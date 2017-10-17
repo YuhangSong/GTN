@@ -21,11 +21,6 @@ All environments are operated using exactly the same Gym interface. See their do
 In order to install requirements, follow:
 
 ```bash
-<<<<<<< HEAD
-# virtual env
-source ~/.bashrc && source deactivate && conda remove --name gtn_env --all
-conda create -n gtn_env && source ~/.bashrc && source activate gtn_env
-=======
 # clear env
 source ~/.bashrc && source deactivate && conda remove --name gtn_env --all
 
@@ -41,7 +36,6 @@ rm -r gtn_env
 
 # create dir
 mkdir -p gtn_env/project/ && cd gtn_env/project/
->>>>>>> 4d6b796391ba55478b23f586b832e95ee6029c87
 
 # PyTorch
 pip install http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp36-cp36m-manylinux1_x86_64.whl 
@@ -75,12 +69,8 @@ Start a `Visdom` server with `python -m visdom.server`, it will serve `http://lo
 #### GTN based on A2C
 
 ```bash
-<<<<<<< HEAD
-source ~/.bashrc && source activate gtn_env && CUDA_VISIBLE_DEVICES=1 python main.py --env-name "PongNoFrameskip-v4"
-=======
 source ~/.bashrc && source activate gtn_env
 CUDA_VISIBLE_DEVICES=0 python main.py
->>>>>>> 4d6b796391ba55478b23f586b832e95ee6029c87
 ```
 
 #### PPO
