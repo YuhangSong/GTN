@@ -73,10 +73,7 @@ def main():
 
     envs = Mt_SubprocVecEnv(envs)
 
-    # envs = SubprocVecEnv([
-    #     make_env(mt_env_id_dic_selected[i], args.seed, j, args.log_dir)
-    #     for j in range(args.num_processes)
-    # ])
+    num_processes_total = args.num_processes * len(mt_env_id_dic_selected)
 
     obs_shape = envs.observation_space.shape
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
@@ -101,8 +98,8 @@ def main():
     elif args.algo == 'acktr':
         optimizer = KFACOptimizer(actor_critic)
 
-    rollouts = RolloutStorage(args.num_steps, args.num_processes, obs_shape, envs.action_space)
-    current_state = torch.zeros(args.num_processes, *obs_shape)
+    rollouts = RolloutStorage(args.num_steps, num_processes_total, obs_shape, envs.action_space)
+    current_state = torch.zeros(num_processes_total, *obs_shape)
 
     def update_current_state(state):
         shape_dim0 = envs.observation_space.shape[0]
@@ -117,8 +114,8 @@ def main():
     rollouts.states[0].copy_(current_state)
 
     # These variables are used to compute average rewards for all processes.
-    episode_rewards = torch.zeros([args.num_processes, 1])
-    final_rewards = torch.zeros([args.num_processes, 1])
+    episode_rewards = torch.zeros([num_processes_total, 1])
+    final_rewards = torch.zeros([num_processes_total, 1])
 
     if args.cuda:
         current_state = current_state.cuda()
@@ -134,7 +131,7 @@ def main():
             cpu_actions = action.data.squeeze(1).cpu().numpy()
 
             # Obser reward and next state
-            state, reward, done, info = envs.step(cpu_actions)
+            state, reward, done = envs.step(cpu_actions)
             reward = torch.from_numpy(np.expand_dims(np.stack(reward), 1)).float()
             episode_rewards += reward
 
@@ -165,8 +162,8 @@ def main():
         if args.algo in ['a2c', 'acktr']:
             values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(Variable(rollouts.states[:-1].view(-1, *obs_shape)), Variable(rollouts.actions.view(-1, action_shape)))
 
-            values = values.view(args.num_steps, args.num_processes, 1)
-            action_log_probs = action_log_probs.view(args.num_steps, args.num_processes, 1)
+            values = values.view(args.num_steps, num_processes_total, 1)
+            action_log_probs = action_log_probs.view(args.num_steps, num_processes_total, 1)
 
             advantages = Variable(rollouts.returns[:-1]) - values
             value_loss = advantages.pow(2).mean()
@@ -206,7 +203,7 @@ def main():
                 old_model.obs_filter = actor_critic.obs_filter
 
             for _ in range(args.ppo_epoch):
-                sampler = BatchSampler(SubsetRandomSampler(range(args.num_processes * args.num_steps)), args.batch_size * args.num_processes, drop_last=False)
+                sampler = BatchSampler(SubsetRandomSampler(range(num_processes_total * args.num_steps)), args.batch_size * num_processes_total, drop_last=False)
                 for indices in sampler:
                     indices = torch.LongTensor(indices)
                     if args.cuda:
