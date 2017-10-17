@@ -4,7 +4,7 @@ import gym
 from gym.spaces.box import Box
 
 from baselines import bench
-from baselines.common.atari_wrappers import wrap_deepmind
+from common.atari_wrappers import wrap_deepmind
 
 try:
     import pybullet_envs
@@ -31,7 +31,7 @@ def make_env(env_id, seed, rank, log_dir):
 class WrapPyTorch(gym.ObservationWrapper):
     def __init__(self, env=None):
         super(WrapPyTorch, self).__init__(env)
-        self.observation_space = Box(0.0, 1.0, [1, 84, 84])
+        self.observation_space = Box(0.0, 1.0, [1, 128, 128])
 
     def _observation(self, observation):
         return observation.transpose(2, 0, 1)
