@@ -108,14 +108,18 @@ def visdom_plot(viz, win, folder, game, name, bin_size=100, smooth=1):
     plt.plot(tx, ty, label="{}".format(name))
 
     # Ugly hack to detect atari
-    if game.find('NoFrameskip') > -1:
-        plt.xticks([4*1e6, 4*2e6, 4*4e6, 4*6e6, 4*8e6, 4*10e6],
-                   ["1M", "2M", "4M", "6M", "8M", "10M"])
-        plt.xlim(0, 40e6)
-    else:
-        plt.xticks([1e5, 2e5, 4e5, 6e5, 8e5, 1e5],
-                   ["0.1M", "0.2M", "0.4M", "0.6M", "0.8M", "1M"])
-        plt.xlim(0, 1e6)
+    # if game.find('NoFrameskip') > -1:
+        # plt.xticks([4*1e6, 4*2e6, 4*4e6, 4*6e6, 4*8e6, 4*10e6],
+        #            ["1M", "2M", "4M", "6M", "8M", "10M"])
+        # plt.xlim(0, 40e6)
+    # else:
+    #     plt.xticks([1e5, 2e5, 4e5, 6e5, 8e5, 1e5],
+    #                ["0.1M", "0.2M", "0.4M", "0.6M", "0.8M", "1M"])
+    #     plt.xlim(0, 1e6)
+
+    plt.xticks([4*1e6, 4*2e6, 4*4e6, 4*6e6, 4*8e6, 4*10e6],
+               ["1M", "2M", "4M", "6M", "8M", "10M"])
+    plt.xlim(0, 40e6)
 
     plt.xlabel('Number of Timesteps')
     plt.ylabel('Rewards')

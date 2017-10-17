@@ -182,9 +182,9 @@ def main():
                 )
 
             values = values.view(args.num_processes, args.num_steps, 1)
-            values = values.permute(0,1,2)
+            values = values.permute(1,0,2)
             action_log_probs = action_log_probs.view(args.num_processes, args.num_steps, 1)
-            action_log_probs = action_log_probs.permute(0,1,2)
+            action_log_probs = action_log_probs.permute(1,0,2)
 
             advantages = Variable(rollouts.returns[:-1]) - values
             value_loss = advantages.pow(2).mean()
