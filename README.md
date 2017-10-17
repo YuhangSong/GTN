@@ -66,7 +66,7 @@ Start a `Visdom` server with `python -m visdom.server`, it will serve `http://lo
 #### A2C
 
 ```bash
-python main.py --env-name "PongNoFrameskip-v4"
+CUDA_VISIBLE_DEVICES=1 python main.py --env-name "PongNoFrameskip-v4"
 ```
 
 #### PPO
