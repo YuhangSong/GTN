@@ -31,6 +31,10 @@ All environments are operated using exactly the same Gym interface. See their do
 In order to install requirements, follow:
 
 ```bash
+# virtual env
+source ~/.bashrc && source deactivate && conda remove --name gtn_env --all
+conda create -n gtn_env && source ~/.bashrc && source activate gtn_env
+
 # PyTorch
 conda install pytorch torchvision -c soumith
 
@@ -66,7 +70,7 @@ Start a `Visdom` server with `python -m visdom.server`, it will serve `http://lo
 #### A2C
 
 ```bash
-CUDA_VISIBLE_DEVICES=1 python main.py --env-name "PongNoFrameskip-v4"
+source ~/.bashrc && source activate gtn_env && CUDA_VISIBLE_DEVICES=1 python main.py --env-name "PongNoFrameskip-v4"
 ```
 
 #### PPO
