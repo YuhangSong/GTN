@@ -39,8 +39,7 @@ except OSError:
         os.remove(f)
 
 game_dic = {
-    'test mt pong':[
-        'PongNoFrameskip-v4',
+    'PongNoFrameskip-v4':[
         'PongNoFrameskip-v4',],
 }
 
@@ -176,15 +175,19 @@ def main():
             # print(rollouts.states[:-1].size())
             # print(rollouts.states[:-1].view(-1, *obs_shape).size())
             values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(
-                inputs=Variable(rollouts.states[:-1].permute(1,0,2,3,4).contiguous().view(-1, *obs_shape)),
+                # inputs=Variable(rollouts.states[:-1].permute(1,0,2,3,4).contiguous().view(-1, *obs_shape)),
+                inputs=Variable(rollouts.states[:-1].view(-1, *obs_shape)),
                 actions=Variable(rollouts.actions.view(-1, action_shape)),
                 num_steps=args.num_steps,
                 )
 
-            values = values.view(args.num_processes, args.num_steps, 1)
-            values = values.permute(1,0,2)
-            action_log_probs = action_log_probs.view(args.num_processes, args.num_steps, 1)
-            action_log_probs = action_log_probs.permute(1,0,2)
+            # values = values.view(args.num_processes, args.num_steps, 1)
+            # values = values.permute(1,0,2)
+            # action_log_probs = action_log_probs.view(args.num_processes, args.num_steps, 1)
+            # action_log_probs = action_log_probs.permute(1,0,2)
+            values = values.view(args.num_steps, args.num_processes, 1)
+            action_log_probs = action_log_probs.view(args.num_steps, args.num_processes, 1)
+
 
             advantages = Variable(rollouts.returns[:-1]) - values
             value_loss = advantages.pow(2).mean()

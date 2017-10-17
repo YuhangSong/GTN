@@ -22,48 +22,38 @@ class FFPolicy(nn.Module):
         raise NotImplementedError
 
     def act(self, inputs, deterministic=False):
-        # print('act')
 
         value, x = self(inputs)
-        # print(game_index_dic)
-        # print(ssss)
-        # print(x.size())
-        # print(self.process_per_game)
         action = []
         for dist_i in range(len(self.dist)):
             x_temp = x.narrow(0,dist_i*self.process_per_game,self.process_per_game)
-            # print(x_temp)
 
             action_temp = self.dist[dist_i].sample(x_temp, deterministic=deterministic)
-            # print(action_temp)
 
-            # print(oooo)
             action += [action_temp]
-        # print(action.size())
-        # print(lllact)
+
         action = torch.cat(action,0)
-        # action = torch.clamp(action, min=0, max=3)
-        # print(aaa)
+        
         return value, action
 
     def evaluate_actions(self, inputs, actions, num_steps):
-        # print('evaluate_actions')
-        value, x = self(inputs)
-        # print(x.size())
-        # print(oooooo)   
+
+        value, x = self(inputs) 
         
-        action_log_probs = []
-        dist_entropy = []
-        for dist_i in range(len(self.dist)):
+        # action_log_probs = []
+        # dist_entropy = []
+        # for dist_i in range(len(self.dist)):
             
-            action_log_probs_temp, dist_entropy_temp = self.dist[dist_i].evaluate_actions(x.narrow(0,dist_i*self.process_per_game*num_steps,self.process_per_game*num_steps), actions.narrow(0,dist_i*self.process_per_game*num_steps,self.process_per_game*num_steps))
-            action_log_probs += [action_log_probs_temp]
-            dist_entropy += [dist_entropy_temp]
-        action_log_probs = torch.cat(action_log_probs,0)
-        dist_entropy = torch.cat(dist_entropy,0)
-        dist_entropy = dist_entropy.mean()
-        # print(dist_entropy.size())
-        # print(sssss)
+        #     action_log_probs_temp, dist_entropy_temp = self.dist[dist_i].evaluate_actions(x.narrow(0,dist_i*self.process_per_game*num_steps,self.process_per_game*num_steps), actions.narrow(0,dist_i*self.process_per_game*num_steps,self.process_per_game*num_steps))
+        #     action_log_probs += [action_log_probs_temp]
+        #     dist_entropy += [dist_entropy_temp]
+
+        # action_log_probs = torch.cat(action_log_probs,0)
+        # dist_entropy = torch.cat(dist_entropy,0)
+        # dist_entropy = dist_entropy.mean()
+
+        action_log_probs, dist_entropy = self.dist[0].evaluate_actions(x, actions)
+
         return value, action_log_probs, dist_entropy
 
 
