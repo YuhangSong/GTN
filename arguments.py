@@ -2,8 +2,10 @@ import argparse
 
 import torch
 
-gtn = '1x3' # 3x3, 1x3
-exp = 'mt_gtn'+gtn+'_mt_pong'
+gtn_M = 1
+gtn_N = 3
+
+exp = 'mt_gtn'+str(gtn_M)+'x'+str(gtn_N)+'_mt_pong'
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
