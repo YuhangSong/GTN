@@ -63,13 +63,20 @@ Contributions are very welcome. If you know how to make this code better, don't 
 
 ## Training
 
-Start a `Visdom` server with `python -m visdom.server`, it will serve `http://localhost:8097/` by default.
+Start a `Visdom` server with
+```bash
+source ~/.bashrc
+source activate gtn_env
+python -m visdom.server
+```
+it will serve `http://localhost:8097/` by default.
 
 ### Atari
 #### GTN based on A2C
 
 ```bash
-source ~/.bashrc && source activate gtn_env
+source ~/.bashrc
+source activate gtn_env
 CUDA_VISIBLE_DEVICES=0 python main.py
 ```
 

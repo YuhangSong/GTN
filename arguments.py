@@ -2,8 +2,8 @@ import argparse
 
 import torch
 
-gtn_M = 3
-gtn_N = 3
+gtn_M = 1
+gtn_N = 5
 
 exp = 'gtn_1_'+str(gtn_M)+'x'+str(gtn_N)+'_mt_high_performance'
 
