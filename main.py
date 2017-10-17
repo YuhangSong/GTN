@@ -12,7 +12,7 @@ from torch.autograd import Variable
 from torch.utils.data.sampler import BatchSampler, SubsetRandomSampler
 
 from arguments import get_args
-from common.vec_env.subproc_vec_env import SubprocVecEnv
+from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
 from envs import make_env
 from kfac import KFACOptimizer
 from model import CNNPolicy, MLPPolicy
