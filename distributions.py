@@ -34,6 +34,11 @@ class Categorical(nn.Module):
 
         action_log_probs = log_probs.gather(1, actions)
 
+        # print(log_probs.size())
+        # print(probs.size())
+        # print((-(log_probs * probs).sum(-1)).size())
+        # print(ssss)
+
         dist_entropy = -(log_probs * probs).sum(-1).mean()
         return action_log_probs, dist_entropy
 

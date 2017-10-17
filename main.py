@@ -12,7 +12,7 @@ from torch.autograd import Variable
 from torch.utils.data.sampler import BatchSampler, SubsetRandomSampler
 
 from arguments import get_args
-from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from common.vec_env.subproc_vec_env import SubprocVecEnv
 from envs import make_env
 from kfac import KFACOptimizer
 from model import CNNPolicy, MLPPolicy
@@ -38,6 +38,13 @@ except OSError:
     for f in files:
         os.remove(f)
 
+game_dic = {
+    'test mt pong':[
+        'PongNoFrameskip-v4',
+        'PongNoFrameskip-v4',],
+}
+
+game_list = game_dic[args.env_name]
 
 def main():
     print("#######")
@@ -51,16 +58,38 @@ def main():
         viz = Visdom()
         win = None
 
-    envs = SubprocVecEnv([
-        make_env(args.env_name, args.seed, i, args.log_dir)
-        for i in range(args.num_processes)
-    ])
+    process_per_game = int(args.num_processes / len(game_list))
+    if process_per_game < 1:
+        process_per_game = 1
+
+    envs_list = []
+    rank = 0
+    game_i = 0
+    for game in game_list:
+        for game_process_i in range(int(process_per_game)):
+            env_i = make_env(game, args.seed, rank, args.log_dir)
+            envs_list += [env_i]
+            rank += 1
+        game_i += 1
+
+    envs = SubprocVecEnv(envs_list)
 
     obs_shape = envs.observation_space.shape
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
 
+    action_space_list = []
+    from envs_temp import create_atari_env
+    for game in game_list:
+        env_i = create_atari_env(game)
+        action_space_list += [env_i.action_space.n]
+    action_space_list =[ max(action_space_list)]*len(action_space_list)
+
     if len(envs.observation_space.shape) == 3:
-        actor_critic = CNNPolicy(obs_shape[0], envs.action_space)
+        actor_critic = CNNPolicy(obs_shape[0],
+            game_total=len(game_list),
+            action_space_list=action_space_list,
+            process_per_game=process_per_game,
+            )
     else:
         actor_critic = MLPPolicy(obs_shape[0], envs.action_space)
 
@@ -108,7 +137,10 @@ def main():
     for j in range(num_updates):
         for step in range(args.num_steps):
             # Sample actions
-            value, action = actor_critic.act(Variable(rollouts.states[step], volatile=True))
+            value, action = actor_critic.act(
+                inputs=Variable(rollouts.states[step], volatile=True),
+                # process_per_game=process_per_game,
+                )
             cpu_actions = action.data.squeeze(1).cpu().numpy()
 
             # Obser reward and next state
@@ -141,10 +173,18 @@ def main():
         rollouts.compute_returns(next_value, args.use_gae, args.gamma, args.tau)
 
         if args.algo in ['a2c', 'acktr']:
-            values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(Variable(rollouts.states[:-1].view(-1, *obs_shape)), Variable(rollouts.actions.view(-1, action_shape)))
+            # print(rollouts.states[:-1].size())
+            # print(rollouts.states[:-1].view(-1, *obs_shape).size())
+            values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(
+                inputs=Variable(rollouts.states[:-1].permute(1,0,2,3,4).contiguous().view(-1, *obs_shape)),
+                actions=Variable(rollouts.actions.view(-1, action_shape)),
+                num_steps=args.num_steps,
+                )
 
-            values = values.view(args.num_steps, args.num_processes, 1)
-            action_log_probs = action_log_probs.view(args.num_steps, args.num_processes, 1)
+            values = values.view(args.num_processes, args.num_steps, 1)
+            values = values.permute(0,1,2)
+            action_log_probs = action_log_probs.view(args.num_processes, args.num_steps, 1)
+            action_log_probs = action_log_probs.permute(0,1,2)
 
             advantages = Variable(rollouts.returns[:-1]) - values
             value_loss = advantages.pow(2).mean()

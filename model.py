@@ -14,26 +14,62 @@ def weights_init(m):
 
 
 class FFPolicy(nn.Module):
-    def __init__(self):
+    def __init__(self, process_per_game):
         super(FFPolicy, self).__init__()
+        self.process_per_game = process_per_game
 
     def forward(self, x):
         raise NotImplementedError
 
     def act(self, inputs, deterministic=False):
+        # print('act')
+
         value, x = self(inputs)
-        action = self.dist.sample(x, deterministic=deterministic)
+        # print(game_index_dic)
+        # print(ssss)
+        # print(x.size())
+        # print(self.process_per_game)
+        action = []
+        for dist_i in range(len(self.dist)):
+            x_temp = x.narrow(0,dist_i*self.process_per_game,self.process_per_game)
+            # print(x_temp)
+
+            action_temp = self.dist[dist_i].sample(x_temp, deterministic=deterministic)
+            # print(action_temp)
+
+            # print(oooo)
+            action += [action_temp]
+        # print(action.size())
+        # print(lllact)
+        action = torch.cat(action,0)
+        # action = torch.clamp(action, min=0, max=3)
+        # print(aaa)
         return value, action
 
-    def evaluate_actions(self, inputs, actions):
+    def evaluate_actions(self, inputs, actions, num_steps):
+        # print('evaluate_actions')
         value, x = self(inputs)
-        action_log_probs, dist_entropy = self.dist.evaluate_actions(x, actions)
+        # print(x.size())
+        # print(oooooo)   
+        
+        action_log_probs = []
+        dist_entropy = []
+        for dist_i in range(len(self.dist)):
+            
+            action_log_probs_temp, dist_entropy_temp = self.dist[dist_i].evaluate_actions(x.narrow(0,dist_i*self.process_per_game*num_steps,self.process_per_game*num_steps), actions.narrow(0,dist_i*self.process_per_game*num_steps,self.process_per_game*num_steps))
+            action_log_probs += [action_log_probs_temp]
+            dist_entropy += [dist_entropy_temp]
+        action_log_probs = torch.cat(action_log_probs,0)
+        dist_entropy = torch.cat(dist_entropy,0)
+        dist_entropy = dist_entropy.mean()
+        # print(dist_entropy.size())
+        # print(sssss)
         return value, action_log_probs, dist_entropy
 
 
 class CNNPolicy(FFPolicy):
-    def __init__(self, num_inputs, action_space):
-        super(CNNPolicy, self).__init__()
+    def __init__(self, num_inputs, game_total, action_space_list, process_per_game):
+        super(CNNPolicy, self).__init__(process_per_game)
         self.conv1 = nn.Conv2d(num_inputs, 32, 8, stride=4)
         self.conv2 = nn.Conv2d(32, 64, 4, stride=2)
         self.conv3 = nn.Conv2d(64, 32, 3, stride=1)
@@ -42,14 +78,17 @@ class CNNPolicy(FFPolicy):
 
         self.critic_linear = nn.Linear(512, 1)
 
-        if action_space.__class__.__name__ == "Discrete":
-            num_outputs = action_space.n
-            self.dist = Categorical(512, num_outputs)
-        elif action_space.__class__.__name__ == "Box":
-            num_outputs = action_space.shape[0]
-            self.dist = DiagGaussian(512, num_outputs)
-        else:
-            raise NotImplementedError
+        # if action_space.__class__.__name__ == "Discrete":
+        self.dist = []
+        for i in range(game_total):
+            self.dist += [Categorical(512, action_space_list[i])]
+            # num_outputs = action_space.n
+            # self.dist = Categorical(512, num_outputs)
+        # elif action_space.__class__.__name__ == "Box":
+        #     num_outputs = action_space.shape[0]
+        #     self.dist = DiagGaussian(512, num_outputs)
+        # else:
+        #     raise NotImplementedError
 
         self.train()
         self.reset_parameters()
@@ -65,6 +104,11 @@ class CNNPolicy(FFPolicy):
 
         if self.dist.__class__.__name__ == "DiagGaussian":
             self.dist.fc_mean.weight.data.mul_(0.01)
+
+    def cuda(self, **args):
+        super(CNNPolicy, self).cuda(**args)
+        for dist_i in self.dist:
+            dist_i=dist_i.cuda()
 
     def forward(self, inputs):
         x = self.conv1(inputs / 255.0)
