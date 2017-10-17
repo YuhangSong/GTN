@@ -2,6 +2,7 @@ import argparse
 
 import torch
 
+exp = 'mt_a2c_mt_pong'
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
@@ -49,9 +50,9 @@ def get_args():
                         help='number of frames to train (default: 10e6)')
     parser.add_argument('--env-name', default='PongNoFrameskip-v4',
                         help='environment to train on (default: PongNoFrameskip-v4)')
-    parser.add_argument('--log-dir', default='../../result/',
+    parser.add_argument('--log-dir', default='../../result/'+exp+'/',
                         help='directory to save agent logs (default: /tmp/gym)')
-    parser.add_argument('--save-dir', default='../../result/',
+    parser.add_argument('--save-dir', default='../../result/'+exp+'/',
                         help='directory to save agent logs (default: ./trained_models/)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
