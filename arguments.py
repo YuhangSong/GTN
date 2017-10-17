@@ -49,10 +49,10 @@ def get_args():
                         help='number of frames to train (default: 10e6)')
     parser.add_argument('--env-name', default='test mt pong',
                         help='environment to train on (default: PongNoFrameskip-v4)')
-    parser.add_argument('--log-dir', default='/tmp/gym/',
-                        help='directory to save agent logs (default: /tmp/gym)')
-    parser.add_argument('--save-dir', default='./trained_models/',
-                        help='directory to save agent logs (default: ./trained_models/)')
+    parser.add_argument('--log-dir', default='../../results/',
+                        help='directory to save agent logs (default: ../../results/)')
+    parser.add_argument('--save-dir', default='../../results/',
+                        help='directory to save agent logs (default: ../../results/)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
     parser.add_argument('--no-vis', action='store_true', default=False,

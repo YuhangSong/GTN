@@ -42,7 +42,8 @@ source ~/.bashrc
 source activate gtn_env
 
 # PyTorch
-conda install pytorch torchvision -c soumith
+pip install http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp36-cp36m-manylinux1_x86_64.whl 
+pip install torchvision
 
 # Baselines for Atari preprocessing
 git clone https://github.com/openai/baselines.git
@@ -50,6 +51,8 @@ cd baselines
 pip install -e .
 
 # Other requirements
+git clone https://github.com/YuhangSong/gtn_a2c.git
+cd gtn_a2c
 pip install -r requirements.txt
 ```
 
