@@ -158,11 +158,11 @@ class CNNPolicy(FFPolicy):
 
     def forward(self, inputs):
         
-        x0=inputs
+        x0 = inputs / 255.0
 
         if gtn_M >= 1:
 
-            x0 = self.conv00(x0 / 255.0)
+            x0 = self.conv00(x0)
             x0 = F.relu(x0)
 
             x1 = x0
@@ -177,7 +177,7 @@ class CNNPolicy(FFPolicy):
 
         if gtn_M >= 2:
 
-            x1 = self.conv10(x1 / 255.0)
+            x1 = self.conv10(x1)
             x1 = F.relu(x1)
 
             x2 = x1
@@ -192,15 +192,15 @@ class CNNPolicy(FFPolicy):
 
         if gtn_M >= 3:
 
-            x2 = self.conv10(x2 / 255.0)
+            x2 = self.conv20(x2)
             x2 = F.relu(x2)
 
             x3 = x2
 
-            x2 = self.conv11(x2)
+            x2 = self.conv21(x2)
             x2 = F.relu(x2)
 
-            x2 = self.conv12(x2)
+            x2 = self.conv22(x2)
             x2 = F.relu(x2)
 
             x2 = x2.view(-1, x2.size()[1]*x2.size()[2]*x2.size()[3])
