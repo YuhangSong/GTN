@@ -38,6 +38,12 @@ except OSError:
     for f in files:
         os.remove(f)
 
+game_dic = {
+    'PongNoFrameskip-v4':[
+        'PongNoFrameskip-v4',],
+}
+
+game_list = game_dic[args.env_name]
 
 def main():
     print("#######")
@@ -51,13 +57,31 @@ def main():
         viz = Visdom()
         win = None
 
-    envs = SubprocVecEnv([
-        make_env(args.env_name, args.seed, i, args.log_dir)
-        for i in range(args.num_processes)
-    ])
+    process_per_game = int(args.num_processes / len(game_list))
+    if process_per_game < 1:
+        process_per_game = 1
+
+    envs_list = []
+    rank = 0
+    game_i = 0
+    for game in game_list:
+        for game_process_i in range(int(process_per_game)):
+            env_i = make_env(game, args.seed, rank, args.log_dir)
+            envs_list += [env_i]
+            rank += 1
+        game_i += 1
+
+    envs = SubprocVecEnv(envs_list)
 
     obs_shape = envs.observation_space.shape
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
+
+    action_space_list = []
+    from envs_temp import create_atari_env
+    for game in game_list:
+        env_i = create_atari_env(game)
+        action_space_list += [env_i.action_space.n]
+    envs.action_space.n =max(action_space_list)
 
     if len(envs.observation_space.shape) == 3:
         actor_critic = CNNPolicy(obs_shape[0], envs.action_space)

@@ -42,14 +42,17 @@ class CNNPolicy(FFPolicy):
 
         self.critic_linear = nn.Linear(512, 1)
 
-        if action_space.__class__.__name__ == "Discrete":
-            num_outputs = action_space.n
-            self.dist = Categorical(512, num_outputs)
-        elif action_space.__class__.__name__ == "Box":
-            num_outputs = action_space.shape[0]
-            self.dist = DiagGaussian(512, num_outputs)
-        else:
-            raise NotImplementedError
+        # if action_space.__class__.__name__ == "Discrete":
+        #     num_outputs = action_space.n
+        #     self.dist = Categorical(512, num_outputs)
+        # elif action_space.__class__.__name__ == "Box":
+        #     num_outputs = action_space.shape[0]
+        #     self.dist = DiagGaussian(512, num_outputs)
+        # else:
+        #     raise NotImplementedError
+
+        num_outputs = action_space.n
+        self.dist = Categorical(512, num_outputs)
 
         self.train()
         self.reset_parameters()
