@@ -1,16 +1,6 @@
-# pytorch-a2c-ppo-acktr
+# GTN based on A2C
 
-## Update 10/06/2017: added enjoy.py and a link to pretrained models!
-## Update 09/27/2017: now supports both Atari and MuJoCo/Roboschool!
-
-This is a PyTorch implementation of
-* Advantage Actor Critic (A2C), a synchronous deterministic version of [A3C](https://arxiv.org/pdf/1602.01783v1.pdf)
-* Proximal Policy Optimization [PPO](https://arxiv.org/pdf/1707.06347.pdf)
-* Scalable trust-region method for deep reinforcement learning using Kronecker-factored approximation [ACKTR](https://arxiv.org/abs/1708.05144)
-
-Also see the OpenAI posts: [A2C/ACKTR](https://blog.openai.com/baselines-acktr-a2c/) and [PPO](https://blog.openai.com/openai-baselines-ppo/) for more information.
-
-This implementation is inspired by the OpenAI baselines for [A2C](https://github.com/openai/baselines/tree/master/baselines/a2c), [ACKTR](https://github.com/openai/baselines/tree/master/baselines/acktr) and [PPO](https://github.com/openai/baselines/tree/master/baselines/ppo1). It uses the same hyper parameters and the model since they were well tuned for Atari games.
+This is a PyTorch implementation of GTN based on A2C.
 
 ## Supported (and tested) environments (via [OpenAI Gym](https://gym.openai.com))
 * [Atari Learning Environment](https://github.com/mgbellemare/Arcade-Learning-Environment)
@@ -31,16 +21,37 @@ All environments are operated using exactly the same Gym interface. See their do
 In order to install requirements, follow:
 
 ```bash
+# clear env
+source ~/.bashrc && source deactivate && conda remove --name gtn_env --all
+
+# create
+conda create -n gtn_env
+
+# source in
+source ~/.bashrc
+source activate gtn_env
+
+# clear dir
+rm -r gtn_env
+
+# create dir
+mkdir -p gtn_env/project/ && cd gtn_env/project/
+
 # PyTorch
-conda install pytorch torchvision -c soumith
+pip install http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp36-cp36m-manylinux1_x86_64.whl 
+pip install torchvision
 
 # Baselines for Atari preprocessing
 git clone https://github.com/openai/baselines.git
 cd baselines
 pip install -e .
+cd ..
 
 # Other requirements
+git clone https://github.com/YuhangSong/gtn_a2c.git
+cd gtn_a2c
 pip install -r requirements.txt
+cd ..
 ```
 
 ## Contributions

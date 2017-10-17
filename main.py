@@ -32,9 +32,18 @@ if args.cuda:
     torch.cuda.manual_seed(args.seed)
 
 mt_env_id_dic_all = {
-    'PongNoFrameskip-v4':[
+    'mt test pong':[
         'PongNoFrameskip-v4',
-        'BreakoutNoFrameskip-v4',],
+        'BreakoutNoFrameskip-v4',
+        ],
+    'mt high performance':[
+        'BeamRiderNoFrameskip-v4',
+        'BreakoutNoFrameskip-v4',
+        'PongNoFrameskip-v4',
+        'QbertNoFrameskip-v4',
+        'SpaceInvadersNoFrameskip-v4',
+        'SeaquestNoFrameskip-v4',
+        ],
 }
 
 mt_env_id_dic_selected = mt_env_id_dic_all[args.env_name]

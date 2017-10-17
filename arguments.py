@@ -5,7 +5,7 @@ import torch
 gtn_M = 3
 gtn_N = 3
 
-exp = 'mt_gtn_1_'+str(gtn_M)+'x'+str(gtn_N)+'_mt_pong'
+exp = 'gtn_1_'+str(gtn_M)+'x'+str(gtn_N)+'_mt_high_performance'
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
@@ -51,7 +51,7 @@ def get_args():
                         help='vis interval, one log per n updates (default: 100)')
     parser.add_argument('--num-frames', type=int, default=10e6,
                         help='number of frames to train (default: 10e6)')
-    parser.add_argument('--env-name', default='PongNoFrameskip-v4',
+    parser.add_argument('--env-name', default='mt high performance',
                         help='environment to train on (default: PongNoFrameskip-v4)')
     parser.add_argument('--log-dir', default='../../result/'+exp+'/',
                         help='directory to save agent logs (default: /tmp/gym)')
