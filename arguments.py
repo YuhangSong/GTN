@@ -2,10 +2,18 @@ import argparse
 
 import torch
 
-gtn_M = 1
-gtn_N = 5
+gtn_M = 3
+gtn_N = 3
 
-exp = 'gtn_1_'+str(gtn_M)+'x'+str(gtn_N)+'_mt_high_performance'
+hierarchical = 0
+
+exp = ''
+exp += ('gtn_1'+'_')
+exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
+exp += ('hierarchical_'+str(hierarchical)+'_')
+exp += ('mt_high_performance')
+
+print(exp)
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
