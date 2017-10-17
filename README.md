@@ -1,16 +1,6 @@
-# pytorch-a2c-ppo-acktr
+# GTN based on A2C
 
-## Update 10/06/2017: added enjoy.py and a link to pretrained models!
-## Update 09/27/2017: now supports both Atari and MuJoCo/Roboschool!
-
-This is a PyTorch implementation of
-* Advantage Actor Critic (A2C), a synchronous deterministic version of [A3C](https://arxiv.org/pdf/1602.01783v1.pdf)
-* Proximal Policy Optimization [PPO](https://arxiv.org/pdf/1707.06347.pdf)
-* Scalable trust-region method for deep reinforcement learning using Kronecker-factored approximation [ACKTR](https://arxiv.org/abs/1708.05144)
-
-Also see the OpenAI posts: [A2C/ACKTR](https://blog.openai.com/baselines-acktr-a2c/) and [PPO](https://blog.openai.com/openai-baselines-ppo/) for more information.
-
-This implementation is inspired by the OpenAI baselines for [A2C](https://github.com/openai/baselines/tree/master/baselines/a2c), [ACKTR](https://github.com/openai/baselines/tree/master/baselines/acktr) and [PPO](https://github.com/openai/baselines/tree/master/baselines/ppo1). It uses the same hyper parameters and the model since they were well tuned for Atari games.
+This is a PyTorch implementation of GTN based on A2C.
 
 ## Supported (and tested) environments (via [OpenAI Gym](https://gym.openai.com))
 * [Atari Learning Environment](https://github.com/mgbellemare/Arcade-Learning-Environment)
@@ -31,46 +21,66 @@ All environments are operated using exactly the same Gym interface. See their do
 In order to install requirements, follow:
 
 ```bash
+<<<<<<< HEAD
 # virtual env
 source ~/.bashrc && source deactivate && conda remove --name gtn_env --all
 conda create -n gtn_env && source ~/.bashrc && source activate gtn_env
+=======
+# clear env
+source ~/.bashrc && source deactivate && conda remove --name gtn_env --all
+
+# create
+conda create -n gtn_env
+
+# source in
+source ~/.bashrc
+source activate gtn_env
+
+# clear dir
+rm -r gtn_env
+
+# create dir
+mkdir -p gtn_env/project/ && cd gtn_env/project/
+>>>>>>> 4d6b796391ba55478b23f586b832e95ee6029c87
 
 # PyTorch
-conda install pytorch torchvision -c soumith
+pip install http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp36-cp36m-manylinux1_x86_64.whl 
+pip install torchvision
 
 # Baselines for Atari preprocessing
 git clone https://github.com/openai/baselines.git
 cd baselines
 pip install -e .
+cd ..
 
 # Other requirements
+git clone https://github.com/YuhangSong/gtn_a2c.git
+cd gtn_a2c
 pip install -r requirements.txt
+cd ..
 ```
 
 ## Contributions
 
 Contributions are very welcome. If you know how to make this code better, don't hesitate to send a pull request. Also see a todo list below.
 
-Also I'm searching for volunteers to run all experiments on Atari and MuJoCo (with multiple random seeds).
-
-## Disclaimer
-
-It's extremely difficult to reproduce results for Reinforcement Learning methods. See ["Deep Reinforcement Learning that Matters"](https://arxiv.org/abs/1709.06560) for more information. I tried to reproduce OpenAI results as closely as possible. However, majors differences in performance can be caused even by minor differences in TensorFlow and PyTorch libraries.
-
 ### TODO
 * Improve this README file. Rearrange images.
-* Improve performance of KFAC, see kfac.py for more information
-* Run evaluation for all games and algorithms
 
 ## Training
 
 Start a `Visdom` server with `python -m visdom.server`, it will serve `http://localhost:8097/` by default.
 
 ### Atari
-#### A2C
+#### GTN based on A2C
 
 ```bash
+<<<<<<< HEAD
 source ~/.bashrc && source activate gtn_env && CUDA_VISIBLE_DEVICES=1 python main.py --env-name "PongNoFrameskip-v4"
+=======
+source ~/.bashrc && source activate gtn_env
+CUDA_VISIBLE_DEVICES=0 python main.py
+>>>>>>> 4d6b796391ba55478b23f586b832e95ee6029c87
 ```
 
 #### PPO
@@ -102,54 +112,8 @@ python main.py --env-name "Reacher-v1" --algo ppo --use-gae --vis-interval 1  --
 
 ACKTR requires some modifications to be made specifically for MuJoCo. But at the moment, I want to keep this code as unified as possible. Thus, I'm going for better ways to integrate it into the codebase.
 
-## Enjoy
-
-Load a pretrained model from [my Google Drive](https://drive.google.com/open?id=0Bw49qC_cgohKS3k2OWpyMWdzYkk).
-
-Disclaimer: I might have used different hyper-parameters to train these models.
-
-### Atari
-
-```bash
-python enjoy.py --load-dir trained_models/a2c --env-name "PongNoFrameskip-v4" --num-stack 4
-```
-
-### MuJoCo
-
-```bash
-python enjoy.py --load-dir trained_models/ppo --env-name "Reacher-v1" --num-stack 1
-```
-
 ## Results
 
-### A2C
+### XX
 
 ![BreakoutNoFrameskip-v4](imgs/a2c_breakout.png)
-
-![SeaquestNoFrameskip-v4](imgs/a2c_seaquest.png)
-
-![QbertNoFrameskip-v4](imgs/a2c_qbert.png)
-
-![beamriderNoFrameskip-v4](imgs/a2c_beamrider.png)
-
-### PPO
-
-
-![BreakoutNoFrameskip-v4](imgs/ppo_halfcheetah.png)
-
-![SeaquestNoFrameskip-v4](imgs/ppo_hopper.png)
-
-![QbertNoFrameskip-v4](imgs/ppo_reacher.png)
-
-![beamriderNoFrameskip-v4](imgs/ppo_walker.png)
-
-
-### ACKTR
-
-![BreakoutNoFrameskip-v4](imgs/acktr_breakout.png)
-
-![SeaquestNoFrameskip-v4](imgs/acktr_seaquest.png)
-
-![QbertNoFrameskip-v4](imgs/acktr_qbert.png)
-
-![beamriderNoFrameskip-v4](imgs/acktr_beamrider.png)
