@@ -12,7 +12,7 @@ from torch.autograd import Variable
 from torch.utils.data.sampler import BatchSampler, SubsetRandomSampler
 
 from arguments import get_args
-from baselines.common.vec_env.subproc_vec_env import SubprocVecEnv
+from common.vec_env.subproc_vec_env import SubprocVecEnv, Mt_SubprocVecEnv
 from envs import make_env
 from kfac import KFACOptimizer
 from model import CNNPolicy, MLPPolicy
@@ -31,13 +31,22 @@ torch.manual_seed(args.seed)
 if args.cuda:
     torch.cuda.manual_seed(args.seed)
 
-try:
-    os.makedirs(args.log_dir)
-except OSError:
-    files = glob.glob(os.path.join(args.log_dir, '*.monitor.json'))
-    for f in files:
-        os.remove(f)
+mt_env_id_dic_all = {
+    'PongNoFrameskip-v4':[
+        'PongNoFrameskip-v4',
+        'BreakoutNoFrameskip-v4',],
+}
 
+mt_env_id_dic_selected = mt_env_id_dic_all[args.env_name]
+
+for env_id in mt_env_id_dic_selected:
+    log_dir = args.log_dir+env_id+'/'
+    try:
+        os.makedirs(log_dir)
+    except OSError:
+        files = glob.glob(os.path.join(log_dir, '*.monitor.json'))
+        for f in files:
+            os.remove(f)
 
 def main():
     print("#######")
@@ -49,12 +58,25 @@ def main():
     if args.vis:
         from visdom import Visdom
         viz = Visdom()
-        win = None
+        win = []
+        for i in range(len(mt_env_id_dic_selected)):
+            win += [None]
 
-    envs = SubprocVecEnv([
-        make_env(args.env_name, args.seed, i, args.log_dir)
-        for i in range(args.num_processes)
-    ])
+    envs = []
+
+    for i in range(len(mt_env_id_dic_selected)):
+        log_dir = args.log_dir+mt_env_id_dic_selected[i]+'/'
+        envs += [SubprocVecEnv([
+                    make_env(mt_env_id_dic_selected[i], args.seed, j, log_dir)
+                    for j in range(args.num_processes)
+                ])]
+
+    envs = Mt_SubprocVecEnv(envs)
+
+    # envs = SubprocVecEnv([
+    #     make_env(mt_env_id_dic_selected[i], args.seed, j, args.log_dir)
+    #     for j in range(args.num_processes)
+    # ])
 
     obs_shape = envs.observation_space.shape
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
@@ -235,7 +257,9 @@ def main():
                        value_loss.data[0], action_loss.data[0]))
 
         if j % args.vis_interval == 0:
-            win = visdom_plot(viz, win, args.log_dir, args.env_name, args.algo)
+            for ii in range(len(mt_env_id_dic_selected)):
+                log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
+                win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
 
 
 if __name__ == "__main__":
