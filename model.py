@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from running_stat import ObsNorm
 from distributions import Categorical, DiagGaussian
 
-from arguments import gtn_M, gtn_N, hierarchical
+from arguments import gtn_M, gtn_N, hierarchical, parameter_noise_rate
 
 def weights_init(m):
     classname = m.__class__.__name__
@@ -611,6 +611,12 @@ class CNNPolicy(FFPolicy):
 
         return self.critic_linear(x), x
 
+    def parameter_noise(self):
+        for p in self.parameters():
+            p.data = torch.normal(
+                means=p.data,
+                std=p.data*parameter_noise_rate,
+                )
 
 def weights_init_mlp(m):
     classname = m.__class__.__name__
@@ -619,7 +625,6 @@ def weights_init_mlp(m):
         m.weight.data *= 1 / torch.sqrt(m.weight.data.pow(2).sum(1, keepdim=True))
         if m.bias is not None:
             m.bias.data.fill_(0)
-
 
 class MLPPolicy(FFPolicy):
     def __init__(self, num_inputs, action_space):
