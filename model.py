@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from running_stat import ObsNorm
 from distributions import Categorical, DiagGaussian
 
-from arguments import gtn_M, gtn_N
+from arguments import gtn_M, gtn_N, hierarchical
 
 def weights_init(m):
     classname = m.__class__.__name__
@@ -36,193 +36,420 @@ class CNNPolicy(FFPolicy):
     def __init__(self, num_inputs, action_space):
         super(CNNPolicy, self).__init__()
 
-        ############ m = 0 ###############
+        if hierarchical == 1:
 
-        # 4 128 128
-        self.conv00 = nn.Conv2d(
-            in_channels=num_inputs,
-            out_channels=32,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 32 64 64
-        self.conv01 = nn.Conv2d(
-            in_channels=32,
-            out_channels=64,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 64 32 32
-        self.conv02 = nn.Conv2d(
-            in_channels=64,
-            out_channels=128,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 128 16 16
-        self.conv03 = nn.Conv2d(
-            in_channels=128,
-            out_channels=256,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 256 8 8
-        self.conv04 = nn.Conv2d(
-            in_channels=256,
-            out_channels=512,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 512 4 4
+            ############ m = 0 ###############
 
-        ############ m = 1 ###############
+            # 4 128 128
+            self.conv00 = nn.Conv2d(
+                in_channels=num_inputs,
+                out_channels=32,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 32 64 64
+            self.conv01 = nn.Conv2d(
+                in_channels=32,
+                out_channels=64,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 64 32 32
+            self.conv02 = nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 128 16 16
+            self.conv03 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv04 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
 
-        # 32 64 64
-        self.conv10 = nn.Conv2d(
-            in_channels=32,
-            out_channels=64,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 64 32 32
-        self.conv11 = nn.Conv2d(
-            in_channels=64,
-            out_channels=128,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 128 16 16
-        self.conv12 = nn.Conv2d(
-            in_channels=128,
-            out_channels=256,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 256 8 8
-        self.conv13 = nn.Conv2d(
-            in_channels=256,
-            out_channels=512,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 512 4 4
-        self.conv23 = nn.Conv2d(
-            in_channels=512,
-            out_channels=2024,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 1024 2 2
+            ############ m = 1 ###############
 
-        ############ m = 2 ###############
+            # 32 64 64
+            self.conv10 = nn.Conv2d(
+                in_channels=32,
+                out_channels=64,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 64 32 32
+            self.conv11 = nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 128 16 16
+            self.conv12 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv13 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
+            self.conv23 = nn.Conv2d(
+                in_channels=512,
+                out_channels=2024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
-        # 64 32 32
-        self.conv20 = nn.Conv2d(
-            in_channels=64,
-            out_channels=128,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 128 16 16
-        self.conv21 = nn.Conv2d(
-            in_channels=128,
-            out_channels=256,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 256 8 8
-        self.conv22 = nn.Conv2d(
-            in_channels=256,
-            out_channels=512,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 512 4 4
-        self.conv23 = nn.Conv2d(
-            in_channels=512,
-            out_channels=2024,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 1024 2 2
+            ############ m = 2 ###############
 
-        ############ m = 3 ###############
+            # 64 32 32
+            self.conv20 = nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 128 16 16
+            self.conv21 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv22 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
+            self.conv23 = nn.Conv2d(
+                in_channels=512,
+                out_channels=2024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
-        # 128 16 16
-        self.conv30 = nn.Conv2d(
-            in_channels=128,
-            out_channels=256,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 256 8 8
-        self.conv31 = nn.Conv2d(
-            in_channels=256,
-            out_channels=512,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 512 4 4
-        self.conv32 = nn.Conv2d(
-            in_channels=512,
-            out_channels=2024,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 1024 2 2
+            ############ m = 3 ###############
 
-        ############ m = 4 ###############
+            # 128 16 16
+            self.conv30 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv31 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
+            self.conv32 = nn.Conv2d(
+                in_channels=512,
+                out_channels=2024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
-        # 256 8 8
-        self.conv40 = nn.Conv2d(
-            in_channels=256,
-            out_channels=512,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 512 4 4
-        self.conv41 = nn.Conv2d(
-            in_channels=512,
-            out_channels=2024,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 1024 2 2
+            ############ m = 4 ###############
 
-        ############ m = 5 ###############
+            # 256 8 8
+            self.conv40 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
+            self.conv41 = nn.Conv2d(
+                in_channels=512,
+                out_channels=2024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
-        # 512 4 4
-        self.conv50 = nn.Conv2d(
-            in_channels=512,
-            out_channels=2024,
-            kernel_size=4,
-            stride=2,
-            padding=1,
-            )
-        # 1024 2 2
+            ############ m = 5 ###############
+
+            # 512 4 4
+            self.conv50 = nn.Conv2d(
+                in_channels=512,
+                out_channels=2024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
+
+        elif hierarchical == 0:
+
+            ############ m = 0 ###############
+
+            # 4 128 128
+            self.conv00 = nn.Conv2d(
+                in_channels=num_inputs,
+                out_channels=32,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 32 64 64
+            self.conv01 = nn.Conv2d(
+                in_channels=32,
+                out_channels=64,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 64 32 32
+            self.conv02 = nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 128 16 16
+            self.conv03 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv04 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
+
+            ############ m = 1 ###############
+
+            # 4 128 128
+            self.conv10 = nn.Conv2d(
+                in_channels=num_inputs,
+                out_channels=32,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 32 64 64
+            self.conv11 = nn.Conv2d(
+                in_channels=32,
+                out_channels=64,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 64 32 32
+            self.conv12 = nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 128 16 16
+            self.conv13 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv14 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
+
+            ############ m = 2 ###############
+
+            # 4 128 128
+            self.conv20 = nn.Conv2d(
+                in_channels=num_inputs,
+                out_channels=32,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 32 64 64
+            self.conv21 = nn.Conv2d(
+                in_channels=32,
+                out_channels=64,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 64 32 32
+            self.conv22 = nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 128 16 16
+            self.conv23 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv24 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
+
+            ############ m = 3 ###############
+
+            # 4 128 128
+            self.conv30 = nn.Conv2d(
+                in_channels=num_inputs,
+                out_channels=32,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 32 64 64
+            self.conv31 = nn.Conv2d(
+                in_channels=32,
+                out_channels=64,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 64 32 32
+            self.conv32 = nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 128 16 16
+            self.conv33 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv34 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
+
+            ############ m = 4 ###############
+
+            # 4 128 128
+            self.conv40 = nn.Conv2d(
+                in_channels=num_inputs,
+                out_channels=32,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 32 64 64
+            self.conv41 = nn.Conv2d(
+                in_channels=32,
+                out_channels=64,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 64 32 32
+            self.conv42 = nn.Conv2d(
+                in_channels=64,
+                out_channels=128,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 128 16 16
+            self.conv43 = nn.Conv2d(
+                in_channels=128,
+                out_channels=256,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 256 8 8
+            self.conv44 = nn.Conv2d(
+                in_channels=256,
+                out_channels=512,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 512 4 4
 
         self.concatenation_layer_size = 0
         for m in range(gtn_M):
-            depth = gtn_N+m
+            if hierarchical == 0:
+                depth = gtn_N
+            elif hierarchical == 1:
+                depth = gtn_N + m
             final_number_feature = 32*(2**(depth-1))
             final_size = 128/(2**(depth))
             self.concatenation_layer_size += final_number_feature * (final_size**2)
@@ -264,11 +491,15 @@ class CNNPolicy(FFPolicy):
 
         if gtn_M >= 1:
 
+            if hierarchical==0:
+                x1 = x0
+
             if gtn_N >= 1:
                 x0 = self.conv00(x0)
                 x0 = F.relu(x0)
 
-            x1 = x0
+            if hierarchical==1:
+                x1 = x0
 
             if gtn_N >= 2:
                 x0 = self.conv01(x0)
@@ -291,11 +522,15 @@ class CNNPolicy(FFPolicy):
 
         if gtn_M >= 2:
 
+            if hierarchical==0:
+                x2 = x1
+
             if gtn_N >= 1:
                 x1 = self.conv10(x1)
                 x1 = F.relu(x1)
 
-            x2 = x1
+            if hierarchical==1:
+                x2 = x1
 
             if gtn_N >= 2:
                 x1 = self.conv11(x1)
@@ -313,11 +548,15 @@ class CNNPolicy(FFPolicy):
 
         if gtn_M >= 3:
 
+            if hierarchical==0:
+                x3 = x2
+
             if gtn_N >= 1:
                 x2 = self.conv20(x2)
                 x2 = F.relu(x2)
 
-            x3 = x2
+            if hierarchical==1:
+                x3 = x2
 
             if gtn_N >= 2:
                 x2 = self.conv21(x2)
@@ -331,11 +570,15 @@ class CNNPolicy(FFPolicy):
 
         if gtn_M >= 4:
 
+            if hierarchical==0:
+                x4 = x3
+
             if gtn_N >= 1:
                 x3 = self.conv30(x3)
                 x3 = F.relu(x3)
 
-            x4 = x3
+            if hierarchical==1:
+                x4 = x3
 
             if gtn_N >= 2:
                 x3 = self.conv31(x3)
@@ -345,11 +588,15 @@ class CNNPolicy(FFPolicy):
 
         if gtn_M >= 5:
 
+            if hierarchical==0:
+                x5 = x4
+
             if gtn_N >= 1:
                 x4 = self.conv40(x4)
                 x4 = F.relu(x4)
 
-            x5 = x4
+            if hierarchical==1:
+                x5 = x4
 
             x4 = x4.view(-1, x4.size()[1]*x4.size()[2]*x4.size()[3])
 

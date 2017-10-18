@@ -22,7 +22,9 @@ In order to install requirements, follow:
 
 ```bash
 # clear env
-source ~/.bashrc && source deactivate && conda remove --name gtn_env --all
+source ~/.bashrc
+source deactivate
+conda remove --name gtn_env --all
 
 # create
 conda create -n gtn_env
@@ -52,6 +54,20 @@ git clone https://github.com/YuhangSong/gtn_a2c.git
 cd gtn_a2c
 pip install -r requirements.txt
 cd ..
+```
+
+### Some known bugs when setup env
+
+```bash
+conda `GLIBCXX_3.4.20' not found
+```
+is solved by
+```bash
+source ~/.bashrc
+source deactivate
+conda install libgcc
+source ~/.bashrc
+source activate gtn_env
 ```
 
 ## Contributions
