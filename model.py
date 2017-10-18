@@ -13,7 +13,6 @@ def weights_init(m):
         if m.bias is not None:
             m.bias.data.fill_(0)
 
-
 class FFPolicy(nn.Module):
     def __init__(self):
         super(FFPolicy, self).__init__()
@@ -30,7 +29,6 @@ class FFPolicy(nn.Module):
         value, x = self(inputs)
         action_log_probs, dist_entropy = self.dist.evaluate_actions(x, actions)
         return value, action_log_probs, dist_entropy
-
 
 class CNNPolicy(FFPolicy):
     def __init__(self, num_inputs, action_space):

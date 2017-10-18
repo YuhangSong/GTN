@@ -5,13 +5,13 @@ import torch
 gtn_M = 3
 gtn_N = 3
 
-hierarchical = 0
+hierarchical = 1
 
 exp = ''
 exp += ('gtn_1'+'_')
 exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
-exp += ('mt_high_performance')
+exp += ('mt_test_pong_parall')
 
 print(exp)
 
@@ -59,7 +59,7 @@ def get_args():
                         help='vis interval, one log per n updates (default: 100)')
     parser.add_argument('--num-frames', type=int, default=10e6,
                         help='number of frames to train (default: 10e6)')
-    parser.add_argument('--env-name', default='mt high performance',
+    parser.add_argument('--env-name', default='mt test pong',
                         help='environment to train on (default: PongNoFrameskip-v4)')
     parser.add_argument('--log-dir', default='../../result/'+exp+'/',
                         help='directory to save agent logs (default: /tmp/gym)')
