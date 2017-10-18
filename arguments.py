@@ -11,7 +11,7 @@ exp = ''
 exp += ('gtn_1'+'_')
 exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
-exp += ('mt_test_pong_parall')
+exp += ('mt_all_atari')
 
 print(exp)
 
@@ -39,7 +39,7 @@ def get_args():
                         help='value loss coefficient (default: 0.5)')
     parser.add_argument('--seed', type=int, default=1,
                         help='random seed (default: 1)')
-    parser.add_argument('--num-processes', type=int, default=16,
+    parser.add_argument('--num-processes', type=int, default=4,
                         help='how many training CPU processes to use (default: 16)')
     parser.add_argument('--num-steps', type=int, default=5,
                         help='number of forward steps in A2C (default: 5)')
@@ -59,7 +59,7 @@ def get_args():
                         help='vis interval, one log per n updates (default: 100)')
     parser.add_argument('--num-frames', type=int, default=10e6,
                         help='number of frames to train (default: 10e6)')
-    parser.add_argument('--env-name', default='mt test pong',
+    parser.add_argument('--env-name', default='mt all atari',
                         help='environment to train on (default: PongNoFrameskip-v4)')
     parser.add_argument('--log-dir', default='../../result/'+exp+'/',
                         help='directory to save agent logs (default: /tmp/gym)')
