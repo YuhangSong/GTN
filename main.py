@@ -12,7 +12,7 @@ from torch.autograd import Variable
 from torch.utils.data.sampler import BatchSampler, SubsetRandomSampler
 
 from arguments import get_args
-from common.vec_env.subproc_vec_env import SubprocVecEnv, Mt_SubprocVecEnv
+from common.vec_env.subproc_vec_env import SubprocVecEnvMt
 from envs import make_env
 from kfac import KFACOptimizer
 from model import CNNPolicy, MLPPolicy
@@ -43,6 +43,73 @@ mt_env_id_dic_all = {
         'QbertNoFrameskip-v4',
         'SpaceInvadersNoFrameskip-v4',
         'SeaquestNoFrameskip-v4',
+        ],
+    'mt shooting':[
+        'BeamRiderNoFrameskip-v4',
+        'BreakoutNoFrameskip-v4',
+        'PongNoFrameskip-v4',
+        'QbertNoFrameskip-v4',
+        'SpaceInvadersNoFrameskip-v4',
+        'SeaquestNoFrameskip-v4',
+        ],
+    'mt all atari':[
+        'AlienNoFrameskip-v4',
+        'AmidarNoFrameskip-v4',
+        'BankHeistNoFrameskip-v4',
+        'MsPacmanNoFrameskip-v4',
+        'TutankhamNoFrameskip-v4',
+        'VentureNoFrameskip-v4',
+        'WizardOfWorNoFrameskip-v4',
+        'AssaultNoFrameskip-v4',
+        'AsteroidsNoFrameskip-v4',
+        'BeamRiderNoFrameskip-v4',
+        'CentipedeNoFrameskip-v4',
+        'ChopperCommandNoFrameskip-v4',
+        'CrazyClimberNoFrameskip-v4',
+        'DemonAttackNoFrameskip-v4',
+        'AtlantisNoFrameskip-v4',
+        'GravitarNoFrameskip-v4',
+        'PhoenixNoFrameskip-v4',
+        'PooyanNoFrameskip-v4',
+        'RiverraidNoFrameskip-v4',
+        'SeaquestNoFrameskip-v4',
+        'SpaceInvadersNoFrameskip-v4',
+        'StarGunnerNoFrameskip-v4',
+        'TimePilotNoFrameskip-v4',
+        'ZaxxonNoFrameskip-v4',
+        'YarsRevengeNoFrameskip-v4',
+        'AsterixNoFrameskip-v4',
+        'ElevatorActionNoFrameskip-v4',
+        'BerzerkNoFrameskip-v4',
+        'FreewayNoFrameskip-v4',
+        'FrostbiteNoFrameskip-v4',
+        'JourneyEscapeNoFrameskip-v4',
+        'KangarooNoFrameskip-v4',
+        'KrullNoFrameskip-v4',
+        'PitfallNoFrameskip-v4',
+        'SkiingNoFrameskip-v4',
+        'UpNDownNoFrameskip-v4',
+        'QbertNoFrameskip-v4',
+        'RoadRunnerNoFrameskip-v4',
+        'DoubleDunkNoFrameskip-v4',
+        'IceHockeyNoFrameskip-v4',
+        'MontezumaRevengeNoFrameskip-v4',
+        'GopherNoFrameskip-v4',
+        'BreakoutNoFrameskip-v4',
+        'PongNoFrameskip-v4',
+        'PrivateEyeNoFrameskip-v4',
+        'TennisNoFrameskip-v4',
+        'VideoPinballNoFrameskip-v4',
+        'FishingDerbyNoFrameskip-v4',
+        'NameThisGameNoFrameskip-v4',
+        'BowlingNoFrameskip-v4',
+        'BattleZoneNoFrameskip-v4',
+        'BoxingNoFrameskip-v4',
+        'JamesbondNoFrameskip-v4',
+        'RobotankNoFrameskip-v4',
+        'SolarisNoFrameskip-v4',
+        'EnduroNoFrameskip-v4',
+        'KungFuMasterNoFrameskip-v4',
         ],
 }
 
@@ -75,12 +142,10 @@ def main():
 
     for i in range(len(mt_env_id_dic_selected)):
         log_dir = args.log_dir+mt_env_id_dic_selected[i]+'/'
-        envs += [SubprocVecEnv([
-                    make_env(mt_env_id_dic_selected[i], args.seed, j, log_dir)
-                    for j in range(args.num_processes)
-                ])]
+        for j in range(args.num_processes):
+            envs += [make_env(mt_env_id_dic_selected[i], args.seed, j, log_dir)]
 
-    envs = Mt_SubprocVecEnv(envs)
+    envs = SubprocVecEnvMt(envs)
 
     num_processes_total = args.num_processes * len(mt_env_id_dic_selected)
 
