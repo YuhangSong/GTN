@@ -70,6 +70,21 @@ source ~/.bashrc
 source activate gtn_env
 ```
 
+```bash
+Traceback (most recent call last):
+  File "main.py", line 7, in <module>
+    import torch
+  File "/home/yuhangsong/anaconda3/lib/python3.6/site-packages/torch/__init__.py", line 53, in <module>
+    from torch._C import *
+ImportError: numpy.core.multiarray failed to import
+```
+is solved by
+```bash
+source ~/.bashrc
+source activate gtn_env
+pip install numpy -I
+```
+
 ## Contributions
 
 Contributions are very welcome. If you know how to make this code better, don't hesitate to send a pull request. Also see a todo list below.
