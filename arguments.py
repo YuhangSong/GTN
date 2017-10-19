@@ -12,7 +12,7 @@ parameter_noise_interval = 10
 parameter_noise_rate = 0.01
 
 ewc = 1
-ewc_lambda = 0.0
+ewc_lambda = 1.0
 ewc_interval = 10
 
 # dataset = 'mt shooting'
