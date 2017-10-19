@@ -350,5 +350,11 @@ def main():
             if j % parameter_noise_interval == 0:
                 actor_critic.parameter_noise()
 
+        from arguments import ewc, ewc_lambda, ewc_interval
+        if ewc == 1:
+            if j % ewc_interval == 0:
+                actor_critic.compute_fisher()
+                actor_critic.star()
+
 if __name__ == "__main__":
     main()

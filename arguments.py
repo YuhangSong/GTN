@@ -11,8 +11,12 @@ parameter_noise = 1
 parameter_noise_interval = 10
 parameter_noise_rate = 0.01
 
-dataset = 'mt shooting'
-# dataset = 'mt test pong'
+ewc = 0
+ewc_lambda = 15
+ewc_interval = 1
+
+# dataset = 'mt shooting'
+dataset = 'mt test pong'
 # dataset = 'mt all atari'
 
 exp = ''
@@ -20,6 +24,7 @@ exp += ('gtn_1'+'_')
 exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
 exp += ('parameter_noise_'+str(parameter_noise)+'_')
+exp += ('ewc_'+str(ewc)+'_')
 exp += ('dataset_'+dataset+'_')
 
 print('#######################################')
