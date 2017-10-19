@@ -615,7 +615,7 @@ class CNNPolicy(FFPolicy):
         for p in self.parameters():
             p.data = torch.normal(
                 means=p.data,
-                std=p.data*parameter_noise_rate,
+                std=p.data.abs()*parameter_noise_rate,
                 )
 
 def weights_init_mlp(m):
