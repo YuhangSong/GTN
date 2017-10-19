@@ -35,51 +35,6 @@ class CloudpickleWrapper(object):
         import pickle
         self.x = pickle.loads(ob)
 
-class Mt_SubprocVecEnv(object):
-    """docstring for Mt_SubprocVecEnv"""
-    def __init__(self, envs):
-        super(Mt_SubprocVecEnv, self).__init__()
-        self.envs = envs
-
-        action_space_n = 0
-        for env in self.envs:
-            if env.action_space.n > action_space_n:
-                self.action_space = env.action_space
-                action_space_n = env.action_space.n
-
-        self.observation_space = self.envs[0].observation_space
-
-    def step(self, actions):
-        return_list_0 = []
-        return_list_1 = []
-        return_list_2 = []
-        for ii in range(len(self.envs)): 
-            temp_0, temp_1, temp_2, _ = self.envs[ii].step(
-                np.clip(
-                    actions[self.envs[ii].num_process*ii:self.envs[ii].num_process*(ii+1)],
-                    a_min=0,
-                    a_max=self.envs[ii].action_space.n-1))
-            return_list_0 += [temp_0]
-            return_list_1 += [temp_1]
-            return_list_2 += [temp_2]
-
-        return_concatenated_0 = np.concatenate(return_list_0, axis=0)
-        return_concatenated_1 = np.concatenate(return_list_1, axis=0)
-        return_concatenated_2 = np.concatenate(return_list_2, axis=0)
-
-        return return_concatenated_0, return_concatenated_1, return_concatenated_2
-
-    def reset(self):
-        return_list = []
-        for env in self.envs:
-            return_list += [env.reset()]
-        return_concatenated = np.concatenate(return_list, axis=0)
-        return return_concatenated
-
-    def close(self):
-        for env in self.envs:
-            env.close()
-
 class SubprocVecEnv(VecEnv):
     def __init__(self, env_fns):
         """
