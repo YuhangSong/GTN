@@ -2,18 +2,28 @@ import argparse
 
 import torch
 
-gtn_M = 3
+gtn_M = 1
 gtn_N = 3
 
 hierarchical = 1
+
+parameter_noise = 1
+parameter_noise_interval = 10
+parameter_noise_rate = 0.1
+
+dataset = 'mt test pong'
+# dataset = 'mt all atari'
 
 exp = ''
 exp += ('gtn_1'+'_')
 exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
-exp += ('mt_all_atari')
+exp += ('parameter_noise_'+str(parameter_noise)+'_')
+exp += ('dataset_'+dataset+'_')
 
+print('#######################################')
 print(exp)
+print('#######################################')
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
@@ -39,7 +49,7 @@ def get_args():
                         help='value loss coefficient (default: 0.5)')
     parser.add_argument('--seed', type=int, default=1,
                         help='random seed (default: 1)')
-    parser.add_argument('--num-processes', type=int, default=4,
+    parser.add_argument('--num-processes', type=int, default=16,
                         help='how many training CPU processes to use (default: 16)')
     parser.add_argument('--num-steps', type=int, default=5,
                         help='number of forward steps in A2C (default: 5)')
@@ -59,8 +69,8 @@ def get_args():
                         help='vis interval, one log per n updates (default: 100)')
     parser.add_argument('--num-frames', type=int, default=10e6,
                         help='number of frames to train (default: 10e6)')
-    parser.add_argument('--env-name', default='mt all atari',
-                        help='environment to train on (default: PongNoFrameskip-v4)')
+    parser.add_argument('--env-name', default=dataset,
+                        help='environment to train on')
     parser.add_argument('--log-dir', default='../../result/'+exp+'/',
                         help='directory to save agent logs (default: /tmp/gym)')
     parser.add_argument('--save-dir', default='../../result/'+exp+'/',

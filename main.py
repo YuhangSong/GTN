@@ -332,6 +332,10 @@ def main():
                 log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
                 win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
 
+        from arguments import parameter_noise, parameter_noise_interval
+        if parameter_noise == 1:
+            if j % parameter_noise_interval == 0:
+                actor_critic.parameter_noise()
 
 if __name__ == "__main__":
     main()
