@@ -9,7 +9,7 @@ hierarchical = 1
 
 parameter_noise = 1
 parameter_noise_interval = 10
-parameter_noise_rate = 0.01
+parameter_noise_rate = 0.1
 
 dataset = 'mt test pong'
 # dataset = 'mt all atari'
