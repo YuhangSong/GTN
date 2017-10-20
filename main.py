@@ -289,7 +289,7 @@ def main():
                 if ewc == 1:
                     ewc_loss = actor_critic.get_ewc_loss(lam=ewc_lambda)
                     if ewc_loss is not None:
-                        final_loss = final_loss + ewc_loss
+                        final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef + final_loss + ewc_loss
 
             final_loss.backward()
 
