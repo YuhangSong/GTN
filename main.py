@@ -217,9 +217,9 @@ def main():
         for step in range(args.num_steps):
             if ewc == 1:
                 try:
-                    states_store = torch.cat([states_store, rollouts.states[step]], 0)
+                    states_store = torch.cat([states_store, rollouts.states[step].clone()], 0)
                 except Exception as e:
-                    states_store = rollouts.states[step]
+                    states_store = rollouts.states[step].clone()
             # Sample actions
             value, action = actor_critic.act(Variable(rollouts.states[step], volatile=True))
             cpu_actions = action.data.squeeze(1).cpu().numpy()
@@ -342,10 +342,10 @@ def main():
                 pass
 
             # A really ugly way to save a model to CPU
-            # save_model = actor_critic
-            # if args.cuda:
-            #     save_model = copy.deepcopy(actor_critic).cpu()
-            # torch.save(save_model, os.path.join(save_path, args.env_name + ".pt"))
+            save_model = actor_critic
+            if args.cuda:
+                save_model = copy.deepcopy(actor_critic).cpu()
+            torch.save(save_model, os.path.join(save_path, args.env_name + ".pt"))
 
         if j % args.log_interval == 0:
             print("Updates {}, num frames {}, mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}, entropy {:.5f}, value loss {:.5f}, policy loss {:.5f}".
