@@ -15,9 +15,9 @@ ewc = 0
 ewc_lambda = 1.0
 ewc_interval = 10
 
-dataset = 'mt shooting'
+# dataset = 'mt shooting'
 # dataset = 'mt test pong'
-# dataset = 'mt all atari'
+dataset = 'mt all atari'
 
 exp = ''
 exp += ('gtn_1'+'_')
@@ -55,7 +55,7 @@ def get_args():
                         help='value loss coefficient (default: 0.5)')
     parser.add_argument('--seed', type=int, default=1,
                         help='random seed (default: 1)')
-    parser.add_argument('--num-processes', type=int, default=16,
+    parser.add_argument('--num-processes', type=int, default=4,
                         help='how many training CPU processes to use')
     parser.add_argument('--num-steps', type=int, default=5,
                         help='number of forward steps in A2C')
