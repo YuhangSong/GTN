@@ -19,6 +19,8 @@ from model import CNNPolicy, MLPPolicy
 from storage import RolloutStorage
 from visualize import visdom_plot
 
+from arguments import log_fisher_sensitivity_per_m, debugging
+
 args = get_args()
 
 assert args.algo in ['a2c', 'ppo', 'acktr']
@@ -150,6 +152,7 @@ def main():
         win = []
         for i in range(len(mt_env_id_dic_selected)):
             win += [None]
+        win_afs_per_m = None
 
     envs = []
 
@@ -212,6 +215,8 @@ def main():
         old_model = copy.deepcopy(actor_critic)
 
     from arguments import ewc, ewc_lambda, ewc_interval
+
+    afs_per_m = []
 
     for j in range(num_updates):
         for step in range(args.num_steps):
@@ -291,12 +296,23 @@ def main():
                     if ewc_loss is not None:
                         final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef + final_loss + ewc_loss
 
-            final_loss.backward()
+            if log_fisher_sensitivity_per_m == 1:
+                final_loss.backward(retain_graph=True)
+            elif log_fisher_sensitivity_per_m == 0:
+                final_loss.backward()
+            else:
+                raise Exception('Not support')
 
             if args.algo == 'a2c':
                 nn.utils.clip_grad_norm(actor_critic.parameters(), args.max_grad_norm)
 
             optimizer.step()
+
+            if log_fisher_sensitivity_per_m == 1:
+                afs_per_m += [actor_critic.get_afs_per_m(
+                                    action_log_probs=action_log_probs,
+                                )]
+
         elif args.algo == 'ppo':
             advantages = rollouts.returns[:-1] - rollouts.value_preds[:-1]
             advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-5)
@@ -334,7 +350,7 @@ def main():
 
         rollouts.states[0].copy_(rollouts.states[-1])
 
-        if j % args.save_interval == 0 and args.save_dir != "":
+        if j % int(num_updates/2-10) == 0 and args.save_dir != "":
             save_path = os.path.join(args.save_dir, args.algo)
             try:
                 os.makedirs(save_path)
@@ -362,10 +378,13 @@ def main():
                 pass
             
 
-        if j % args.vis_interval == 0:
+        if j > 5 and j % args.vis_interval == 0:
             for ii in range(len(mt_env_id_dic_selected)):
                 log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
                 win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
+
+            if log_fisher_sensitivity_per_m == 1:
+                win_afs_per_m = viz.line(torch.from_numpy(np.asarray(afs_per_m)), win=win_afs_per_m)
 
         from arguments import parameter_noise, parameter_noise_interval
         if parameter_noise == 1:

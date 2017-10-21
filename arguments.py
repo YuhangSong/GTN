@@ -1,9 +1,10 @@
 import argparse
-
 import torch
 
-gtn_M = 3
-gtn_N = 3
+debugging = 0
+
+gtn_M = 5
+gtn_N = 2
 
 hierarchical = 1
 
@@ -15,21 +16,48 @@ ewc = 0
 ewc_lambda = 1.0
 ewc_interval = 10
 
-# dataset = 'mt shooting'
-# dataset = 'mt test pong'
-dataset = 'mt all atari'
+both_side_tower = 1
 
-exp = ''
+log_fisher_sensitivity_per_m = 1
+
+dataset = 'mt shooting'
+# dataset = 'mt test pong'
+# dataset = 'mt all atari'
+
+exp = '1'
 exp += ('gtn_1'+'_')
 exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
 exp += ('parameter_noise_'+str(parameter_noise)+'_')
 exp += ('ewc_'+str(ewc)+'_')
+exp += ('both_side_tower_'+str(both_side_tower)+'_')
 exp += ('dataset_'+dataset+'_')
 
 print('#######################################')
 print(exp)
 print('#######################################')
+
+multi_gpu = 0
+
+if multi_gpu == 1:
+    gpus = range(torch.cuda.device_count())
+    print('Using GPU:'+str(gpus))
+else:
+    gpus = [0]
+
+num_processes = 16
+if dataset == 'mt all atari':
+    num_processes = 4
+
+log_interval = 20
+vis_interval = 20
+
+if debugging == 1:
+    num_processes = 1
+    dataset = 'mt test pong'
+    log_interval = 1
+    vis_interval = 1
+
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
@@ -55,7 +83,7 @@ def get_args():
                         help='value loss coefficient (default: 0.5)')
     parser.add_argument('--seed', type=int, default=1,
                         help='random seed (default: 1)')
-    parser.add_argument('--num-processes', type=int, default=4,
+    parser.add_argument('--num-processes', type=int, default=num_processes,
                         help='how many training CPU processes to use')
     parser.add_argument('--num-steps', type=int, default=5,
                         help='number of forward steps in A2C')
@@ -67,12 +95,10 @@ def get_args():
                         help='ppo clip parameter (default: 0.2)')
     parser.add_argument('--num-stack', type=int, default=4,
                         help='number of frames to stack (default: 4)')
-    parser.add_argument('--log-interval', type=int, default=10,
-                        help='log interval, one log per n updates (default: 10)')
-    parser.add_argument('--save-interval', type=int, default=10,
-                        help='save interval, one save per n updates (default: 10)')
-    parser.add_argument('--vis-interval', type=int, default=100,
-                        help='vis interval, one log per n updates (default: 100)')
+    parser.add_argument('--log-interval', type=int, default=log_interval,
+                        help='log interval, one log per n updates')
+    parser.add_argument('--vis-interval', type=int, default=vis_interval,
+                        help='vis interval, one log per n updates')
     parser.add_argument('--num-frames', type=int, default=10e6,
                         help='number of frames to train (default: 10e6)')
     parser.add_argument('--env-name', default=dataset,
