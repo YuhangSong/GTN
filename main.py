@@ -211,8 +211,15 @@ def main():
     if args.algo == 'ppo':
         old_model = copy.deepcopy(actor_critic)
 
+    from arguments import ewc, ewc_lambda, ewc_interval
+
     for j in range(num_updates):
         for step in range(args.num_steps):
+            if ewc == 1:
+                try:
+                    states_store = torch.cat([states_store, rollouts.states[step].clone()], 0)
+                except Exception as e:
+                    states_store = rollouts.states[step].clone()
             # Sample actions
             value, action = actor_critic.act(Variable(rollouts.states[step], volatile=True))
             cpu_actions = action.data.squeeze(1).cpu().numpy()
@@ -275,7 +282,16 @@ def main():
                 optimizer.acc_stats = False
 
             optimizer.zero_grad()
-            (value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef).backward()
+
+            final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
+
+            if j != 0:
+                if ewc == 1:
+                    ewc_loss = actor_critic.get_ewc_loss(lam=ewc_lambda)
+                    if ewc_loss is not None:
+                        final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef + final_loss + ewc_loss
+
+            final_loss.backward()
 
             if args.algo == 'a2c':
                 nn.utils.clip_grad_norm(actor_critic.parameters(), args.max_grad_norm)
@@ -339,6 +355,12 @@ def main():
                        final_rewards.min(),
                        final_rewards.max(), -dist_entropy.data[0],
                        value_loss.data[0], action_loss.data[0]))
+            try:
+                print("ewc loss {:.5f}".
+                format(ewc_loss.data.cpu().numpy()[0]))
+            except Exception as e:
+                pass
+            
 
         if j % args.vis_interval == 0:
             for ii in range(len(mt_env_id_dic_selected)):
@@ -349,6 +371,12 @@ def main():
         if parameter_noise == 1:
             if j % parameter_noise_interval == 0:
                 actor_critic.parameter_noise()
+
+        if ewc == 1:
+            if j % ewc_interval == 0 or j==0:
+                actor_critic.compute_fisher(states_store)
+                states_store = None
+                actor_critic.star()
 
 if __name__ == "__main__":
     main()

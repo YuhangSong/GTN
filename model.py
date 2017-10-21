@@ -1,10 +1,13 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.autograd as autograd
+from torch.autograd import Variable
 from running_stat import ObsNorm
 from distributions import Categorical, DiagGaussian
-
+import numpy as np
 from arguments import gtn_M, gtn_N, hierarchical, parameter_noise_rate
+import copy
 
 def weights_init(m):
     classname = m.__class__.__name__
@@ -29,6 +32,25 @@ class FFPolicy(nn.Module):
         value, x = self(inputs)
         action_log_probs, dist_entropy = self.dist.evaluate_actions(x, actions)
         return value, action_log_probs, dist_entropy
+
+    def evaluate_states_value_fisher(self, inputs):
+        value, _ = self(inputs)
+        value = value.log()
+        return value
+
+# class UniConv(nn.Module):
+#     def __init__(self, in_channels, out_channels):
+#         super(UniConv, self).__init__()
+#         self.conv = nn.Conv2d(
+#             in_channels=in_channels,
+#             out_channels=out_channels,
+#             kernel_size=4,
+#             stride=2,
+#             padding=1,
+#             )
+
+#     def forward(self, x):
+#         return self.conv(x)
 
 class CNNPolicy(FFPolicy):
     def __init__(self, num_inputs, action_space):
@@ -79,6 +101,14 @@ class CNNPolicy(FFPolicy):
                 padding=1,
                 )
             # 512 4 4
+            self.conv05 = nn.Conv2d(
+                in_channels=512,
+                out_channels=1024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
             ############ m = 1 ###############
 
@@ -115,7 +145,7 @@ class CNNPolicy(FFPolicy):
                 padding=1,
                 )
             # 512 4 4
-            self.conv23 = nn.Conv2d(
+            self.conv14 = nn.Conv2d(
                 in_channels=512,
                 out_channels=2024,
                 kernel_size=4,
@@ -265,6 +295,14 @@ class CNNPolicy(FFPolicy):
                 padding=1,
                 )
             # 512 4 4
+            self.conv05 = nn.Conv2d(
+                in_channels=512,
+                out_channels=1024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
             ############ m = 1 ###############
 
@@ -309,6 +347,14 @@ class CNNPolicy(FFPolicy):
                 padding=1,
                 )
             # 512 4 4
+            self.conv15 = nn.Conv2d(
+                in_channels=512,
+                out_channels=1024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
             ############ m = 2 ###############
 
@@ -353,6 +399,14 @@ class CNNPolicy(FFPolicy):
                 padding=1,
                 )
             # 512 4 4
+            self.conv25 = nn.Conv2d(
+                in_channels=512,
+                out_channels=1024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
             ############ m = 3 ###############
 
@@ -397,6 +451,14 @@ class CNNPolicy(FFPolicy):
                 padding=1,
                 )
             # 512 4 4
+            self.conv35 = nn.Conv2d(
+                in_channels=512,
+                out_channels=1024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
             ############ m = 4 ###############
 
@@ -441,6 +503,14 @@ class CNNPolicy(FFPolicy):
                 padding=1,
                 )
             # 512 4 4
+            self.conv45 = nn.Conv2d(
+                in_channels=512,
+                out_channels=1024,
+                kernel_size=4,
+                stride=2,
+                padding=1,
+                )
+            # 1024 2 2
 
         self.concatenation_layer_size = 0
         for m in range(gtn_M):
@@ -474,9 +544,158 @@ class CNNPolicy(FFPolicy):
 
         relu_gain = nn.init.calculate_gain('relu')
 
-        self.conv00.weight.data.mul_(relu_gain)
-        self.conv01.weight.data.mul_(relu_gain)
-        self.conv02.weight.data.mul_(relu_gain)
+        def reset_conv_parameters(x):
+            x.weight.data.mul_(relu_gain)
+
+        try:
+            reset_conv_parameters(self.conv00)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv01)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv02)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv03)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv04)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv05)
+        except Exception as e:
+            pass
+
+        try:
+            reset_conv_parameters(self.conv10)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv11)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv12)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv13)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv14)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv15)
+        except Exception as e:
+            pass
+
+        try:
+            reset_conv_parameters(self.conv20)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv21)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv22)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv23)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv24)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv25)
+        except Exception as e:
+            pass
+
+        try:
+            reset_conv_parameters(self.conv30)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv31)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv32)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv33)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv34)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv35)
+        except Exception as e:
+            pass
+
+        try:
+            reset_conv_parameters(self.conv40)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv41)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv42)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv43)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv44)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv45)
+        except Exception as e:
+            pass
+
+        try:
+            reset_conv_parameters(self.conv50)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv51)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv52)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv53)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv54)
+        except Exception as e:
+            pass
+        try:
+            reset_conv_parameters(self.conv55)
+        except Exception as e:
+            pass
 
         self.concatenation_layer.weight.data.mul_(relu_gain)
 
@@ -617,6 +836,134 @@ class CNNPolicy(FFPolicy):
                 means=p.data,
                 std=p.data.abs()*parameter_noise_rate,
                 )
+
+    # def log_param_number(self):
+    #     param = []
+    #     for p in self.parameters():
+    #         try:
+    #             param += [p.grad.data.pow(2)]
+    #         except Exception as e:
+    #             pass
+
+    def compute_fisher(self, states, num_samples=200, plot_diffs=False, disp_freq=10):
+
+        # computer Fisher information for each parameter
+
+        # initialize Fisher information for most recent task
+        # self.F_accum = []
+        # for p in list(self.parameters()):
+        #     self.F_accum += [p.data.cpu().numpy().fill(0.0)]
+
+        # sampling a random class from softmax
+        # probs = tf.nn.softmax(self.y)
+        # class_ind = tf.to_int32(tf.multinomial(tf.log(probs), 1)[0][0])
+
+        # if(plot_diffs):
+        #     # track differences in mean Fisher info
+        #     F_prev = deepcopy(self.F_accum)
+        #     mean_diffs = np.zeros(0)
+
+        
+
+        def get_fisher_one(state):
+            value = self.evaluate_states_value_fisher(
+                inputs = autograd.Variable(state),
+            ).sum()
+            value.backward()
+
+            parameters_have_grad_index = []
+            for p in self.parameters():
+                if p.grad is not None:
+                    parameters_have_grad_index += [True]
+                else:
+                    parameters_have_grad_index += [False]
+
+            F_one = []
+            for p, have_grad in zip(self.parameters(), parameters_have_grad_index):
+                if have_grad:
+                    F_one += [p.grad.data.pow(2)]
+                else:
+                    pass
+
+            return F_one, parameters_have_grad_index
+
+        for b in range(states.size()[0]):
+            state = states[b:(b+1)]
+            F_one, self.parameters_have_grad_index = get_fisher_one(state)
+            try:
+                for ii in range(len(F_one)):
+                    self.F_accum[ii] = self.F_accum[ii] + F_one[ii]
+            except Exception as e:
+                self.F_accum = F_one
+
+        for ii in range(len(self.F_accum)):
+            self.F_accum[ii] = self.F_accum[ii] / states.size()[0]
+
+        # for i in range(num_samples):
+        #     # select random input image
+        #     im_ind = np.random.randint(imgset.shape[0])
+        #     # compute first-order derivatives
+        #     ders = sess.run(tf.gradients(tf.log(probs[0,class_ind]), self.var_list), feed_dict={self.x: imgset[im_ind:im_ind+1]})
+        #     # square the derivatives and add to total
+        #     for v in range(len(self.F_accum)):
+        #         self.F_accum[v] += np.square(ders[v])
+        #     # if(plot_diffs):
+        #     #     if i % disp_freq == 0 and i > 0:
+        #     #         # recording mean diffs of F
+        #     #         F_diff = 0
+        #     #         for v in range(len(self.F_accum)):
+        #     #             F_diff += np.sum(np.absolute(self.F_accum[v]/(i+1) - F_prev[v]))
+        #     #         mean_diff = np.mean(F_diff)
+        #     #         mean_diffs = np.append(mean_diffs, mean_diff)
+        #     #         for v in range(len(self.F_accum)):
+        #     #             F_prev[v] = self.F_accum[v]/(i+1)
+        #     #         plt.plot(range(disp_freq+1, i+2, disp_freq), mean_diffs)
+        #     #         plt.xlabel("Number of samples")
+        #     #         plt.ylabel("Mean absolute Fisher difference")
+        #     #         display.display(plt.gcf())
+        #     #         display.clear_output(wait=True)
+
+        # # divide totals by number of samples
+        # for v in range(len(self.F_accum)):
+        #     self.F_accum[v] /= num_samples
+
+    def star(self):
+        # used for saving optimal weights after most recent task training
+        self.star_vars = []
+
+        for p, have_grad in zip(self.parameters(), self.parameters_have_grad_index):
+            if have_grad:
+                self.star_vars += [p.data.clone()]
+            else:
+                pass
+
+    def get_ewc_loss(self, lam):
+        # elastic weight consolidation
+        # lam is weighting for previous task(s) constraints
+
+        try:
+            temp = self.star_vars[0]
+            temp = self.F_accum[0]
+        except Exception as e:
+            return None
+
+        ii = 0
+        for p, have_grad in zip(self.parameters(), self.parameters_have_grad_index):
+            
+            if have_grad:
+
+                temp = (p - Variable(self.star_vars[ii])).pow(2)
+                loss = (lam/2) * (torch.mul(Variable(self.F_accum[ii]),temp)).sum()
+                
+                try:
+                    ewc_loss += loss
+                    
+                except Exception as e:
+                    ewc_loss = loss
+
+                ii += 1
+
+        return ewc_loss
 
 def weights_init_mlp(m):
     classname = m.__class__.__name__

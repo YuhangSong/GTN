@@ -11,6 +11,10 @@ parameter_noise = 1
 parameter_noise_interval = 10
 parameter_noise_rate = 0.01
 
+ewc = 0
+ewc_lambda = 1.0
+ewc_interval = 10
+
 dataset = 'mt shooting'
 # dataset = 'mt test pong'
 # dataset = 'mt all atari'
@@ -20,6 +24,7 @@ exp += ('gtn_1'+'_')
 exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
 exp += ('parameter_noise_'+str(parameter_noise)+'_')
+exp += ('ewc_'+str(ewc)+'_')
 exp += ('dataset_'+dataset+'_')
 
 print('#######################################')
@@ -51,9 +56,9 @@ def get_args():
     parser.add_argument('--seed', type=int, default=1,
                         help='random seed (default: 1)')
     parser.add_argument('--num-processes', type=int, default=16,
-                        help='how many training CPU processes to use (default: 16)')
+                        help='how many training CPU processes to use')
     parser.add_argument('--num-steps', type=int, default=5,
-                        help='number of forward steps in A2C (default: 5)')
+                        help='number of forward steps in A2C')
     parser.add_argument('--ppo-epoch', type=int, default=4,
                         help='number of ppo epochs (default: 4)')
     parser.add_argument('--batch-size', type=int, default=64,
