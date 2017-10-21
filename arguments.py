@@ -15,8 +15,10 @@ ewc = 0
 ewc_lambda = 1.0
 ewc_interval = 10
 
-dataset = 'mt shooting'
-# dataset = 'mt test pong'
+both_side_tower = 1
+
+# dataset = 'mt shooting'
+dataset = 'mt test pong'
 # dataset = 'mt all atari'
 
 exp = ''
@@ -25,11 +27,20 @@ exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
 exp += ('parameter_noise_'+str(parameter_noise)+'_')
 exp += ('ewc_'+str(ewc)+'_')
+exp += ('both_side_tower_'+str(both_side_tower)+'_')
 exp += ('dataset_'+dataset+'_')
 
 print('#######################################')
 print(exp)
 print('#######################################')
+
+multi_gpu = 0
+
+if multi_gpu == 1:
+    gpus = range(torch.cuda.device_count())
+    print('Using GPU:'+str(gpus))
+else:
+    gpus = [0]
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
