@@ -17,6 +17,8 @@ ewc_interval = 10
 
 both_side_tower = 1
 
+log_fisher_sensitivity_per_m = 1
+
 # dataset = 'mt shooting'
 dataset = 'mt test pong'
 # dataset = 'mt all atari'

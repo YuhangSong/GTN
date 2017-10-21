@@ -43,20 +43,6 @@ class FFPolicy(nn.Module):
         value = value.log()
         return value
 
-# class UniConv(nn.Module):
-#     def __init__(self, in_channels, out_channels):
-#         super(UniConv, self).__init__()
-#         self.conv = nn.Conv2d(
-#             in_channels=in_channels,
-#             out_channels=out_channels,
-#             kernel_size=4,
-#             stride=2,
-#             padding=1,
-#             )
-
-#     def forward(self, x):
-#         return self.conv(x)
-
 class CNNPolicy(FFPolicy):
     def __init__(self, num_inputs, action_space):
         super(CNNPolicy, self).__init__()
@@ -1119,13 +1105,37 @@ class CNNPolicy(FFPolicy):
                 std=p.data.abs()*parameter_noise_rate,
                 )
 
-    # def log_param_number(self):
-    #     param = []
-    #     for p in self.parameters():
-    #         try:
-    #             param += [p.grad.data.pow(2)]
-    #         except Exception as e:
-    #             pass
+    def get_afs_one_layer(self, layer):
+        sum_temp = 0
+        for p in layer.parameters():
+            sum_temp += p.grad.data.pow(2).mean()
+
+        if sum_temp == 0.0:
+            return 0.0
+
+        sum_temp = np.log10(sum_temp)
+
+        return sum_temp
+
+    def get_afs_per_m(self, action_log_probs):
+        '''Average Fisher Sensitivity (AFS)'''
+        self.zero_grad()
+        (action_log_probs.abs().sum()).backward()
+        
+        afs_per_m = []
+
+        if gtn_M >= 1:
+            afs_per_m += [self.get_afs_one_layer(self.conv01)]
+        if gtn_M >= 2:
+            afs_per_m += [self.get_afs_one_layer(self.conv11)]
+        if gtn_M >= 3:
+            afs_per_m += [self.get_afs_one_layer(self.conv21)]
+        if gtn_M >= 4:
+            afs_per_m += [self.get_afs_one_layer(self.conv31)]
+        if gtn_M >= 5:
+            afs_per_m += [self.get_afs_one_layer(self.conv41)]
+
+        return afs_per_m
 
     def compute_fisher(self, states, num_samples=200, plot_diffs=False, disp_freq=10):
 
