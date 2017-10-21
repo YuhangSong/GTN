@@ -19,7 +19,7 @@ from model import CNNPolicy, MLPPolicy
 from storage import RolloutStorage
 from visualize import visdom_plot
 
-from arguments import log_fisher_sensitivity_per_m, debugging
+from arguments import log_fisher_sensitivity_per_m, debugging, gtn_M
 
 args = get_args()
 
@@ -138,6 +138,8 @@ for env_id in mt_env_id_dic_selected:
         files = glob.glob(os.path.join(log_dir, '*.monitor.json'))
         for f in files:
             os.remove(f)
+
+afs_offset = [0.0, 0.0, 0.0, 0.0, 0.0]
 
 def main():
     print("#######")
@@ -308,10 +310,18 @@ def main():
 
             optimizer.step()
 
+
+        if j % (args.log_interval/10) == 0:
+            
             if log_fisher_sensitivity_per_m == 1:
                 afs_per_m += [actor_critic.get_afs_per_m(
                                     action_log_probs=action_log_probs,
+                                    afs_offset=afs_offset,
                                 )]
+
+                if len(afs_per_m) > 100 and afs_offset[0]==0.0:
+                    for i in range(gtn_M):
+                        afs_offset[i] = -np.mean(np.asarray(afs_per_m)[80:100][i])
 
         elif args.algo == 'ppo':
             advantages = rollouts.returns[:-1] - rollouts.value_preds[:-1]
