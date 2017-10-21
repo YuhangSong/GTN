@@ -15,8 +15,8 @@ ewc = 0
 ewc_lambda = 1.0
 ewc_interval = 10
 
-# dataset = 'mt shooting'
-dataset = 'mt test pong'
+dataset = 'mt shooting'
+# dataset = 'mt test pong'
 # dataset = 'mt all atari'
 
 exp = ''
@@ -58,7 +58,7 @@ def get_args():
     parser.add_argument('--num-processes', type=int, default=16,
                         help='how many training CPU processes to use')
     parser.add_argument('--num-steps', type=int, default=5,
-                        help='number of forward steps in A2C (default: 5)')
+                        help='number of forward steps in A2C')
     parser.add_argument('--ppo-epoch', type=int, default=4,
                         help='number of ppo epochs (default: 4)')
     parser.add_argument('--batch-size', type=int, default=64,
