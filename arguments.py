@@ -2,7 +2,7 @@ import argparse
 
 import torch
 
-gtn_M = 1
+gtn_M = 3
 gtn_N = 3
 
 hierarchical = 1
