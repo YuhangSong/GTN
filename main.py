@@ -298,22 +298,24 @@ def main():
                     if ewc_loss is not None:
                         final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef + final_loss + ewc_loss
 
-            if log_fisher_sensitivity_per_m == 1:
+            if log_fisher_sensitivity_per_m == 1 and j % (args.log_interval/5) == 0:
                 final_loss.backward(retain_graph=True)
-            elif log_fisher_sensitivity_per_m == 0:
-                final_loss.backward()
             else:
-                raise Exception('Not support')
+                final_loss.backward()
 
             if args.algo == 'a2c':
                 nn.utils.clip_grad_norm(actor_critic.parameters(), args.max_grad_norm)
 
             optimizer.step()
 
+<<<<<<< HEAD
 
         if j % (args.log_interval/10) == 0:
             
             if log_fisher_sensitivity_per_m == 1:
+=======
+            if log_fisher_sensitivity_per_m == 1 and j % (args.log_interval/5) == 0:
+>>>>>>> dd138a2bc801ac6ff09aee2377758f545a75c3cc
                 afs_per_m += [actor_critic.get_afs_per_m(
                                     action_log_probs=action_log_probs,
                                     afs_offset=afs_offset,
