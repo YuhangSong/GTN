@@ -1089,7 +1089,7 @@ class CNNPolicy(FFPolicy):
 
         return sum_temp
 
-    def get_afs_per_m(self, action_log_probs):
+    def get_afs_per_m(self, action_log_probs, afs_offset):
         '''Average Fisher Sensitivity (AFS)'''
         self.zero_grad()
         (action_log_probs.abs().sum()).backward()
@@ -1106,6 +1106,9 @@ class CNNPolicy(FFPolicy):
             afs_per_m += [self.get_afs_one_layer(self.conv31)]
         if gtn_M >= 5:
             afs_per_m += [self.get_afs_one_layer(self.conv41)]
+
+        for i in range(gtn_M):
+            afs_per_m[i] = afs_per_m[i] + afs_offset[i]
 
         return afs_per_m
 

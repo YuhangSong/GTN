@@ -58,6 +58,12 @@ if debugging == 1:
     log_interval = 1
     vis_interval = 1
 
+title = exp
+for x in range(0,len(title),40):
+    title = title[:x] + '\n' + title[x:]
+title_html = exp
+for x in range(0,len(title),40):
+    title_html = title_html[:x] + '<br>' + title_html[x:]
 
 def get_args():
     parser = argparse.ArgumentParser(description='RL')
