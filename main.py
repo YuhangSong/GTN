@@ -308,14 +308,10 @@ def main():
 
             optimizer.step()
 
-<<<<<<< HEAD
-
         if j % (args.log_interval/10) == 0:
             
-            if log_fisher_sensitivity_per_m == 1:
-=======
             if log_fisher_sensitivity_per_m == 1 and j % (args.log_interval/5) == 0:
->>>>>>> dd138a2bc801ac6ff09aee2377758f545a75c3cc
+
                 afs_per_m += [actor_critic.get_afs_per_m(
                                     action_log_probs=action_log_probs,
                                     afs_offset=afs_offset,
