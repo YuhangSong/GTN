@@ -1107,7 +1107,7 @@ class CNNPolicy(FFPolicy):
         if gtn_M >= 5:
             afs_per_m += [self.get_afs_one_layer(self.conv41)]
 
-        for i in range(len(afs_per_m)):
+        for i in range(gtn_M):
             afs_per_m[i] = afs_per_m[i] + afs_offset[i]
 
         return afs_per_m

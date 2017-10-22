@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import medfilt
 matplotlib.rcParams.update({'font.size': 8})
-from arguments import exp
+from arguments import title
 
 def smooth_reward_curve(x, y):
     # Halfwidth of our smoothing convolution
@@ -120,7 +120,7 @@ def visdom_plot(viz, win, folder, game, name, bin_size=100, smooth=1):
     plt.xlabel('Number of Timesteps')
     plt.ylabel('Rewards')
 
-    plt.title(exp+' | '+game)
+    plt.title(title+' | '+game)
     plt.legend(loc=4)
     plt.show()
     plt.draw()

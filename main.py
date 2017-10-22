@@ -20,6 +20,7 @@ from storage import RolloutStorage
 from visualize import visdom_plot
 
 from arguments import log_fisher_sensitivity_per_m, debugging, gtn_M
+from arguments import exp, title, title_html
 
 args = get_args()
 
@@ -219,6 +220,7 @@ def main():
     from arguments import ewc, ewc_lambda, ewc_interval
 
     afs_per_m = []
+    afs_offset = [0.0]*gtn_M
 
     for j in range(num_updates):
         for step in range(args.num_steps):
@@ -298,7 +300,7 @@ def main():
                     if ewc_loss is not None:
                         final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef + final_loss + ewc_loss
 
-            if log_fisher_sensitivity_per_m == 1 and j % (args.log_interval/5) == 0:
+            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
                 final_loss.backward(retain_graph=True)
             else:
                 final_loss.backward()
@@ -308,14 +310,15 @@ def main():
 
             optimizer.step()
 
-        if j % (args.log_interval/10) == 0:
-            
-            if log_fisher_sensitivity_per_m == 1 and j % (args.log_interval/5) == 0:
+            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
 
                 afs_per_m += [actor_critic.get_afs_per_m(
                                     action_log_probs=action_log_probs,
                                     afs_offset=afs_offset,
                                 )]
+                # if len(afs_per_m)>70 and afs_offset[0]==0.0:
+                #     for ii in range(len(afs_offset)):
+                #         afs_offset[ii] = -np.mean(np.asarray(afs_per_m[50:70][ii]))
 
                 if len(afs_per_m) > 100 and afs_offset[0]==0.0:
                     for i in range(gtn_M):
@@ -379,6 +382,7 @@ def main():
                        final_rewards.min(),
                        final_rewards.max(), -dist_entropy.data[0],
                        value_loss.data[0], action_loss.data[0]))
+
             try:
                 print("ewc loss {:.5f}".
                 format(ewc_loss.data.cpu().numpy()[0]))
@@ -392,7 +396,11 @@ def main():
                 win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
 
             if log_fisher_sensitivity_per_m == 1:
-                win_afs_per_m = viz.line(torch.from_numpy(np.asarray(afs_per_m)), win=win_afs_per_m)
+                win_afs_per_m = viz.line(
+                    torch.from_numpy(np.asarray(afs_per_m)), 
+                    win=win_afs_per_m,
+                    opts=dict(title=title_html)
+                )
 
         from arguments import parameter_noise, parameter_noise_interval
         if parameter_noise == 1:
