@@ -60,7 +60,7 @@ pip install -r requirements.txt
 cd ..
 ```
 
-Meet some issues? See [Some known bugs when setup env](# some known bugs when setup env)
+Meet some issues? See [problems](#problems)
 
 ## Run the code
 
@@ -122,7 +122,7 @@ Contributions are very welcome. If you know how to make this code better, don't 
 ### TODO
 * Improve this README file. Rearrange images.
 
-## Some known bugs when setup env
+## Problems
 
 ```bash
 conda `GLIBCXX_3.4.20' not found
