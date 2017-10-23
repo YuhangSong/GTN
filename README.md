@@ -60,7 +60,7 @@ pip install -r requirements.txt
 cd ..
 ```
 
-Meet some issues? See [Some known bugs when setup env](# Some known bugs when setup env)
+Meet some issues? See [Some known bugs when setup env](# some known bugs when setup env)
 
 ## Run the code
 
