@@ -20,9 +20,9 @@ both_side_tower = 1
 
 log_fisher_sensitivity_per_m = 1
 
-dataset = 'mt shooting'
+# dataset = 'mt shooting'
 # dataset = 'mt test pong'
-# dataset = 'mt all atari'
+dataset = 'mt all atari'
 
 exp = '1'
 exp += ('gtn_1'+'_')
