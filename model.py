@@ -1136,7 +1136,7 @@ class CNNPolicy(FFPolicy):
                 if afs_per_m[m].data.cpu().numpy()[0]==0.0:
                     continue
                 else:
-                    temp = afs_per_m[m] * (m) * 0.0
+                    temp = afs_per_m[m] * (m) * 0.1
                     if loss_afs is not None:
                         loss_afs += temp
                     else:
