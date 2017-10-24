@@ -20,7 +20,7 @@ Refer to [my personal basic setup](https://github.com/YuhangSong/basic_setup) fo
 * [CUDA 8.0](https://developer.nvidia.com/cuda-downloads)
 * [Anaconda3](https://www.anaconda.com/download/)
 
-# Other requirements
+### Other requirements
 
 In order to install other requirements, follow:
 
