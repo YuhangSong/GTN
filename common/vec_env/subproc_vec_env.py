@@ -8,13 +8,14 @@ def worker(remote, env_fn_wrapper):
         cmd, data = remote.recv()
         if cmd == 'step':
             if data >= env.action_space.n:
-                reward = -1.0
-                done = True
-                ob, _, _, info = env.step(0)
-            else:
-                ob, reward, done, info = env.step(data)
-                if done:
-                    ob = env.reset()
+                # reward = -1.0
+                # done = True
+                # ob, _, _, info = env.step(0)
+                data = env.action_space.n - 1
+            # else:
+            ob, reward, done, info = env.step(data)
+            if done:
+                ob = env.reset()
             remote.send((ob, reward, done, info))
         elif cmd == 'reset':
             ob = env.reset()

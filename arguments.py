@@ -1,7 +1,7 @@
 import argparse
 import torch
 
-debugging = 1
+debugging = 0
 
 gtn_M = 5
 gtn_N = 2
@@ -19,7 +19,7 @@ ewc_interval = 10
 both_side_tower = 0
 
 log_fisher_sensitivity_per_m = 1
-loss_fisher_sensitivity_per_m = 0
+loss_fisher_sensitivity_per_m = 1
 if loss_fisher_sensitivity_per_m == 1:
     log_fisher_sensitivity_per_m = 1
 

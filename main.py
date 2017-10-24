@@ -227,6 +227,9 @@ def main():
     afs_loss_list = []
     basic_loss_list = []
 
+    one = torch.FloatTensor([1]).cuda()
+    mone = one * -1
+
     for j in range(num_updates):
         for step in range(args.num_steps):
             if ewc == 1:
@@ -268,34 +271,32 @@ def main():
         rollouts.compute_returns(next_value, args.use_gae, args.gamma, args.tau)
 
         if args.algo in ['a2c', 'acktr']:
-            values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(Variable(rollouts.states[:-1].view(-1, *obs_shape)), Variable(rollouts.actions.view(-1, action_shape)))
+            # reset gradient
+            optimizer.zero_grad()
 
+            # forward
+            values, action_log_probs, dist_entropy, conv_list = actor_critic.evaluate_actions(Variable(rollouts.states[:-1].view(-1, *obs_shape)), Variable(rollouts.actions.view(-1, action_shape)))
+            # pre-process
             values = values.view(args.num_steps, num_processes_total, 1)
             action_log_probs = action_log_probs.view(args.num_steps, num_processes_total, 1)
+
+            # compute afs loss
+            afs_loss = None
+            afs_per_m_temp, afs_loss = actor_critic.get_afs_per_m(
+                action_log_probs=action_log_probs,
+                conv_list=conv_list,
+            )
+            afs_per_m += [afs_per_m_temp]
+
+            if (afs_loss is not None) and (afs_loss.data.cpu().numpy()[0]!=0.0):
+                afs_loss.backward(mone, retain_graph=True)
+                afs_loss_list += [afs_loss.data.cpu().numpy()[0]]
 
             advantages = Variable(rollouts.returns[:-1]) - values
             value_loss = advantages.pow(2).mean()
 
             action_loss = -(Variable(advantages.data) * action_log_probs).mean()
 
-            if args.algo == 'acktr' and optimizer.steps % optimizer.Ts == 0:
-                # Sampled fisher, see Martens 2014
-                actor_critic.zero_grad()
-                pg_fisher_loss = -action_log_probs.mean()
-
-                value_noise = Variable(torch.randn(values.size()))
-                if args.cuda:
-                    value_noise = value_noise.cuda()
-
-                sample_values = values + value_noise
-                vf_fisher_loss = -(values - Variable(sample_values.data)).pow(2).mean()
-
-                fisher_loss = pg_fisher_loss + vf_fisher_loss
-                optimizer.acc_stats = True
-                fisher_loss.backward(retain_graph=True)
-                optimizer.acc_stats = False
-
-            optimizer.zero_grad()
 
             final_loss_basic = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
 
@@ -303,34 +304,15 @@ def main():
             if j != 0:
                 if ewc == 1:
                     ewc_loss = actor_critic.get_ewc_loss(lam=ewc_lambda)
-
-            afs_loss = None
-            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
-
-                afs_per_m_temp, afs_loss = actor_critic.get_afs_per_m(
-                                    action_log_probs=action_log_probs,
-                                    values=values,
-                                )
-
-                afs_per_m += [afs_per_m_temp]
             
-            if (ewc_loss is None) and (afs_loss is None):
+            if ewc_loss is None:
                 final_loss = final_loss_basic
-            elif (ewc_loss is not None) and (afs_loss is None):
+            else:
                 final_loss = final_loss_basic + ewc_loss
-            elif (ewc_loss is None) and (afs_loss is not None):
-                final_loss = final_loss_basic + afs_loss
-            elif (ewc_loss is not None) and (afs_loss is not None):
-                final_loss = final_loss_basic + ewc_loss + afs_loss
 
             basic_loss_list += [final_loss_basic.data.cpu().numpy()[0]]
-            if afs_loss is not None:
-                afs_loss_list += [afs_loss.data.cpu().numpy()[0]]
-
-            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
-                final_loss.backward(retain_graph=True)
-            else:
-                final_loss.backward()
+                
+            final_loss.backward()
 
             if args.algo == 'a2c':
                 nn.utils.clip_grad_norm(actor_critic.parameters(), args.max_grad_norm)
