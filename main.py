@@ -295,7 +295,6 @@ def main():
                 fisher_loss.backward(retain_graph=True)
                 optimizer.acc_stats = False
 
-            optimizer.zero_grad()
 
             final_loss_basic = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
 
@@ -304,33 +303,31 @@ def main():
                 if ewc == 1:
                     ewc_loss = actor_critic.get_ewc_loss(lam=ewc_lambda)
 
-            afs_loss = None
-            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
+            # afs_loss = None
+            # if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
 
-                afs_per_m_temp, afs_loss = actor_critic.get_afs_per_m(
-                                    action_log_probs=action_log_probs,
-                                    values=values,
-                                )
+            afs_per_m_temp, _ = actor_critic.get_afs_per_m(
+                                action_log_probs=action_log_probs,
+                                values=values,
+                            )
 
-                afs_per_m += [afs_per_m_temp]
+            afs_per_m += [afs_per_m_temp]
             
-            if (ewc_loss is None) and (afs_loss is None):
+            if ewc_loss is None:
                 final_loss = final_loss_basic
-            elif (ewc_loss is not None) and (afs_loss is None):
+            else:
                 final_loss = final_loss_basic + ewc_loss
-            elif (ewc_loss is None) and (afs_loss is not None):
-                final_loss = final_loss_basic + afs_loss
-            elif (ewc_loss is not None) and (afs_loss is not None):
-                final_loss = final_loss_basic + ewc_loss + afs_loss
 
             basic_loss_list += [final_loss_basic.data.cpu().numpy()[0]]
-            if afs_loss is not None:
-                afs_loss_list += [afs_loss.data.cpu().numpy()[0]]
+            # if afs_loss is not None:
+            #     afs_loss_list += [afs_loss.data.cpu().numpy()[0]]
 
-            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
-                final_loss.backward(retain_graph=True)
-            else:
-                final_loss.backward()
+            # if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
+            #     final_loss.backward(retain_graph=True)
+            # else:
+            optimizer.zero_grad()
+            
+            final_loss.backward()
 
             if args.algo == 'a2c':
                 nn.utils.clip_grad_norm(actor_critic.parameters(), args.max_grad_norm)

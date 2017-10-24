@@ -1103,7 +1103,7 @@ class CNNPolicy(FFPolicy):
         '''Average Fisher Sensitivity (AFS)'''
 
         self.zero_grad()
-        (action_log_probs.abs().sum()).backward(retain_graph=True)
+        (action_log_probs.abs().sum()).backward()
         
         afs_per_m = []
 
@@ -1118,24 +1118,24 @@ class CNNPolicy(FFPolicy):
         if gtn_M >= 5:
             afs_per_m += [self.get_afs_one_layer(self.conv41)]
 
-        loss_afs = None
-        if loss_fisher_sensitivity_per_m==1:
-            for m in range(len(afs_per_m)):
-                if afs_per_m[m].data.cpu().numpy()[0]==0.0:
-                    continue
-                else:
-                    temp = -afs_per_m[m]*(m**2)*0.0
-                    if loss_afs is not None:
-                        loss_afs += temp
-                    else:
-                        loss_afs = temp.clone()
+        # loss_afs = None
+        # if loss_fisher_sensitivity_per_m==1:
+        #     for m in range(len(afs_per_m)):
+        #         if afs_per_m[m].data.cpu().numpy()[0]==0.0:
+        #             continue
+        #         else:
+        #             temp = -afs_per_m[m]*(m**2)*0.0
+        #             if loss_afs is not None:
+        #                 loss_afs += temp
+        #             else:
+        #                 loss_afs = temp.clone()
 
         for m in range(len(afs_per_m)):
             afs_per_m[m] = afs_per_m[m].data.cpu().numpy()[0]
             if afs_per_m[m] != 0.0:
                 afs_per_m[m] = np.log(afs_per_m[m])
 
-        return afs_per_m, loss_afs
+        return afs_per_m
 
     ########################### for EWC ###############################
 
