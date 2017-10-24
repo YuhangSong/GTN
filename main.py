@@ -19,7 +19,7 @@ from model import CNNPolicy, MLPPolicy
 from storage import RolloutStorage
 from visualize import visdom_plot
 
-from arguments import log_fisher_sensitivity_per_m, debugging, gtn_M
+from arguments import debugging, gtn_M
 from arguments import exp, title, title_html
 
 args = get_args()
@@ -281,12 +281,12 @@ def main():
             action_log_probs = action_log_probs.view(args.num_steps, num_processes_total, 1)
 
             # compute afs loss
-            afs_loss = None
             afs_per_m_temp, afs_loss = actor_critic.get_afs_per_m(
                 action_log_probs=action_log_probs,
                 conv_list=conv_list,
             )
-            afs_per_m += [afs_per_m_temp]
+            if len(afs_per_m_temp)>0:
+                afs_per_m += [afs_per_m_temp]
 
             if (afs_loss is not None) and (afs_loss.data.cpu().numpy()[0]!=0.0):
                 afs_loss.backward(mone, retain_graph=True)
@@ -296,7 +296,6 @@ def main():
             value_loss = advantages.pow(2).mean()
 
             action_loss = -(Variable(advantages.data) * action_log_probs).mean()
-
 
             final_loss_basic = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
 
@@ -390,7 +389,7 @@ def main():
                 log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
                 win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
 
-            if log_fisher_sensitivity_per_m == 1:
+            if len(afs_per_m)>0:
                 win_afs_per_m = viz.line(
                     torch.from_numpy(np.asarray(afs_per_m)), 
                     win=win_afs_per_m,

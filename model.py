@@ -7,6 +7,7 @@ from running_stat import ObsNorm
 from distributions import Categorical, DiagGaussian
 import numpy as np
 from arguments import gtn_M, gtn_N, hierarchical, parameter_noise_rate, both_side_tower, multi_gpu, gpus, loss_fisher_sensitivity_per_m
+from arguments import log_fisher_sensitivity_per_m
 import copy
 
 def weights_init(m):
@@ -597,11 +598,6 @@ class CNNPolicy(FFPolicy):
         if multi_gpu == 1:
             self.apply(to_data_parallel)
 
-        # if loss_fisher_sensitivity_per_m==1:
-        #     for p in self.parameters():
-        #         # p.requires_grad = True
-        #         p.grad.volatile = False
-
     def reset_parameters(self):
         self.apply(weights_init)
 
@@ -1087,7 +1083,7 @@ class CNNPolicy(FFPolicy):
                 x = self.concatenation_layer(torch.cat(x,1))
                 x = F.relu(x)
 
-        return self.critic_linear(x), x, conv_list
+        return self.critic_linear(x), x, None #conv_list
 
     def parameter_noise(self):
         for p in self.parameters():
@@ -1127,8 +1123,9 @@ class CNNPolicy(FFPolicy):
         
         afs_per_m = []
 
-        for m in range(gtn_M):
-            afs_per_m += [self.get_gradient_reward_one_m(action_log_probs, conv_list[m])]
+        if log_fisher_sensitivity_per_m == 1:
+            for m in range(gtn_M):
+                afs_per_m += [self.get_gradient_reward_one_m(action_log_probs, conv_list[m])]
 
         loss_afs = None
         if loss_fisher_sensitivity_per_m==1:
@@ -1142,8 +1139,9 @@ class CNNPolicy(FFPolicy):
                     else:
                         loss_afs = temp.clone()
 
-        for m in range(len(afs_per_m)):
-            afs_per_m[m] = afs_per_m[m].data.cpu().numpy()[0]
+        if len(afs_per_m)>0:
+            for m in range(len(afs_per_m)):
+                afs_per_m[m] = afs_per_m[m].data.cpu().numpy()[0]
 
         return afs_per_m, loss_afs
 
