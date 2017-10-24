@@ -1,7 +1,7 @@
 import argparse
 import torch
 
-debugging = 0
+debugging = 1
 
 gtn_M = 5
 gtn_N = 2
@@ -16,13 +16,16 @@ ewc = 0
 ewc_lambda = 1.0
 ewc_interval = 10
 
-both_side_tower = 1
+both_side_tower = 0
 
 log_fisher_sensitivity_per_m = 1
+loss_fisher_sensitivity_per_m = 0
+if loss_fisher_sensitivity_per_m == 1:
+    log_fisher_sensitivity_per_m = 1
 
 # dataset = 'mt shooting'
-# dataset = 'mt test pong'
-dataset = 'mt all atari'
+dataset = 'mt test pong'
+# dataset = 'mt all atari'
 
 exp = '1'
 exp += ('gtn_1'+'_')

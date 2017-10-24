@@ -156,6 +156,8 @@ def main():
         for i in range(len(mt_env_id_dic_selected)):
             win += [None]
         win_afs_per_m = None
+        win_afs_loss = None
+        win_basic_loss = None
 
     envs = []
 
@@ -221,6 +223,9 @@ def main():
 
     afs_per_m = []
     afs_offset = [0.0]*gtn_M
+
+    afs_loss_list = []
+    basic_loss_list = []
 
     for j in range(num_updates):
         for step in range(args.num_steps):
@@ -292,13 +297,35 @@ def main():
 
             optimizer.zero_grad()
 
-            final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
+            final_loss_basic = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
 
+            ewc_loss = None
             if j != 0:
                 if ewc == 1:
                     ewc_loss = actor_critic.get_ewc_loss(lam=ewc_lambda)
-                    if ewc_loss is not None:
-                        final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef + final_loss + ewc_loss
+
+            afs_loss = None
+            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
+
+                afs_per_m_temp, afs_loss = actor_critic.get_afs_per_m(
+                                    action_log_probs=action_log_probs,
+                                    values=values,
+                                )
+
+                afs_per_m += [afs_per_m_temp]
+            
+            if (ewc_loss is None) and (afs_loss is None):
+                final_loss = final_loss_basic
+            elif (ewc_loss is not None) and (afs_loss is None):
+                final_loss = final_loss_basic + ewc_loss
+            elif (ewc_loss is None) and (afs_loss is not None):
+                final_loss = final_loss_basic + afs_loss
+            elif (ewc_loss is not None) and (afs_loss is not None):
+                final_loss = final_loss_basic + ewc_loss + afs_loss
+
+            basic_loss_list += [final_loss_basic.data.cpu().numpy()[0]]
+            if afs_loss is not None:
+                afs_loss_list += [afs_loss.data.cpu().numpy()[0]]
 
             if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
                 final_loss.backward(retain_graph=True)
@@ -309,20 +336,6 @@ def main():
                 nn.utils.clip_grad_norm(actor_critic.parameters(), args.max_grad_norm)
 
             optimizer.step()
-
-            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
-
-                afs_per_m += [actor_critic.get_afs_per_m(
-                                    action_log_probs=action_log_probs,
-                                    afs_offset=afs_offset,
-                                )]
-                # if len(afs_per_m)>70 and afs_offset[0]==0.0:
-                #     for ii in range(len(afs_offset)):
-                #         afs_offset[ii] = -np.mean(np.asarray(afs_per_m[50:70][ii]))
-
-                if len(afs_per_m) > 100 and afs_offset[0]==0.0:
-                    for i in range(gtn_M):
-                        afs_offset[i] = -np.mean(np.asarray(afs_per_m)[80:100][i])
 
         elif args.algo == 'ppo':
             advantages = rollouts.returns[:-1] - rollouts.value_preds[:-1]
@@ -399,7 +412,20 @@ def main():
                 win_afs_per_m = viz.line(
                     torch.from_numpy(np.asarray(afs_per_m)), 
                     win=win_afs_per_m,
-                    opts=dict(title=title_html)
+                    opts=dict(title=title_html+'>>afs')
+                )
+
+            win_basic_loss = viz.line(
+                torch.from_numpy(np.asarray(basic_loss_list)), 
+                win=win_basic_loss,
+                opts=dict(title=title_html+'>>basic_loss')
+            )
+
+            if len(afs_loss_list) > 0:
+                win_afs_loss = viz.line(
+                    torch.from_numpy(np.asarray(afs_loss_list)), 
+                    win=win_afs_loss,
+                    opts=dict(title=title_html+'>>afs_loss')
                 )
 
         from arguments import parameter_noise, parameter_noise_interval

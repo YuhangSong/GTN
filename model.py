@@ -6,7 +6,7 @@ from torch.autograd import Variable
 from running_stat import ObsNorm
 from distributions import Categorical, DiagGaussian
 import numpy as np
-from arguments import gtn_M, gtn_N, hierarchical, parameter_noise_rate, both_side_tower, multi_gpu, gpus
+from arguments import gtn_M, gtn_N, hierarchical, parameter_noise_rate, both_side_tower, multi_gpu, gpus, loss_fisher_sensitivity_per_m
 import copy
 
 def weights_init(m):
@@ -36,6 +36,8 @@ class FFPolicy(nn.Module):
     def evaluate_actions(self, inputs, actions):
         value, x = self(inputs)
         action_log_probs, dist_entropy = self.dist.evaluate_actions(x, actions)
+        # print(x.size())
+        # print(action_log_probs.size())
         return value, action_log_probs, dist_entropy
 
     def evaluate_states_value_fisher(self, inputs):
@@ -597,6 +599,11 @@ class CNNPolicy(FFPolicy):
         if multi_gpu == 1:
             self.apply(to_data_parallel)
 
+        # if loss_fisher_sensitivity_per_m==1:
+        #     for p in self.parameters():
+        #         # p.requires_grad = True
+        #         p.grad.volatile = False
+
     def reset_parameters(self):
         self.apply(weights_init)
 
@@ -1077,22 +1084,26 @@ class CNNPolicy(FFPolicy):
                 std=p.data.abs()*parameter_noise_rate,
                 )
 
+    ########################### for AFS ###############################
+
     def get_afs_one_layer(self, layer):
-        sum_temp = 0
+
         for p in layer.parameters():
-            sum_temp += p.grad.data.pow(2).mean()
-
-        if sum_temp == 0.0:
-            return 0.0
-
-        sum_temp = np.log10(sum_temp)
+            # if p.grad.volatile is True:
+            #     p.grad.volatile = False
+            temp = p.grad.pow(2).mean()
+            try:
+                sum_temp += temp
+            except Exception as e:
+                sum_temp = temp.clone()
 
         return sum_temp
 
-    def get_afs_per_m(self, action_log_probs, afs_offset):
+    def get_afs_per_m(self, action_log_probs, values):
         '''Average Fisher Sensitivity (AFS)'''
+
         self.zero_grad()
-        (action_log_probs.abs().sum()).backward()
+        (action_log_probs.abs().sum()).backward(retain_graph=True)
         
         afs_per_m = []
 
@@ -1107,10 +1118,26 @@ class CNNPolicy(FFPolicy):
         if gtn_M >= 5:
             afs_per_m += [self.get_afs_one_layer(self.conv41)]
 
-        for i in range(gtn_M):
-            afs_per_m[i] = afs_per_m[i] + afs_offset[i]
+        loss_afs = None
+        if loss_fisher_sensitivity_per_m==1:
+            for m in range(len(afs_per_m)):
+                if afs_per_m[m].data.cpu().numpy()[0]==0.0:
+                    continue
+                else:
+                    temp = -afs_per_m[m]*(m**2)*0.0
+                    if loss_afs is not None:
+                        loss_afs += temp
+                    else:
+                        loss_afs = temp.clone()
 
-        return afs_per_m
+        for m in range(len(afs_per_m)):
+            afs_per_m[m] = afs_per_m[m].data.cpu().numpy()[0]
+            if afs_per_m[m] != 0.0:
+                afs_per_m[m] = np.log(afs_per_m[m])
+
+        return afs_per_m, loss_afs
+
+    ########################### for EWC ###############################
 
     def compute_fisher(self, states, num_samples=200, plot_diffs=False, disp_freq=10):
 
