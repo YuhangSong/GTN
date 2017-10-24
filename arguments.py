@@ -1,7 +1,7 @@
 import argparse
 import torch
 
-debugging = 0
+debugging = 1
 
 gtn_M = 5
 gtn_N = 2
