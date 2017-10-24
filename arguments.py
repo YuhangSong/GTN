@@ -19,7 +19,7 @@ ewc_interval = 10
 both_side_tower = 0
 
 log_fisher_sensitivity_per_m = 1
-loss_fisher_sensitivity_per_m = 1
+loss_fisher_sensitivity_per_m = 0
 if loss_fisher_sensitivity_per_m == 1:
     log_fisher_sensitivity_per_m = 1
 
