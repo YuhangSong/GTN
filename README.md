@@ -1,6 +1,7 @@
 # GTN based on A2C
 
-This is a PyTorch implementation of GTN based on A2C.
+This repo provides code for a PyTorch implementation of GTN based on A2C. See [Generalization Tower Network: A Novel
+Deep Neural Network Architecture for Multi-Task Learning.](https://arxiv.org/abs/1710.10036)
 
 ## Supported (and tested) environments (via [OpenAI Gym](https://gym.openai.com))
 * [Atari Learning Environment](https://github.com/mgbellemare/Arcade-Learning-Environment)
