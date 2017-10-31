@@ -19,7 +19,7 @@ from model import CNNPolicy, MLPPolicy
 from storage import RolloutStorage
 from visualize import visdom_plot
 
-from arguments import log_fisher_sensitivity_per_m, debugging, gtn_M
+from arguments import debugging, gtn_M
 from arguments import exp, title, title_html
 
 args = get_args()
@@ -156,6 +156,8 @@ def main():
         for i in range(len(mt_env_id_dic_selected)):
             win += [None]
         win_afs_per_m = None
+        win_afs_loss = None
+        win_basic_loss = None
 
     envs = []
 
@@ -222,6 +224,12 @@ def main():
     afs_per_m = []
     afs_offset = [0.0]*gtn_M
 
+    afs_loss_list = []
+    basic_loss_list = []
+
+    one = torch.FloatTensor([1]).cuda()
+    mone = one * -1
+
     for j in range(num_updates):
         for step in range(args.num_steps):
             if ewc == 1:
@@ -263,66 +271,52 @@ def main():
         rollouts.compute_returns(next_value, args.use_gae, args.gamma, args.tau)
 
         if args.algo in ['a2c', 'acktr']:
-            values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(Variable(rollouts.states[:-1].view(-1, *obs_shape)), Variable(rollouts.actions.view(-1, action_shape)))
+            # reset gradient
+            optimizer.zero_grad()
 
+            # forward
+            values, action_log_probs, dist_entropy, conv_list = actor_critic.evaluate_actions(Variable(rollouts.states[:-1].view(-1, *obs_shape)), Variable(rollouts.actions.view(-1, action_shape)))
+            # pre-process
             values = values.view(args.num_steps, num_processes_total, 1)
             action_log_probs = action_log_probs.view(args.num_steps, num_processes_total, 1)
+
+            # compute afs loss
+            afs_per_m_temp, afs_loss = actor_critic.get_afs_per_m(
+                action_log_probs=action_log_probs,
+                conv_list=conv_list,
+            )
+            if len(afs_per_m_temp)>0:
+                afs_per_m += [afs_per_m_temp]
+
+            if (afs_loss is not None) and (afs_loss.data.cpu().numpy()[0]!=0.0):
+                afs_loss.backward(mone, retain_graph=True)
+                afs_loss_list += [afs_loss.data.cpu().numpy()[0]]
 
             advantages = Variable(rollouts.returns[:-1]) - values
             value_loss = advantages.pow(2).mean()
 
             action_loss = -(Variable(advantages.data) * action_log_probs).mean()
 
-            if args.algo == 'acktr' and optimizer.steps % optimizer.Ts == 0:
-                # Sampled fisher, see Martens 2014
-                actor_critic.zero_grad()
-                pg_fisher_loss = -action_log_probs.mean()
+            final_loss_basic = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
 
-                value_noise = Variable(torch.randn(values.size()))
-                if args.cuda:
-                    value_noise = value_noise.cuda()
-
-                sample_values = values + value_noise
-                vf_fisher_loss = -(values - Variable(sample_values.data)).pow(2).mean()
-
-                fisher_loss = pg_fisher_loss + vf_fisher_loss
-                optimizer.acc_stats = True
-                fisher_loss.backward(retain_graph=True)
-                optimizer.acc_stats = False
-
-            optimizer.zero_grad()
-
-            final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
-
+            ewc_loss = None
             if j != 0:
                 if ewc == 1:
                     ewc_loss = actor_critic.get_ewc_loss(lam=ewc_lambda)
-                    if ewc_loss is not None:
-                        final_loss = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef + final_loss + ewc_loss
-
-            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
-                final_loss.backward(retain_graph=True)
+            
+            if ewc_loss is None:
+                final_loss = final_loss_basic
             else:
-                final_loss.backward()
+                final_loss = final_loss_basic + ewc_loss
+
+            basic_loss_list += [final_loss_basic.data.cpu().numpy()[0]]
+                
+            final_loss.backward()
 
             if args.algo == 'a2c':
                 nn.utils.clip_grad_norm(actor_critic.parameters(), args.max_grad_norm)
 
             optimizer.step()
-
-            if log_fisher_sensitivity_per_m == 1 and j % int(args.log_interval/5+1) == 0:
-
-                afs_per_m += [actor_critic.get_afs_per_m(
-                                    action_log_probs=action_log_probs,
-                                    afs_offset=afs_offset,
-                                )]
-                # if len(afs_per_m)>70 and afs_offset[0]==0.0:
-                #     for ii in range(len(afs_offset)):
-                #         afs_offset[ii] = -np.mean(np.asarray(afs_per_m[50:70][ii]))
-
-                if len(afs_per_m) > 100 and afs_offset[0]==0.0:
-                    for i in range(gtn_M):
-                        afs_offset[i] = -np.mean(np.asarray(afs_per_m)[80:100][i])
 
         elif args.algo == 'ppo':
             advantages = rollouts.returns[:-1] - rollouts.value_preds[:-1]
@@ -395,11 +389,24 @@ def main():
                 log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
                 win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
 
-            if log_fisher_sensitivity_per_m == 1:
+            if len(afs_per_m)>0:
                 win_afs_per_m = viz.line(
                     torch.from_numpy(np.asarray(afs_per_m)), 
                     win=win_afs_per_m,
-                    opts=dict(title=title_html)
+                    opts=dict(title=title_html+'>>afs')
+                )
+
+            win_basic_loss = viz.line(
+                torch.from_numpy(np.asarray(basic_loss_list)), 
+                win=win_basic_loss,
+                opts=dict(title=title_html+'>>basic_loss')
+            )
+
+            if len(afs_loss_list) > 0:
+                win_afs_loss = viz.line(
+                    torch.from_numpy(np.asarray(afs_loss_list)), 
+                    win=win_afs_loss,
+                    opts=dict(title=title_html+'>>afs_loss')
                 )
 
         from arguments import parameter_noise, parameter_noise_interval

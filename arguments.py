@@ -16,9 +16,12 @@ ewc = 0
 ewc_lambda = 1.0
 ewc_interval = 10
 
-both_side_tower = 1
+both_side_tower = 0
 
-log_fisher_sensitivity_per_m = 1
+log_fisher_sensitivity_per_m = 0
+loss_fisher_sensitivity_per_m = 0
+if loss_fisher_sensitivity_per_m == 1:
+    log_fisher_sensitivity_per_m = 1
 
 # dataset = 'mt shooting'
 # dataset = 'mt test pong'
@@ -31,6 +34,7 @@ exp += ('hierarchical_'+str(hierarchical)+'_')
 exp += ('parameter_noise_'+str(parameter_noise)+'_')
 exp += ('ewc_'+str(ewc)+'_')
 exp += ('both_side_tower_'+str(both_side_tower)+'_')
+exp += ('loss_fisher_sensitivity_per_m_'+str(loss_fisher_sensitivity_per_m)+'_')
 exp += ('dataset_'+dataset+'_')
 
 print('#######################################')

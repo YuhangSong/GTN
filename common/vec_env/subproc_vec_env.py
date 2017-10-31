@@ -7,6 +7,12 @@ def worker(remote, env_fn_wrapper):
     while True:
         cmd, data = remote.recv()
         if cmd == 'step':
+            if data >= env.action_space.n:
+                # reward = -1.0
+                # done = True
+                # ob, _, _, info = env.step(0)
+                data = env.action_space.n - 1
+            # else:
             ob, reward, done, info = env.step(data)
             if done:
                 ob = env.reset()
@@ -100,10 +106,12 @@ class SubprocVecEnvMt(VecEnv):
             
             remote.send(
                 ('step', 
-                    np.clip(
-                    action,
-                    a_min=0,
-                    a_max=self.action_space_n_list[i]-1))
+                    # np.clip(
+                    # action,
+                    # a_min=0,
+                    # a_max=self.action_space_n_list[i]-1)
+                    action
+                    )
                 )
 
         results = [remote.recv() for remote in self.remotes]

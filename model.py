@@ -6,7 +6,8 @@ from torch.autograd import Variable
 from running_stat import ObsNorm
 from distributions import Categorical, DiagGaussian
 import numpy as np
-from arguments import gtn_M, gtn_N, hierarchical, parameter_noise_rate, both_side_tower, multi_gpu, gpus
+from arguments import gtn_M, gtn_N, hierarchical, parameter_noise_rate, both_side_tower, multi_gpu, gpus, loss_fisher_sensitivity_per_m
+from arguments import log_fisher_sensitivity_per_m
 import copy
 
 def weights_init(m):
@@ -29,17 +30,17 @@ class FFPolicy(nn.Module):
         raise NotImplementedError
 
     def act(self, inputs, deterministic=False):
-        value, x = self(inputs)
+        value, x, _ = self(inputs)
         action = self.dist.sample(x, deterministic=deterministic)
         return value, action
 
     def evaluate_actions(self, inputs, actions):
-        value, x = self(inputs)
+        value, x, conv_list = self(inputs)
         action_log_probs, dist_entropy = self.dist.evaluate_actions(x, actions)
-        return value, action_log_probs, dist_entropy
+        return value, action_log_probs, dist_entropy, conv_list
 
     def evaluate_states_value_fisher(self, inputs):
-        value, _ = self(inputs)
+        value, _, _ = self(inputs)
         value = value.log()
         return value
 
@@ -842,6 +843,8 @@ class CNNPolicy(FFPolicy):
         
         x0 = inputs / 255.0
 
+        conv_list = []
+
         if gtn_M >= 1:
 
             if hierarchical==0:
@@ -853,6 +856,8 @@ class CNNPolicy(FFPolicy):
 
             if hierarchical==1:
                 x1 = x0
+
+            conv_list += [x0]
 
             if gtn_N >= 2:
                 x0 = self.conv01(x0)
@@ -888,6 +893,8 @@ class CNNPolicy(FFPolicy):
             if hierarchical==1:
                 x2 = x1
 
+            conv_list += [x1]
+
             if gtn_N >= 2:
                 x1 = self.conv11(x1)
                 x1 = F.relu(x1)
@@ -918,6 +925,8 @@ class CNNPolicy(FFPolicy):
             if hierarchical==1:
                 x3 = x2
 
+            conv_list += [x2]
+
             if gtn_N >= 2:
                 x2 = self.conv21(x2)
                 x2 = F.relu(x2)
@@ -944,6 +953,8 @@ class CNNPolicy(FFPolicy):
             if hierarchical==1:
                 x4 = x3
 
+            conv_list += [x3]
+
             if gtn_N >= 2:
                 x3 = self.conv31(x3)
                 x3 = F.relu(x3)
@@ -963,12 +974,14 @@ class CNNPolicy(FFPolicy):
                 x4 = self.conv40(x4)
                 x4 = F.relu(x4)
 
+            if hierarchical==1:
+                x5 = x4
+
             if gtn_N >= 2:
                 x4 = self.conv41(x4)
                 x4 = F.relu(x4)
 
-            if hierarchical==1:
-                x5 = x4
+            conv_list += [x4]
 
             x4 = x4.view(-1, x4.size()[1]*x4.size()[2]*x4.size()[3])
 
@@ -983,6 +996,8 @@ class CNNPolicy(FFPolicy):
 
             if hierarchical==1:
                 x6 = x5
+
+            conv_list += [x5]
 
             x5 = x5.view(-1, x5.size()[1]*x5.size()[2]*x5.size()[3])
 
@@ -1068,7 +1083,7 @@ class CNNPolicy(FFPolicy):
                 x = self.concatenation_layer(torch.cat(x,1))
                 x = F.relu(x)
 
-        return self.critic_linear(x), x
+        return self.critic_linear(x), x, None #conv_list
 
     def parameter_noise(self):
         for p in self.parameters():
@@ -1077,40 +1092,60 @@ class CNNPolicy(FFPolicy):
                 std=p.data.abs()*parameter_noise_rate,
                 )
 
-    def get_afs_one_layer(self, layer):
-        sum_temp = 0
-        for p in layer.parameters():
-            sum_temp += p.grad.data.pow(2).mean()
+    ########################### for AFS ###############################
 
-        if sum_temp == 0.0:
-            return 0.0
+    def get_gradient_reward_one_m(self, action_log_probs, conv):
 
-        sum_temp = np.log10(sum_temp)
+        def get_grad_norm(inputs,outputs):
 
-        return sum_temp
+            gradients = autograd.grad(
+                outputs=outputs,
+                inputs=inputs,
+                grad_outputs=torch.ones(outputs.size()).cuda(),
+                create_graph=True,
+                retain_graph=True,
+                only_inputs=True
+            )[0]
+            gradients = gradients.contiguous()
+            gradients_fl = gradients.view(gradients.size()[0],-1)
+            gradients_norm = gradients_fl.norm(2, dim=1) / ((gradients_fl.size()[1])**0.5)
 
-    def get_afs_per_m(self, action_log_probs, afs_offset):
+            return gradients_norm
+
+        gradients_norm_noise = get_grad_norm(conv,action_log_probs)
+
+        gradients_reward = (gradients_norm_noise+1.0).log().mean()
+
+        return gradients_reward
+
+    def get_afs_per_m(self, action_log_probs, conv_list):
         '''Average Fisher Sensitivity (AFS)'''
-        self.zero_grad()
-        (action_log_probs.abs().sum()).backward()
         
         afs_per_m = []
 
-        if gtn_M >= 1:
-            afs_per_m += [self.get_afs_one_layer(self.conv01)]
-        if gtn_M >= 2:
-            afs_per_m += [self.get_afs_one_layer(self.conv11)]
-        if gtn_M >= 3:
-            afs_per_m += [self.get_afs_one_layer(self.conv21)]
-        if gtn_M >= 4:
-            afs_per_m += [self.get_afs_one_layer(self.conv31)]
-        if gtn_M >= 5:
-            afs_per_m += [self.get_afs_one_layer(self.conv41)]
+        if log_fisher_sensitivity_per_m == 1:
+            for m in range(gtn_M):
+                afs_per_m += [self.get_gradient_reward_one_m(action_log_probs, conv_list[m])]
 
-        for i in range(gtn_M):
-            afs_per_m[i] = afs_per_m[i] + afs_offset[i]
+        loss_afs = None
+        if loss_fisher_sensitivity_per_m==1:
+            for m in range(len(afs_per_m)):
+                if afs_per_m[m].data.cpu().numpy()[0]==0.0:
+                    continue
+                else:
+                    temp = afs_per_m[m] * (m) * 0.1
+                    if loss_afs is not None:
+                        loss_afs += temp
+                    else:
+                        loss_afs = temp.clone()
 
-        return afs_per_m
+        if len(afs_per_m)>0:
+            for m in range(len(afs_per_m)):
+                afs_per_m[m] = afs_per_m[m].data.cpu().numpy()[0]
+
+        return afs_per_m, loss_afs
+
+    ########################### for EWC ###############################
 
     def compute_fisher(self, states, num_samples=200, plot_diffs=False, disp_freq=10):
 
