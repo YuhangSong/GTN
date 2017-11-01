@@ -3,7 +3,7 @@ import os
 import gym
 from gym.spaces.box import Box
 
-from baselines import bench
+import bench
 from common.atari_wrappers import wrap_deepmind
 
 try:

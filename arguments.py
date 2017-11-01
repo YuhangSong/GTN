@@ -1,7 +1,7 @@
 import argparse
 import torch
 
-debugging = 1
+debugging = 0
 
 gtn_M = 5
 gtn_N = 2
@@ -23,11 +23,11 @@ loss_fisher_sensitivity_per_m = 0
 if loss_fisher_sensitivity_per_m == 1:
     log_fisher_sensitivity_per_m = 1
 
-# dataset = 'mt shooting'
+dataset = 'mt shooting'
 # dataset = 'mt test pong'
-dataset = 'mt all atari'
+# dataset = 'mt all atari'
 
-exp = '1'
+exp = '2'
 exp += ('gtn_1'+'_')
 exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
