@@ -3,7 +3,7 @@ import torch
 
 debugging = 0
 
-gtn_M = 5
+gtn_M = 2 
 gtn_N = 2
 
 hierarchical = 1

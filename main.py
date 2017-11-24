@@ -160,17 +160,20 @@ def main():
         win_basic_loss = None
 
     envs = []
-
+    ''' Because the oral program has only one game per model, so Song add loop i
+        So whatever you wanna run , just put in SubprocVecEnvMt!
+    '''
     for i in range(len(mt_env_id_dic_selected)):
         log_dir = args.log_dir+mt_env_id_dic_selected[i]+'/'
         for j in range(args.num_processes):
             envs += [make_env(mt_env_id_dic_selected[i], args.seed, j, log_dir)]
-
+    ''' This envs is an intergration of all the running env'''
     envs = SubprocVecEnvMt(envs)
 
     num_processes_total = args.num_processes * len(mt_env_id_dic_selected)
-
+    '''(1,128,128)'''
     obs_shape = envs.observation_space.shape
+    #num_stack :number of frames to stack
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
 
     if len(envs.observation_space.shape) == 3:
@@ -192,7 +195,7 @@ def main():
         optimizer = optim.Adam(actor_critic.parameters(), args.lr, eps=args.eps)
     elif args.algo == 'acktr':
         optimizer = KFACOptimizer(actor_critic)
-
+    #'args.num_steps: number of forward steps in A2C'
     rollouts = RolloutStorage(args.num_steps, num_processes_total, obs_shape, envs.action_space)
     current_state = torch.zeros(num_processes_total, *obs_shape)
 
