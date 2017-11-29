@@ -1,10 +1,12 @@
 import argparse
 import torch
-
+#############
+is_use_ppo = False
+#############
 debugging = 0
 
-gtn_M = 2 
-gtn_N = 2
+gtn_M = 5 
+gtn_N = 4
 
 hierarchical = 1
 
@@ -23,8 +25,12 @@ loss_fisher_sensitivity_per_m = 0
 if loss_fisher_sensitivity_per_m == 1:
     log_fisher_sensitivity_per_m = 1
 
-dataset = 'mt shooting'
-# dataset = 'mt test pong'
+if is_use_ppo is False:
+
+    dataset = 'mt shooting'
+else:
+    dataset = 'mt test pong'
+dataset = 'mt test pong'
 # dataset = 'mt all atari'
 
 exp = '2'
@@ -42,19 +48,25 @@ print(exp)
 print('#######################################')
 
 multi_gpu = 0
-is_use_ppo = True
+
 if multi_gpu == 1:
     gpus = range(torch.cuda.device_count())
     print('Using GPU:'+str(gpus))
 else:
     gpus = [0]
-
-num_processes = 16
+if is_use_ppo is False:
+    num_processes = 16
+else:
+    num_processes = 8
 if dataset == 'mt all atari':
     num_processes = 4
 
-log_interval = 20
-vis_interval = 20
+if is_use_ppo is False:
+    log_interval = 20
+    vis_interval = 20
+else:
+    log_interval = 1
+    vis_interval = 1
 
 if debugging == 1:
     num_processes = 1
@@ -101,14 +113,14 @@ def get_args():
                         help='value loss coefficient (default: 0.5)')
     parser.add_argument('--seed', type=int, default=1,
                         help='random seed (default: 1)')
-    if is_use_ppo is False:
-        parser.add_argument('--num-processes', type=int, default=num_processes,
+    parser.add_argument('--num-processes', type=int, default=num_processes,
                         help='how many training CPU processes to use')
-    else:
-        parser.add_argument('--num-processes', type=int, default=8,
-                        help='how many training CPU processes to use (default: 16)')
-    parser.add_argument('--num-steps', type=int, default=5,
+    if is_use_ppo is False:
+        parser.add_argument('--num-steps', type=int, default=5,
                         help='number of forward steps in A2C')
+    else:
+        parser.add_argument('--num-steps', type=int, default=256,
+                        help='number of forward steps in A2C (default: 5)')
     parser.add_argument('--ppo-epoch', type=int, default=4,
                         help='number of ppo epochs (default: 4)')
     parser.add_argument('--batch-size', type=int, default=64,

@@ -346,9 +346,9 @@ def main():
                     return_batch = rollouts.returns[:-1].view(-1, 1)[indices]
 
                     # Reshape to do in a single forward pass for all steps
-                    values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(Variable(states_batch), Variable(actions_batch))
+                    values, action_log_probs, dist_entropy, conv_list = actor_critic.evaluate_actions(Variable(states_batch), Variable(actions_batch))
 
-                    _, old_action_log_probs, _ = old_model.evaluate_actions(Variable(states_batch, volatile=True), Variable(actions_batch, volatile=True))
+                    _, old_action_log_probs, _, old_conv_list= old_model.evaluate_actions(Variable(states_batch, volatile=True), Variable(actions_batch, volatile=True))
 
                     ratio = torch.exp(action_log_probs - Variable(old_action_log_probs.data))
                     adv_targ = Variable(advantages.view(-1, 1)[indices])
