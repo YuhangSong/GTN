@@ -27,7 +27,9 @@ args = get_args()
 assert args.algo in ['a2c', 'ppo', 'acktr']
 if args.algo == 'ppo':
     assert args.num_processes * args.num_steps % args.batch_size == 0
-
+'''num_frames: number of frames to train (default: 10e6)
+    num_steps:  agent every time updata need steps
+'''
 num_updates = int(args.num_frames) // args.num_steps // args.num_processes
 
 torch.manual_seed(args.seed)
@@ -195,12 +197,15 @@ def main():
         optimizer = optim.Adam(actor_critic.parameters(), args.lr, eps=args.eps)
     elif args.algo == 'acktr':
         optimizer = KFACOptimizer(actor_critic)
-    #'args.num_steps: number of forward steps in A2C'
+    #'args.num_steps: number of forward steps in A2C
+    #rollouts is an intergration of state\ reward\ next state\action and so on
     rollouts = RolloutStorage(args.num_steps, num_processes_total, obs_shape, envs.action_space)
     current_state = torch.zeros(num_processes_total, *obs_shape)
-
+    ''' not sure about it'''
     def update_current_state(state):
         shape_dim0 = envs.observation_space.shape[0]
+        # print (shape_dim0)
+        # print (sss)
         state = torch.from_numpy(state).float()
         if args.num_stack > 1:
             current_state[:, :-shape_dim0] = current_state[:, shape_dim0:]
@@ -232,7 +237,7 @@ def main():
 
     one = torch.FloatTensor([1]).cuda()
     mone = one * -1
-
+    '''for one whole game '''
     for j in range(num_updates):
         for step in range(args.num_steps):
             if ewc == 1:
@@ -241,6 +246,7 @@ def main():
                 except Exception as e:
                     states_store = rollouts.states[step].clone()
             # Sample actions
+            '''act fun refer to "observe it!"'''
             value, action = actor_critic.act(Variable(rollouts.states[step], volatile=True))
             cpu_actions = action.data.squeeze(1).cpu().numpy()
 
