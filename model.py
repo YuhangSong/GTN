@@ -54,6 +54,7 @@ class CNNPolicy(FFPolicy):
                 depth = gtn_N
             elif hierarchical == 1:
                 depth = gtn_N + m
+            ''' current m-level final feature size'''
             final_number_feature = 32*(2**(depth-1))
             final_size = 128/(2**(depth))
             self.final_flatten_size += [int(final_number_feature * (final_size**2))]

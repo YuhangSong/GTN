@@ -21,13 +21,15 @@ from visualize import visdom_plot
 
 from arguments import debugging, gtn_M
 from arguments import exp, title, title_html
-
+is_use_afs = True
 args = get_args()
 
 assert args.algo in ['a2c', 'ppo', 'acktr']
 if args.algo == 'ppo':
     assert args.num_processes * args.num_steps % args.batch_size == 0
-
+'''num_frames: number of frames to train (default: 10e6)
+    num_steps:  agent every time updata need steps
+'''
 num_updates = int(args.num_frames) // args.num_steps // args.num_processes
 
 torch.manual_seed(args.seed)
@@ -160,17 +162,20 @@ def main():
         win_basic_loss = None
 
     envs = []
-
+    ''' Because the oral program has only one game per model, so Song add loop i
+        So whatever you wanna run , just put in SubprocVecEnvMt!
+    '''
     for i in range(len(mt_env_id_dic_selected)):
         log_dir = args.log_dir+mt_env_id_dic_selected[i]+'/'
         for j in range(args.num_processes):
             envs += [make_env(mt_env_id_dic_selected[i], args.seed, j, log_dir)]
-
+    ''' This envs is an intergration of all the running env'''
     envs = SubprocVecEnvMt(envs)
 
     num_processes_total = args.num_processes * len(mt_env_id_dic_selected)
-
+    '''(1,128,128)'''
     obs_shape = envs.observation_space.shape
+    #num_stack :number of frames to stack
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
 
     if len(envs.observation_space.shape) == 3:
@@ -192,12 +197,15 @@ def main():
         optimizer = optim.Adam(actor_critic.parameters(), args.lr, eps=args.eps)
     elif args.algo == 'acktr':
         optimizer = KFACOptimizer(actor_critic)
-
+    #'args.num_steps: number of forward steps in A2C
+    #rollouts is an intergration of state\ reward\ next state\action and so on
     rollouts = RolloutStorage(args.num_steps, num_processes_total, obs_shape, envs.action_space)
     current_state = torch.zeros(num_processes_total, *obs_shape)
-
+    ''' not sure about it'''
     def update_current_state(state):
         shape_dim0 = envs.observation_space.shape[0]
+        # print (shape_dim0)
+        # print (sss)
         state = torch.from_numpy(state).float()
         if args.num_stack > 1:
             current_state[:, :-shape_dim0] = current_state[:, shape_dim0:]
@@ -229,7 +237,7 @@ def main():
 
     one = torch.FloatTensor([1]).cuda()
     mone = one * -1
-
+    '''for one whole game '''
     for j in range(num_updates):
         for step in range(args.num_steps):
             if ewc == 1:
@@ -238,6 +246,7 @@ def main():
                 except Exception as e:
                     states_store = rollouts.states[step].clone()
             # Sample actions
+            '''act fun refer to "observe it!"'''
             value, action = actor_critic.act(Variable(rollouts.states[step], volatile=True))
             cpu_actions = action.data.squeeze(1).cpu().numpy()
 
@@ -337,9 +346,9 @@ def main():
                     return_batch = rollouts.returns[:-1].view(-1, 1)[indices]
 
                     # Reshape to do in a single forward pass for all steps
-                    values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(Variable(states_batch), Variable(actions_batch))
+                    values, action_log_probs, dist_entropy, conv_list = actor_critic.evaluate_actions(Variable(states_batch), Variable(actions_batch))
 
-                    _, old_action_log_probs, _ = old_model.evaluate_actions(Variable(states_batch, volatile=True), Variable(actions_batch, volatile=True))
+                    _, old_action_log_probs, _, old_conv_list= old_model.evaluate_actions(Variable(states_batch, volatile=True), Variable(actions_batch, volatile=True))
 
                     ratio = torch.exp(action_log_probs - Variable(old_action_log_probs.data))
                     adv_targ = Variable(advantages.view(-1, 1)[indices])
