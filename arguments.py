@@ -5,7 +5,7 @@ is_use_ppo = False
 #############
 debugging = 0
 
-gtn_M = 5 
+gtn_M = 3 
 gtn_N = 4
 
 hierarchical = 1

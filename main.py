@@ -21,7 +21,7 @@ from visualize import visdom_plot
 
 from arguments import debugging, gtn_M
 from arguments import exp, title, title_html
-
+is_use_afs = True
 args = get_args()
 
 assert args.algo in ['a2c', 'ppo', 'acktr']
