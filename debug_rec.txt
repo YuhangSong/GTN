@@ -14,12 +14,15 @@ in a2c:
         afs_loss.backward(mone, retain_graph=True)
         afs_loss_list += [afs_loss.data.cpu().numpy()[0]]
 
+
+        ok
+
     6. dim a final_loss_basic but not backward
-    7. dim a ewc-loss
+    7. dim a ewc-loss ok
 
 2. lager than 3 x 3  happend to error , guess it is because the conv3x3 is missing 
-3. loss normalization from different games
-4.linear or lstm
-5.different action-spcae 
+3. loss normalization from different games ok
+4.linear or lstm linear
+5.different action-spcae ok
 6.hyper-parameter is like the code or the paper
 7.afs_loss is need
