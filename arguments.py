@@ -1,12 +1,12 @@
 import argparse
 import torch
 #############
-is_use_ppo = False
+is_use_ppo = True
 #############
 debugging = 0
 
-gtn_M = 3 
-gtn_N = 4
+gtn_M = 1 
+gtn_N = 3
 
 hierarchical = 1
 
@@ -29,20 +29,27 @@ if is_use_ppo is False:
 
     dataset = 'mt shooting'
 else:
-    dataset = 'mt test pong'
-dataset = 'mt test pong'
+    dataset = 'mt as ewc'
+# dataset = 'mt high performance'
 # dataset = 'mt all atari'
 
-exp = '2'
-exp += ('gtn_1'+'_')
+# exp = '2'
+# exp += ('gtn_1'+'_')
+# exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
+# exp += ('hierarchical_'+str(hierarchical)+'_')
+# exp += ('parameter_noise_'+str(parameter_noise)+'_')
+# exp += ('ewc_'+str(ewc)+'_')
+# exp += ('both_side_tower_'+str(both_side_tower)+'_')
+# exp += ('loss_fisher_sensitivity_per_m_'+str(loss_fisher_sensitivity_per_m)+'_')
+# exp += ('dataset_'+dataset+'_')
+exp = 'on_ewc_games_'
+exp += ('gtn'+'_')
 exp += (str(gtn_M)+'x'+str(gtn_N)+'_')
 exp += ('hierarchical_'+str(hierarchical)+'_')
 exp += ('parameter_noise_'+str(parameter_noise)+'_')
 exp += ('ewc_'+str(ewc)+'_')
-exp += ('both_side_tower_'+str(both_side_tower)+'_')
-exp += ('loss_fisher_sensitivity_per_m_'+str(loss_fisher_sensitivity_per_m)+'_')
 exp += ('dataset_'+dataset+'_')
-
+exp += ('ppo_') if is_use_ppo else ('a2c')
 print('#######################################')
 print(exp)
 print('#######################################')
@@ -65,8 +72,8 @@ if is_use_ppo is False:
     log_interval = 20
     vis_interval = 20
 else:
-    log_interval = 1
-    vis_interval = 1
+    log_interval = 10
+    vis_interval = 10
 
 if debugging == 1:
     num_processes = 1
@@ -120,7 +127,7 @@ def get_args():
                         help='number of forward steps in A2C')
     else:
         parser.add_argument('--num-steps', type=int, default=256,
-                        help='number of forward steps in A2C (default: 5)')
+                        help='number of forward steps in ppo (default: 5)')
     parser.add_argument('--ppo-epoch', type=int, default=4,
                         help='number of ppo epochs (default: 4)')
     parser.add_argument('--batch-size', type=int, default=64,
@@ -137,9 +144,9 @@ def get_args():
                         help='number of frames to train (default: 10e6)')
     parser.add_argument('--env-name', default=dataset,
                         help='environment to train on')
-    parser.add_argument('--log-dir', default='../../result/'+exp+'/',
+    parser.add_argument('--log-dir', default='../result/'+exp+'/',
                         help='directory to save agent logs (default: /tmp/gym)')
-    parser.add_argument('--save-dir', default='../../result/'+exp+'/',
+    parser.add_argument('--save-dir', default='../result/'+exp+'/',
                         help='directory to save agent logs (default: ./trained_models/)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')

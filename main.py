@@ -49,6 +49,26 @@ mt_env_id_dic_all = {
         'SpaceInvadersNoFrameskip-v4',
         'SeaquestNoFrameskip-v4',
         ],
+    'mt as ewc':[
+        'CrazyClimberNoFrameskip-v4',
+        'RiverraidNoFrameskip-v4',
+        'JamesbondNoFrameskip-v4',
+        'BreakoutNoFrameskip-v4',
+        'GopherNoFrameskip-v4',
+        'KangarooNoFrameskip-v4',
+        'KungFuMasterNoFrameskip-v4',
+        'FishingDerbyNoFrameskip-v4',
+        'EnduroNoFrameskip-v4',
+        'PongNoFrameskip-v4',
+        'StarGunnerNoFrameskip-v4',
+        'DemonAttackNoFrameskip-v4',
+        'BoxingNoFrameskip-v4',
+        'AsteroidsNoFrameskip-v4',
+        'RoadRunnerNoFrameskip-v4',
+        'FreewayNoFrameskip-v4',
+        'KrullNoFrameskip-v4',
+        'SpaceInvadersNoFrameskip-v4',
+        ],
     'mt shooting':[
         'BeamRiderNoFrameskip-v4',
         'PhoenixNoFrameskip-v4',
@@ -305,7 +325,6 @@ def main():
             value_loss = advantages.pow(2).mean()
 
             action_loss = -(Variable(advantages.data) * action_log_probs).mean()
-
             final_loss_basic = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
 
             ewc_loss = None
@@ -317,9 +336,9 @@ def main():
                 final_loss = final_loss_basic
             else:
                 final_loss = final_loss_basic + ewc_loss
-
+            # print (final_loss_basic.data.cpu().numpy()[0])
+            # final_loss_basic
             basic_loss_list += [final_loss_basic.data.cpu().numpy()[0]]
-                
             final_loss.backward()
 
             if args.algo == 'a2c':
@@ -359,7 +378,10 @@ def main():
                     value_loss = (Variable(return_batch) - values).pow(2).mean()
 
                     optimizer.zero_grad()
-                    (value_loss + action_loss - dist_entropy * args.entropy_coef).backward()
+                    final_loss_basic = (value_loss + action_loss - dist_entropy * args.entropy_coef)
+                    
+                    basic_loss_list += [final_loss_basic.data.cpu().numpy()[0]]
+                    final_loss_basic.backward()
                     optimizer.step()
 
         rollouts.states[0].copy_(rollouts.states[-1])
@@ -394,6 +416,7 @@ def main():
             
 
         if j > 5 and j % args.vis_interval == 0:
+            ''' load from the folder'''
             for ii in range(len(mt_env_id_dic_selected)):
                 log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
                 win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
@@ -405,6 +428,13 @@ def main():
                     opts=dict(title=title_html+'>>afs')
                 )
 
+            # print (basic_loss_list)
+            '''a2c:len(basic_loss_list) is vis_interval+1. because j start from 0
+               ppo:len(basic_loss_list) is (vis_interval+1)*ppo_epoch_4*len(BatchSampler)
+            '''
+            
+            # print (len(basic_loss_list))
+            # print (ss)
             win_basic_loss = viz.line(
                 torch.from_numpy(np.asarray(basic_loss_list)), 
                 win=win_basic_loss,
