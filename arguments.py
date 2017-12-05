@@ -29,7 +29,7 @@ if is_use_ppo is False:
 
     dataset = 'mt shooting'
 else:
-    dataset = 'mt as ewc'
+    dataset = 'mt as ewc test'
 # dataset = 'mt high performance'
 # dataset = 'mt all atari'
 
@@ -64,7 +64,7 @@ else:
 if is_use_ppo is False:
     num_processes = 16
 else:
-    num_processes = 8
+    num_processes = 4
 if dataset == 'mt all atari':
     num_processes = 4
 
@@ -130,7 +130,7 @@ def get_args():
                         help='number of forward steps in ppo (default: 5)')
     parser.add_argument('--ppo-epoch', type=int, default=4,
                         help='number of ppo epochs (default: 4)')
-    parser.add_argument('--batch-size', type=int, default=64,
+    parser.add_argument('--batch-size', type=int, default=32,
                         help='ppo batch size (default: 64)')
     parser.add_argument('--clip-param', type=float, default=0.2,
                         help='ppo clip parameter (default: 0.2)')
@@ -150,7 +150,7 @@ def get_args():
                         help='directory to save agent logs (default: ./trained_models/)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
-    parser.add_argument('--no-vis', action='store_true', default=False,
+    parser.add_argument('--no-vis', action='store_true', default=True,
                         help='disables visdom visualization')
     args = parser.parse_args()
 
