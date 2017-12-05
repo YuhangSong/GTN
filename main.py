@@ -49,24 +49,14 @@ mt_env_id_dic_all = {
         'SpaceInvadersNoFrameskip-v4',
         'SeaquestNoFrameskip-v4',
         ],
-    'mt as ewc':[
+    'mt as ewc test':[
         'CrazyClimberNoFrameskip-v4',
         'RiverraidNoFrameskip-v4',
-        'JamesbondNoFrameskip-v4',
         'BreakoutNoFrameskip-v4',
-        'GopherNoFrameskip-v4',
-        'KangarooNoFrameskip-v4',
-        'KungFuMasterNoFrameskip-v4',
-        'FishingDerbyNoFrameskip-v4',
-        'EnduroNoFrameskip-v4',
         'PongNoFrameskip-v4',
         'StarGunnerNoFrameskip-v4',
         'DemonAttackNoFrameskip-v4',
-        'BoxingNoFrameskip-v4',
         'AsteroidsNoFrameskip-v4',
-        'RoadRunnerNoFrameskip-v4',
-        'FreewayNoFrameskip-v4',
-        'KrullNoFrameskip-v4',
         'SpaceInvadersNoFrameskip-v4',
         ],
     'mt shooting':[
@@ -415,7 +405,7 @@ def main():
                 pass
             
 
-        if j > 5 and j % args.vis_interval == 0:
+        if j > 5 and j % args.vis_interval == 0 and args.vis:
             ''' load from the folder'''
             for ii in range(len(mt_env_id_dic_selected)):
                 log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
