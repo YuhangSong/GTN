@@ -188,11 +188,19 @@ def main():
     #num_stack :number of frames to stack
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
 
-    if len(envs.observation_space.shape) == 3:
-        actor_critic = CNNPolicy(obs_shape[0], envs.action_space)
+    from arguments import is_restore
+    if is_restore and args.save_dir:
+        load_path = os.path.join(args.save_dir, args.algo)
+        actor_critic =torch.load(os.path.join(load_path, args.env_name + ".pt"))
+        print ("restored previous model!")
+        print (actor_critic.Variable)
+        print (sss)
     else:
-        actor_critic = MLPPolicy(obs_shape[0], envs.action_space)
-
+        if len(envs.observation_space.shape) == 3:
+            actor_critic = CNNPolicy(obs_shape[0], envs.action_space)
+        else:
+            actor_critic = MLPPolicy(obs_shape[0], envs.action_space)
+    
     if envs.action_space.__class__.__name__ == "Discrete":
         action_shape = 1
     else:

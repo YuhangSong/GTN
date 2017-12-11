@@ -75,6 +75,8 @@ else:
     log_interval = 10
     vis_interval = 10
 
+is_restore = True
+
 if debugging == 1:
     num_processes = 1
     dataset = 'mt test pong'
