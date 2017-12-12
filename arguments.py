@@ -1,7 +1,7 @@
 import argparse
 import torch
 #############
-is_use_ppo = True
+is_use_ppo =False 
 #############
 debugging = 0
 
@@ -25,11 +25,11 @@ loss_fisher_sensitivity_per_m = 0
 if loss_fisher_sensitivity_per_m == 1:
     log_fisher_sensitivity_per_m = 1
 
-if is_use_ppo is False:
+# if is_use_ppo is False:
 
-    dataset = 'mt shooting'
-else:
-    dataset = 'mt as ewc test'
+    # dataset = 'mt shooting'
+# else:
+dataset = 'mt_as_ewc_test'
 # dataset = 'mt high performance'
 # dataset = 'mt all atari'
 
@@ -75,7 +75,7 @@ else:
     log_interval = 10
     vis_interval = 10
 
-is_restore = True
+is_restore = False
 
 if debugging == 1:
     num_processes = 1
@@ -138,6 +138,8 @@ def get_args():
                         help='ppo clip parameter (default: 0.2)')
     parser.add_argument('--num-stack', type=int, default=4,
                         help='number of frames to stack (default: 4)')
+    parser.add_argument('--save-interval', type=int, default=100,
+                        help='save interval, one save per n updates (default: 10)')
     parser.add_argument('--log-interval', type=int, default=log_interval,
                         help='log interval, one log per n updates')
     parser.add_argument('--vis-interval', type=int, default=vis_interval,
@@ -152,7 +154,7 @@ def get_args():
                         help='directory to save agent logs (default: ./trained_models/)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
-    parser.add_argument('--no-vis', action='store_true', default=True,
+    parser.add_argument('--no-vis', action='store_true', default=False,
                         help='disables visdom visualization')
     args = parser.parse_args()
 
