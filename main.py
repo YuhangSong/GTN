@@ -49,7 +49,7 @@ mt_env_id_dic_all = {
         'SpaceInvadersNoFrameskip-v4',
         'SeaquestNoFrameskip-v4',
         ],
-    'mt as ewc test':[
+    'mt_as_ewc_test':[
         'CrazyClimberNoFrameskip-v4',
         'RiverraidNoFrameskip-v4',
         'BreakoutNoFrameskip-v4',
@@ -153,6 +153,44 @@ for env_id in mt_env_id_dic_selected:
             os.remove(f)
 
 afs_offset = [0.0, 0.0, 0.0, 0.0, 0.0]
+reward_dict={}
+
+def rec_last_100_epi_reward(reward,done_list):
+    # num = 0
+    '''
+    arguments statement:
+    reward  :episode reward
+    done_list: the finished signal from env
+    '''
+    
+    for index,done  in enumerate(done_list):
+        env_name = mt_env_id_dic_selected[index // args.num_processes] 
+        # print (env_name)
+        if done:
+            try:
+                reward_dict["{}_entire".format(env_name)].append(reward[index])
+                try:
+                    reward_dict["{}_average".format(env_name)].append(np.mean(np.asarray(reward_dict["{}_entire".format(env_name)])))            
+                except:
+                    reward_dict["{}_average".format(env_name)] =[]           
+                if len(reward_dict["{}_entire".format(env_name)])>100:
+                    try:
+                        reward_dict["{}_last_100".format(env_name)].append(np.mean(np.asarray(reward_dict["{}_entire".format(env_name)][-100:])))
+                    except:
+                        reward_dict["{}_last_100".format(env_name)]=[]
+
+            except Exception as e:
+                reward_dict["{}_entire".format(env_name)]=[]
+                reward_dict["{}_average".format(env_name)] =[]         
+            reward[index] = 0
+    return reward
+        
+
+def break_line_html(string):
+    for x in range(0,len(string),40):
+        string = string[:x] + '<br>' + string[x:]
+    return string
+
 
 def main():
     print("#######")
@@ -165,12 +203,14 @@ def main():
         from visdom import Visdom
         viz = Visdom()
         win = []
+        win_dic ={}
         for i in range(len(mt_env_id_dic_selected)):
             win += [None]
         win_afs_per_m = None
         win_afs_loss = None
         win_basic_loss = None
-
+    
+    plot_dic = {}
     envs = []
     ''' Because the oral program has only one game per model, so Song add loop i
         So whatever you wanna run , just put in SubprocVecEnvMt!
@@ -188,11 +228,19 @@ def main():
     #num_stack :number of frames to stack
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
 
-    if len(envs.observation_space.shape) == 3:
-        actor_critic = CNNPolicy(obs_shape[0], envs.action_space)
+    from arguments import is_restore
+    if is_restore and args.save_dir:
+        load_path = os.path.join(args.save_dir, args.algo)
+        actor_critic =torch.load(os.path.join(load_path, args.env_name + ".pt"))
+        # print ("restored previous model!")
+        # print (actor_critic.Variable)
+        # print (sss)
     else:
-        actor_critic = MLPPolicy(obs_shape[0], envs.action_space)
-
+        if len(envs.observation_space.shape) == 3:
+            actor_critic = CNNPolicy(obs_shape[0], envs.action_space)
+        else:
+            actor_critic = MLPPolicy(obs_shape[0], envs.action_space)
+    
     if envs.action_space.__class__.__name__ == "Discrete":
         action_shape = 1
     else:
@@ -244,7 +292,7 @@ def main():
 
     afs_loss_list = []
     basic_loss_list = []
-
+    episode_reward_rec = 0.0
     one = torch.FloatTensor([1]).cuda()
     mone = one * -1
     '''for one whole game '''
@@ -262,10 +310,23 @@ def main():
 
             # Obser reward and next state
             state, reward, done = envs.step(cpu_actions)
+            '''record the last 100 episodes rewards'''
+            episode_reward_rec += reward
+            episode_reward_rec = rec_last_100_epi_reward(episode_reward_rec,done)
+            
+            
             reward = torch.from_numpy(np.expand_dims(np.stack(reward), 1)).float()
+            '''reward is shape of process_num_total, not batch-size'''
+            # print ((reward).size())
+            # print (done)
+            # print (sss)
             episode_rewards += reward
-
-            # If done then clean the history of observations.
+            ################
+            # rec_last_100_epi_reward(reward,done)
+            
+            # episode_reward_ppo += reward[0]
+            # If done then clean the history of observations. final_rewards is used for compute after one whole num_step
+            
             masks = torch.FloatTensor([[0.0] if done_ else [1.0] for done_ in done])
             final_rewards *= masks
             final_rewards += (1 - masks) * episode_rewards
@@ -376,7 +437,9 @@ def main():
 
         rollouts.states[0].copy_(rollouts.states[-1])
 
-        if j % int(num_updates/2-10) == 0 and args.save_dir != "":
+        # if j % int(num_updates/2-10) == 0 and args.save_dir != "":
+        if j % args.save_interval == 0 and args.save_dir != "":
+         
             save_path = os.path.join(args.save_dir, args.algo)
             try:
                 os.makedirs(save_path)
@@ -388,6 +451,11 @@ def main():
             if args.cuda:
                 save_model = copy.deepcopy(actor_critic).cpu()
             torch.save(save_model, os.path.join(save_path, args.env_name + ".pt"))
+            import pickle
+            with open(os.path.join(save_path, args.env_name + "_last_100_reward"), "wb") as f:
+                pickle.dump(reward_dict, f)
+
+
 
         if j % args.log_interval == 0:
             print("Updates {}, num frames {}, mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}, entropy {:.5f}, value loss {:.5f}, policy loss {:.5f}".
@@ -411,6 +479,22 @@ def main():
                 log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
                 win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
 
+            plot_dic = reward_dict
+            for plot_name in plot_dic.keys():
+                # if plot_name not in win_dic:
+                # win_dic[plot_name] = None
+                if plot_name in win_dic.keys():
+                    if len(plot_dic[plot_name]) > 0:
+                        win_dic[plot_name] = viz.line(
+                            torch.from_numpy(np.asarray(plot_dic[plot_name])), 
+                            win=win_dic[plot_name],
+                            opts=dict(title=break_line_html(exp+'>>'+plot_name))
+                        )
+                    
+
+                else:
+                    win_dic[plot_name] = None
+            
             if len(afs_per_m)>0:
                 win_afs_per_m = viz.line(
                     torch.from_numpy(np.asarray(afs_per_m)), 
