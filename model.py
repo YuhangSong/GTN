@@ -54,6 +54,7 @@ class CNNPolicy(FFPolicy):
                 depth = gtn_N
             elif hierarchical == 1:
                 depth = gtn_N + m
+            ''' current m-level final feature size'''
             final_number_feature = 32*(2**(depth-1))
             final_size = 128/(2**(depth))
             self.final_flatten_size += [int(final_number_feature * (final_size**2))]
@@ -317,266 +318,295 @@ class CNNPolicy(FFPolicy):
                         self.linear_cat_5 = nn.Linear(temp, 512)
 
         elif hierarchical == 0:
+            if gtn_M >= 1:
+                m = 0 ###############
+                if gtn_N>=1:
+                    # 4 128 128
+                    self.conv00 = nn.Conv2d(
+                        in_channels=num_inputs,
+                        out_channels=32,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 2:
+                    # 32 64 64
+                    self.conv01 = nn.Conv2d(
+                        in_channels=32,
+                        out_channels=64,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 3:
+                    # 64 32 32
+                    self.conv02 = nn.Conv2d(
+                        in_channels=64,
+                        out_channels=128,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 4:
+                    # 128 16 16
+                    self.conv03 = nn.Conv2d(
+                        in_channels=128,
+                        out_channels=256,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 5:
+                    # 256 8 8
+                    self.conv04 = nn.Conv2d(
+                        in_channels=256,
+                        out_channels=512,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 6:
+                    # 512 4 4
+                    self.conv05 = nn.Conv2d(
+                        in_channels=512,
+                        out_channels=1024,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                    # 1024 2 2
 
-            m = 0 ###############
+            if gtn_M >= 2:
+                m = 1 ###############
+                if gtn_N >= 1:
+                    # 4 128 128
+                    self.conv10 = nn.Conv2d(
+                        in_channels=num_inputs,
+                        out_channels=32,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 2:
+                    # 32 64 64
+                    self.conv11 = nn.Conv2d(
+                        in_channels=32,
+                        out_channels=64,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 3:
+                    # 64 32 32
+                    self.conv12 = nn.Conv2d(
+                        in_channels=64,
+                        out_channels=128,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 4:
+                    # 128 16 16
+                    self.conv13 = nn.Conv2d(
+                        in_channels=128,
+                        out_channels=256,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 5:
+                    # 256 8 8
+                    self.conv14 = nn.Conv2d(
+                        in_channels=256,
+                        out_channels=512,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 6:
+                    # 512 4 4
+                    self.conv15 = nn.Conv2d(
+                        in_channels=512,
+                        out_channels=1024,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                    # 1024 2 2
 
-            # 4 128 128
-            self.conv00 = nn.Conv2d(
-                in_channels=num_inputs,
-                out_channels=32,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 32 64 64
-            self.conv01 = nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 64 32 32
-            self.conv02 = nn.Conv2d(
-                in_channels=64,
-                out_channels=128,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 128 16 16
-            self.conv03 = nn.Conv2d(
-                in_channels=128,
-                out_channels=256,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 256 8 8
-            self.conv04 = nn.Conv2d(
-                in_channels=256,
-                out_channels=512,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 512 4 4
-            self.conv05 = nn.Conv2d(
-                in_channels=512,
-                out_channels=1024,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 1024 2 2
+            if gtn_M >= 3:
+                m = 2 ###############
+                if gtn_N >= 1:
+                    # 4 128 128
+                    self.conv20 = nn.Conv2d(
+                        in_channels=num_inputs,
+                        out_channels=32,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 2:
+                    # 32 64 64
+                    self.conv21 = nn.Conv2d(
+                        in_channels=32,
+                        out_channels=64,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 3:
+                    # 64 32 32
+                    self.conv22 = nn.Conv2d(
+                        in_channels=64,
+                        out_channels=128,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 4:
+                    # 128 16 16
+                    self.conv23 = nn.Conv2d(
+                        in_channels=128,
+                        out_channels=256,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 5:
+                    # 256 8 8
+                    self.conv24 = nn.Conv2d(
+                        in_channels=256,
+                        out_channels=512,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 6:
+                    # 512 4 4
+                    self.conv25 = nn.Conv2d(
+                        in_channels=512,
+                        out_channels=1024,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                    # 1024 2 2
 
-            m = 1 ###############
+            if gtn_M >= 4:
+                m = 3 ###############
+                if gtn_N >= 1:    
+                    # 4 128 128
+                    self.conv30 = nn.Conv2d(
+                        in_channels=num_inputs,
+                        out_channels=32,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 2:
+                    # 32 64 64
+                    self.conv31 = nn.Conv2d(
+                        in_channels=32,
+                        out_channels=64,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 3:
+                    # 64 32 32
+                    self.conv32 = nn.Conv2d(
+                        in_channels=64,
+                        out_channels=128,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 4:
+                    # 128 16 16
+                    self.conv33 = nn.Conv2d(
+                        in_channels=128,
+                        out_channels=256,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 5:
+                    # 256 8 8
+                    self.conv34 = nn.Conv2d(
+                        in_channels=256,
+                        out_channels=512,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 6:
+                    # 512 4 4
+                    self.conv35 = nn.Conv2d(
+                        in_channels=512,
+                        out_channels=1024,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                    # 1024 2 2
 
-            # 4 128 128
-            self.conv10 = nn.Conv2d(
-                in_channels=num_inputs,
-                out_channels=32,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 32 64 64
-            self.conv11 = nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 64 32 32
-            self.conv12 = nn.Conv2d(
-                in_channels=64,
-                out_channels=128,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 128 16 16
-            self.conv13 = nn.Conv2d(
-                in_channels=128,
-                out_channels=256,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 256 8 8
-            self.conv14 = nn.Conv2d(
-                in_channels=256,
-                out_channels=512,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 512 4 4
-            self.conv15 = nn.Conv2d(
-                in_channels=512,
-                out_channels=1024,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 1024 2 2
-
-            m = 2 ###############
-
-            # 4 128 128
-            self.conv20 = nn.Conv2d(
-                in_channels=num_inputs,
-                out_channels=32,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 32 64 64
-            self.conv21 = nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 64 32 32
-            self.conv22 = nn.Conv2d(
-                in_channels=64,
-                out_channels=128,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 128 16 16
-            self.conv23 = nn.Conv2d(
-                in_channels=128,
-                out_channels=256,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 256 8 8
-            self.conv24 = nn.Conv2d(
-                in_channels=256,
-                out_channels=512,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 512 4 4
-            self.conv25 = nn.Conv2d(
-                in_channels=512,
-                out_channels=1024,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 1024 2 2
-
-            m = 3 ###############
-
-            # 4 128 128
-            self.conv30 = nn.Conv2d(
-                in_channels=num_inputs,
-                out_channels=32,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 32 64 64
-            self.conv31 = nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 64 32 32
-            self.conv32 = nn.Conv2d(
-                in_channels=64,
-                out_channels=128,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 128 16 16
-            self.conv33 = nn.Conv2d(
-                in_channels=128,
-                out_channels=256,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 256 8 8
-            self.conv34 = nn.Conv2d(
-                in_channels=256,
-                out_channels=512,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 512 4 4
-            self.conv35 = nn.Conv2d(
-                in_channels=512,
-                out_channels=1024,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 1024 2 2
-
-            m = 4 ###############
-
-            # 4 128 128
-            self.conv40 = nn.Conv2d(
-                in_channels=num_inputs,
-                out_channels=32,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 32 64 64
-            self.conv41 = nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 64 32 32
-            self.conv42 = nn.Conv2d(
-                in_channels=64,
-                out_channels=128,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 128 16 16
-            self.conv43 = nn.Conv2d(
-                in_channels=128,
-                out_channels=256,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 256 8 8
-            self.conv44 = nn.Conv2d(
-                in_channels=256,
-                out_channels=512,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 512 4 4
-            self.conv45 = nn.Conv2d(
-                in_channels=512,
-                out_channels=1024,
-                kernel_size=4,
-                stride=2,
-                padding=1,
-                )
-            # 1024 2 2
+            if gtn_M >= 5:
+                m = 4 ###############
+                if gtn_N >= 1:
+                    # 4 128 128
+                    self.conv40 = nn.Conv2d(
+                        in_channels=num_inputs,
+                        out_channels=32,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 2:
+                    # 32 64 64
+                    self.conv41 = nn.Conv2d(
+                        in_channels=32,
+                        out_channels=64,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 3:
+                    # 64 32 32
+                    self.conv42 = nn.Conv2d(
+                        in_channels=64,
+                        out_channels=128,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 4:
+                    # 128 16 16
+                    self.conv43 = nn.Conv2d(
+                        in_channels=128,
+                        out_channels=256,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 5:
+                    # 256 8 8
+                    self.conv44 = nn.Conv2d(
+                        in_channels=256,
+                        out_channels=512,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                if gtn_N >= 6:
+                    # 512 4 4
+                    self.conv45 = nn.Conv2d(
+                        in_channels=512,
+                        out_channels=1024,
+                        kernel_size=4,
+                        stride=2,
+                        padding=1,
+                        )
+                    # 1024 2 2
 
         if both_side_tower == 0:
             self.concatenation_layer_size = sum(self.final_flatten_size)

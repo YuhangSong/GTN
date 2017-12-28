@@ -1,0 +1,660 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+A2cProcessFrame	../common/atari_wrappers_deprecated.py	/^class A2cProcessFrame(gym.Wrapper):$/;"	kind:class	line:223
+ALREADY_INITIALIZED	../common/tf_util.py	/^ALREADY_INITIALIZED = set()$/;"	kind:variable	line:236
+AddBias	../utils.py	/^class AddBias(nn.Module):$/;"	kind:class	line:5
+BatchInput	../common/tf_util.py	/^class BatchInput(PlacholderTfInput):$/;"	kind:class	line:136
+BernoulliPd	../common/distributions.py	/^class BernoulliPd(Pd):$/;"	kind:class	line:209
+BernoulliPdType	../common/distributions.py	/^class BernoulliPdType(PdType):$/;"	kind:class	line:88
+CNNPolicy	../model.py	/^class CNNPolicy(FFPolicy):$/;"	kind:class	line:47
+Categorical	../distributions.py	/^class Categorical(nn.Module):$/;"	kind:class	line:10
+CategoricalPd	../common/distributions.py	/^class CategoricalPd(Pd):$/;"	kind:class	line:123
+CategoricalPdType	../common/distributions.py	/^class CategoricalPdType(PdType):$/;"	kind:class	line:47
+ClipRewardEnv	../common/atari_wrappers.py	/^class ClipRewardEnv(gym.RewardWrapper):$/;"	kind:class	line:115
+ClippedRewardsWrapper	../common/atari_wrappers_deprecated.py	/^class ClippedRewardsWrapper(gym.RewardWrapper):$/;"	kind:class	line:146
+CloudpickleWrapper	../common/vec_env/subproc_vec_env.py	/^class CloudpickleWrapper(object):$/;"	kind:class	line:31
+ConstantSchedule	../common/schedules.py	/^class ConstantSchedule(object):$/;"	kind:class	line:18
+Container	../common/azure_utils.py	/^class Container(object):$/;"	kind:class	line:49
+Dataset	../common/dataset.py	/^class Dataset(object):$/;"	kind:class	line:3
+DiagGaussian	../distributions.py	/^class DiagGaussian(nn.Module):$/;"	kind:class	line:41
+DiagGaussianPd	../common/distributions.py	/^class DiagGaussianPd(Pd):$/;"	kind:class	line:183
+DiagGaussianPdType	../common/distributions.py	/^class DiagGaussianPdType(PdType):$/;"	kind:class	line:76
+EXT	../bench/monitor.py	/^    EXT = "monitor.json"$/;"	kind:variable	line:15
+EpisodicLifeEnv	../common/atari_wrappers.py	/^class EpisodicLifeEnv(gym.Wrapper):$/;"	kind:class	line:50
+EpisodicLifeEnv	../common/atari_wrappers_deprecated.py	/^class EpisodicLifeEnv(gym.Wrapper):$/;"	kind:class	line:53
+EzPickle	../common/misc_util.py	/^class EzPickle(object):$/;"	kind:class	line:38
+FFPolicy	../model.py	/^class FFPolicy(nn.Module):$/;"	kind:class	line:25
+FireResetEnv	../common/atari_wrappers.py	/^class FireResetEnv(gym.Wrapper):$/;"	kind:class	line:33
+FireResetEnv	../common/atari_wrappers_deprecated.py	/^class FireResetEnv(gym.Wrapper):$/;"	kind:class	line:35
+FrameStack	../common/atari_wrappers.py	/^class FrameStack(gym.Wrapper):$/;"	kind:class	line:133
+FrameStack	../common/atari_wrappers_deprecated.py	/^class FrameStack(gym.Wrapper):$/;"	kind:class	line:170
+GetFlat	../common/tf_util.py	/^class GetFlat(object):$/;"	kind:class	line:638
+JSONLogger	../bench/monitor.py	/^class JSONLogger(object):$/;"	kind:class	line:101
+KFACOptimizer	../kfac.py	/^class KFACOptimizer(optim.Optimizer):$/;"	kind:class	line:85
+LazyFrames	../common/atari_wrappers_deprecated.py	/^class LazyFrames(object):$/;"	kind:class	line:152
+LinearSchedule	../common/schedules.py	/^class LinearSchedule(object):$/;"	kind:class	line:76
+LoadMonitorResultsError	../bench/monitor.py	/^class LoadMonitorResultsError(Exception):$/;"	kind:class	line:114
+MEAN_NUM	../plot.py	/^MEAN_NUM = 50$/;"	kind:variable	line:16
+MESSAGE_DEPTH	../common/console_util.py	/^MESSAGE_DEPTH = 0$/;"	kind:variable	line:44
+MLPPolicy	../model.py	/^class MLPPolicy(FFPolicy):$/;"	kind:class	line:1308
+MaxAndSkipEnv	../common/atari_wrappers.py	/^class MaxAndSkipEnv(gym.Wrapper):$/;"	kind:class	line:86
+MaxAndSkipEnv	../common/atari_wrappers_deprecated.py	/^class MaxAndSkipEnv(gym.Wrapper):$/;"	kind:class	line:93
+MinSegmentTree	../common/segment_tree.py	/^class MinSegmentTree(SegmentTree):$/;"	kind:class	line:135
+Module	../common/tf_util.py	/^class Module(object):$/;"	kind:class	line:494
+Monitor	../bench/monitor.py	/^class Monitor(Wrapper):$/;"	kind:class	line:14
+MpiAdam	../common/mpi_adam.py	/^class MpiAdam(object):$/;"	kind:class	line:6
+MultiCategoricalPd	../common/distributions.py	/^class MultiCategoricalPd(Pd):$/;"	kind:class	line:160
+MultiCategoricalPdType	../common/distributions.py	/^class MultiCategoricalPdType(PdType):$/;"	kind:class	line:60
+NoopResetEnv	../common/atari_wrappers.py	/^class NoopResetEnv(gym.Wrapper):$/;"	kind:class	line:8
+NoopResetEnv	../common/atari_wrappers_deprecated.py	/^class NoopResetEnv(gym.Wrapper):$/;"	kind:class	line:9
+ObsNorm	../running_stat.py	/^class ObsNorm(object):$/;"	kind:class	line:5
+Pd	../common/distributions.py	/^class Pd(object):$/;"	kind:class	line:7
+PdType	../common/distributions.py	/^class PdType(object):$/;"	kind:class	line:27
+PiecewiseSchedule	../common/schedules.py	/^class PiecewiseSchedule(object):$/;"	kind:class	line:38
+PlacholderTfInput	../common/tf_util.py	/^class PlacholderTfInput(TfInput):$/;"	kind:class	line:123
+ProcessFrame84	../common/atari_wrappers_deprecated.py	/^class ProcessFrame84(gym.ObservationWrapper):$/;"	kind:class	line:123
+RolloutStorage	../storage.py	/^class RolloutStorage(object):$/;"	kind:class	line:4
+RunningAvg	../common/misc_util.py	/^class RunningAvg(object):$/;"	kind:class	line:123
+RunningMeanStd	../common/mpi_running_mean_std.py	/^class RunningMeanStd(object):$/;"	kind:class	line:4
+ScaledFloatFrame	../common/atari_wrappers_deprecated.py	/^class ScaledFloatFrame(gym.ObservationWrapper):$/;"	kind:class	line:202
+Schedule	../common/schedules.py	/^class Schedule(object):$/;"	kind:class	line:12
+SegmentTree	../common/segment_tree.py	/^class SegmentTree(object):$/;"	kind:class	line:4
+SetFromFlat	../common/tf_util.py	/^class SetFromFlat(object):$/;"	kind:class	line:619
+SimpleMonitor	../common/misc_util.py	/^class SimpleMonitor(gym.Wrapper):$/;"	kind:class	line:157
+SplitBias	../kfac.py	/^class SplitBias(nn.Module):$/;"	kind:class	line:72
+SubprocVecEnv	../common/vec_env/subproc_vec_env.py	/^class SubprocVecEnv(VecEnv):$/;"	kind:class	line:44
+SubprocVecEnvMt	../common/vec_env/subproc_vec_env.py	/^class SubprocVecEnvMt(VecEnv):$/;"	kind:class	line:81
+SumSegmentTree	../common/segment_tree.py	/^class SumSegmentTree(SegmentTree):$/;"	kind:class	line:94
+TfInput	../common/tf_util.py	/^class TfInput(object):$/;"	kind:class	line:104
+Uint8Input	../common/tf_util.py	/^class Uint8Input(PlacholderTfInput):$/;"	kind:class	line:152
+VALUE_SETTERS	../common/tf_util.py	/^VALUE_SETTERS = collections.OrderedDict()$/;"	kind:variable	line:252
+VARIABLES	../common/tf_util.py	/^VARIABLES = {}$/;"	kind:variable	line:546
+VecEnv	../common/vec_env/__init__.py	/^class VecEnv(object):$/;"	kind:class	line:1
+WarpFrame	../common/atari_wrappers.py	/^class WarpFrame(gym.ObservationWrapper):$/;"	kind:class	line:120
+WrapPyTorch	../envs.py	/^class WrapPyTorch(gym.ObservationWrapper):$/;"	kind:class	line:31
+WrapperModule	../common/tf_util.py	/^        class WrapperModule(Module):$/;"	kind:class	line:535
+_ATARI_SUFFIX	../bench/benchmarks.py	/^_ATARI_SUFFIX = 'NoFrameskip-v4'$/;"	kind:variable	line:32
+_BENCHMARKS	../bench/benchmarks.py	/^_BENCHMARKS = []$/;"	kind:variable	line:4
+_Function	../common/tf_util.py	/^class _Function(object):$/;"	kind:class	line:405
+_MemFriendlyFunction	../common/tf_util.py	/^class _MemFriendlyFunction(object):$/;"	kind:class	line:460
+_PLACEHOLDER_CACHE	../common/tf_util.py	/^_PLACEHOLDER_CACHE = {}  # name -> (placeholder, dtype, shape)$/;"	kind:variable	line:727
+__all__	../bench/monitor.py	/^__all__ = ['Monitor', 'get_monitor_files', 'load_results']$/;"	kind:variable	line:1
+__array__	../common/atari_wrappers_deprecated.py	/^    def __array__(self, dtype=None):$/;"	kind:member	line:163
+__call__	../common/tf_util.py	/^    def __call__(self):$/;"	kind:member	line:642
+__call__	../common/tf_util.py	/^    def __call__(self, *args):$/;"	kind:member	line:501
+__call__	../common/tf_util.py	/^    def __call__(self, *args, **kwargs):$/;"	kind:member	line:423
+__call__	../common/tf_util.py	/^    def __call__(self, *inputvals):$/;"	kind:member	line:467
+__call__	../common/tf_util.py	/^    def __call__(self, theta):$/;"	kind:member	line:634
+__call__	../running_stat.py	/^    def __call__(self, x):$/;"	kind:member	line:45
+__float__	../common/misc_util.py	/^    def __float__(self):$/;"	kind:member	line:152
+__getitem__	../common/segment_tree.py	/^    def __getitem__(self, idx):$/;"	kind:member	line:89
+__getstate__	../bench/monitor.py	/^    def __getstate__(self): # XXX$/;"	kind:member	line:41
+__getstate__	../common/misc_util.py	/^    def __getstate__(self):$/;"	kind:member	line:62
+__getstate__	../common/vec_env/subproc_vec_env.py	/^    def __getstate__(self):$/;"	kind:member	line:37
+__init__	../bench/monitor.py	/^    def __init__(self, env, filename, allow_early_resets=False):$/;"	kind:member	line:18
+__init__	../bench/monitor.py	/^    def __init__(self, file):$/;"	kind:member	line:102
+__init__	../common/atari_wrappers.py	/^    def __init__(self, env):$/;"	kind:member	line:121
+__init__	../common/atari_wrappers.py	/^    def __init__(self, env):$/;"	kind:member	line:34
+__init__	../common/atari_wrappers.py	/^    def __init__(self, env):$/;"	kind:member	line:51
+__init__	../common/atari_wrappers.py	/^    def __init__(self, env, k):$/;"	kind:member	line:134
+__init__	../common/atari_wrappers.py	/^    def __init__(self, env, noop_max=30):$/;"	kind:member	line:9
+__init__	../common/atari_wrappers.py	/^    def __init__(self, env, skip=4):$/;"	kind:member	line:87
+__init__	../common/atari_wrappers_deprecated.py	/^    def __init__(self, env):$/;"	kind:member	line:224
+__init__	../common/atari_wrappers_deprecated.py	/^    def __init__(self, env, k):$/;"	kind:member	line:171
+__init__	../common/atari_wrappers_deprecated.py	/^    def __init__(self, env=None):$/;"	kind:member	line:124
+__init__	../common/atari_wrappers_deprecated.py	/^    def __init__(self, env=None):$/;"	kind:member	line:36
+__init__	../common/atari_wrappers_deprecated.py	/^    def __init__(self, env=None):$/;"	kind:member	line:54
+__init__	../common/atari_wrappers_deprecated.py	/^    def __init__(self, env=None, noop_max=30):$/;"	kind:member	line:10
+__init__	../common/atari_wrappers_deprecated.py	/^    def __init__(self, env=None, skip=4):$/;"	kind:member	line:94
+__init__	../common/atari_wrappers_deprecated.py	/^    def __init__(self, frames):$/;"	kind:member	line:153
+__init__	../common/azure_utils.py	/^    def __init__(self, account_name, account_key, container_name, maybe_create=False):$/;"	kind:member	line:52
+__init__	../common/dataset.py	/^    def __init__(self, data_map, deterministic=False, shuffle=True):$/;"	kind:member	line:4
+__init__	../common/distributions.py	/^    def __init__(self, flat):$/;"	kind:member	line:184
+__init__	../common/distributions.py	/^    def __init__(self, logits):$/;"	kind:member	line:124
+__init__	../common/distributions.py	/^    def __init__(self, logits):$/;"	kind:member	line:210
+__init__	../common/distributions.py	/^    def __init__(self, low, high):$/;"	kind:member	line:61
+__init__	../common/distributions.py	/^    def __init__(self, low, high, flat):$/;"	kind:member	line:161
+__init__	../common/distributions.py	/^    def __init__(self, ncat):$/;"	kind:member	line:48
+__init__	../common/distributions.py	/^    def __init__(self, size):$/;"	kind:member	line:77
+__init__	../common/distributions.py	/^    def __init__(self, size):$/;"	kind:member	line:89
+__init__	../common/misc_util.py	/^    def __init__(self, *args, **kwargs):$/;"	kind:member	line:58
+__init__	../common/misc_util.py	/^    def __init__(self, env):$/;"	kind:member	line:158
+__init__	../common/misc_util.py	/^    def __init__(self, gamma, init_value=None):$/;"	kind:member	line:124
+__init__	../common/mpi_adam.py	/^    def __init__(self, var_list, *, beta1=0.9, beta2=0.999, epsilon=1e-08, scale_grad_by_procs=True, comm=None):$/;"	kind:member	line:7
+__init__	../common/mpi_running_mean_std.py	/^    def __init__(self, epsilon=1e-2, shape=()):$/;"	kind:member	line:6
+__init__	../common/schedules.py	/^    def __init__(self, endpoints, interpolation=linear_interpolation, outside_value=None):$/;"	kind:member	line:39
+__init__	../common/schedules.py	/^    def __init__(self, schedule_timesteps, final_p, initial_p=1.0):$/;"	kind:member	line:77
+__init__	../common/schedules.py	/^    def __init__(self, value):$/;"	kind:member	line:19
+__init__	../common/segment_tree.py	/^    def __init__(self, capacity):$/;"	kind:member	line:136
+__init__	../common/segment_tree.py	/^    def __init__(self, capacity):$/;"	kind:member	line:95
+__init__	../common/segment_tree.py	/^    def __init__(self, capacity, operation, neutral_element):$/;"	kind:member	line:5
+__init__	../common/tf_util.py	/^    def __init__(self, inputs, outputs, updates, givens, check_nan=False):$/;"	kind:member	line:406
+__init__	../common/tf_util.py	/^    def __init__(self, name):$/;"	kind:member	line:495
+__init__	../common/tf_util.py	/^    def __init__(self, name="(unnamed)"):$/;"	kind:member	line:105
+__init__	../common/tf_util.py	/^    def __init__(self, nondata_inputs, data_inputs, outputs, batch_size):$/;"	kind:member	line:461
+__init__	../common/tf_util.py	/^    def __init__(self, placeholder):$/;"	kind:member	line:124
+__init__	../common/tf_util.py	/^    def __init__(self, shape, dtype=tf.float32, name=None):$/;"	kind:member	line:137
+__init__	../common/tf_util.py	/^    def __init__(self, shape, name=None):$/;"	kind:member	line:153
+__init__	../common/tf_util.py	/^    def __init__(self, var_list):$/;"	kind:member	line:639
+__init__	../common/tf_util.py	/^    def __init__(self, var_list, dtype=tf.float32):$/;"	kind:member	line:620
+__init__	../common/vec_env/subproc_vec_env.py	/^    def __init__(self, env_fns):$/;"	kind:member	line:45
+__init__	../common/vec_env/subproc_vec_env.py	/^    def __init__(self, env_fns):$/;"	kind:member	line:82
+__init__	../common/vec_env/subproc_vec_env.py	/^    def __init__(self, x):$/;"	kind:member	line:35
+__init__	../distributions.py	/^    def __init__(self, num_inputs, num_outputs):$/;"	kind:member	line:11
+__init__	../distributions.py	/^    def __init__(self, num_inputs, num_outputs):$/;"	kind:member	line:42
+__init__	../envs.py	/^    def __init__(self, env=None):$/;"	kind:member	line:32
+__init__	../kfac.py	/^    def __init__(self, module):$/;"	kind:member	line:73
+__init__	../kfac.py	/^    def __init__(self,$/;"	kind:member	line:86
+__init__	../model.py	/^    def __init__(self):$/;"	kind:member	line:26
+__init__	../model.py	/^    def __init__(self, num_inputs, action_space):$/;"	kind:member	line:1309
+__init__	../model.py	/^    def __init__(self, num_inputs, action_space):$/;"	kind:member	line:48
+__init__	../plot.py	/^	def __init__(self,LOGDIR,DSP,params_str, MULTI_RUN):$/;"	kind:member	line:20
+__init__	../running_stat.py	/^    def __init__(self, shape, demean=True, destd=True, clip=10.0):$/;"	kind:member	line:6
+__init__	../storage.py	/^    def __init__(self, num_steps, num_processes, obs_shape, action_space):$/;"	kind:member	line:5
+__init__	../utils.py	/^    def __init__(self, bias):$/;"	kind:member	line:6
+__init__.py	../bench/__init__.py	1;"	kind:file	line:1
+__init__.py	../common/__init__.py	1;"	kind:file	line:1
+__init__.py	../common/vec_env/__init__.py	1;"	kind:file	line:1
+__setitem__	../common/segment_tree.py	/^    def __setitem__(self, idx, val):$/;"	kind:member	line:77
+__setstate__	../bench/monitor.py	/^    def __setstate__(self, d):$/;"	kind:member	line:50
+__setstate__	../common/misc_util.py	/^    def __setstate__(self, d):$/;"	kind:member	line:65
+__setstate__	../common/vec_env/subproc_vec_env.py	/^    def __setstate__(self, ob):$/;"	kind:member	line:40
+_atari50	../bench/benchmarks.py	/^_atari50 =  [ # actually 49$/;"	kind:variable	line:114
+_atari7	../bench/benchmarks.py	/^_atari7 = ['BeamRider', 'Breakout', 'Enduro', 'Pong', 'Qbert', 'Seaquest', 'SpaceInvaders']$/;"	kind:variable	line:1
+_atariexpl7	../bench/benchmarks.py	/^_atariexpl7 = ['Freeway', 'Gravitar', 'MontezumaRevenge', 'Pitfall', 'PrivateEye', 'Solaris', 'Venture']$/;"	kind:variable	line:2
+_call	../common/tf_util.py	/^            def _call(self, *args):$/;"	kind:member	line:536
+_call	../common/tf_util.py	/^    def _call(self, *args):$/;"	kind:member	line:518
+_extract_patches	../kfac.py	/^def _extract_patches(x, kernel_size, stride, padding):$/;"	kind:function	line:15
+_feed_input	../common/tf_util.py	/^    def _feed_input(self, feed_dict, inpt, value):$/;"	kind:member	line:417
+_get_ob	../common/atari_wrappers_deprecated.py	/^    def _get_ob(self):$/;"	kind:member	line:197
+_initializer	../common/tf_util.py	/^    def _initializer(shape, dtype=None, partition_info=None):  # pylint: disable=W0613$/;"	kind:function	line:287
+_mujocosmall	../bench/benchmarks.py	/^_mujocosmall = [$/;"	kind:variable	line:61
+_observation	../common/atari_wrappers.py	/^    def _observation(self):$/;"	kind:member	line:154
+_observation	../common/atari_wrappers.py	/^    def _observation(self, obs):$/;"	kind:member	line:127
+_observation	../common/atari_wrappers_deprecated.py	/^    def _observation(self, obs):$/;"	kind:member	line:128
+_observation	../common/atari_wrappers_deprecated.py	/^    def _observation(self, obs):$/;"	kind:member	line:203
+_observation	../envs.py	/^    def _observation(self, observation):$/;"	kind:member	line:36
+_prepare_model	../kfac.py	/^    def _prepare_model(self):$/;"	kind:member	line:176
+_reduce_helper	../common/segment_tree.py	/^    def _reduce_helper(self, start, end, node, node_start, node_end):$/;"	kind:member	line:37
+_reset	../common/atari_wrappers.py	/^    def _reset(self):$/;"	kind:member	line:108
+_reset	../common/atari_wrappers.py	/^    def _reset(self):$/;"	kind:member	line:143
+_reset	../common/atari_wrappers.py	/^    def _reset(self):$/;"	kind:member	line:18
+_reset	../common/atari_wrappers.py	/^    def _reset(self):$/;"	kind:member	line:40
+_reset	../common/atari_wrappers.py	/^    def _reset(self):$/;"	kind:member	line:73
+_reset	../common/atari_wrappers_deprecated.py	/^    def _reset(self):$/;"	kind:member	line:115
+_reset	../common/atari_wrappers_deprecated.py	/^    def _reset(self):$/;"	kind:member	line:186
+_reset	../common/atari_wrappers_deprecated.py	/^    def _reset(self):$/;"	kind:member	line:19
+_reset	../common/atari_wrappers_deprecated.py	/^    def _reset(self):$/;"	kind:member	line:232
+_reset	../common/atari_wrappers_deprecated.py	/^    def _reset(self):$/;"	kind:member	line:42
+_reset	../common/atari_wrappers_deprecated.py	/^    def _reset(self):$/;"	kind:member	line:77
+_reset	../common/misc_util.py	/^    def _reset(self):$/;"	kind:member	line:178
+_reward	../common/atari_wrappers.py	/^    def _reward(self, reward):$/;"	kind:member	line:116
+_reward	../common/atari_wrappers_deprecated.py	/^    def _reward(self, reward):$/;"	kind:member	line:147
+_save_grad_output	../kfac.py	/^    def _save_grad_output(self, module, grad_input, grad_output):$/;"	kind:member	line:159
+_save_input	../kfac.py	/^    def _save_input(self, module, input):$/;"	kind:member	line:142
+_step	../common/atari_wrappers.py	/^    def _step(self, action):$/;"	kind:member	line:149
+_step	../common/atari_wrappers.py	/^    def _step(self, action):$/;"	kind:member	line:59
+_step	../common/atari_wrappers.py	/^    def _step(self, action):$/;"	kind:member	line:94
+_step	../common/atari_wrappers_deprecated.py	/^    def _step(self, action):$/;"	kind:member	line:101
+_step	../common/atari_wrappers_deprecated.py	/^    def _step(self, action):$/;"	kind:member	line:192
+_step	../common/atari_wrappers_deprecated.py	/^    def _step(self, action):$/;"	kind:member	line:228
+_step	../common/atari_wrappers_deprecated.py	/^    def _step(self, action):$/;"	kind:member	line:63
+_step	../common/misc_util.py	/^    def _step(self, action):$/;"	kind:member	line:198
+_thunk	../envs.py	/^    def _thunk():$/;"	kind:function	line:16
+absolute_scope_name	../common/tf_util.py	/^def absolute_scope_name(relative_scope_name):$/;"	kind:function	line:696
+act	../model.py	/^    def act(self, inputs, deterministic=False):$/;"	kind:member	line:32
+action_log_probs	../gtn_optimize.py	/^        action_log_probs=action_log_probs,$/;"	kind:variable	line:9
+action_log_probs	../gtn_optimize.py	/^    action_log_probs = action_log_probs.view(args.num_steps, num_processes_total, 1)$/;"	kind:variable	line:5
+action_log_probs	../ppo_optimize.py	/^    action_log_probs = action_log_probs.view(args.num_steps, args.num_processes, 1)$/;"	kind:variable	line:5
+action_loss	../gtn_optimize.py	/^            action_loss = -torch.min(surr1, surr2).mean() # PPO's pessimistic surrogate (L^CLIP)$/;"	kind:variable	line:72
+action_loss	../gtn_optimize.py	/^    action_loss = -(Variable(advantages.data) * action_log_probs).mean()$/;"	kind:variable	line:22
+action_loss	../ppo_optimize.py	/^            action_loss = -torch.min(surr1, surr2).mean() # PPO's pessimistic surrogate (L^CLIP)$/;"	kind:variable	line:43
+action_loss	../ppo_optimize.py	/^    action_loss = -(Variable(advantages.data) * action_log_probs).mean()$/;"	kind:variable	line:10
+actions_batch	../gtn_optimize.py	/^            actions_batch = rollouts.actions.view(-1, action_shape)[indices]$/;"	kind:variable	line:60
+actions_batch	../ppo_optimize.py	/^            actions_batch = rollouts.actions.view(-1, action_shape)[indices]$/;"	kind:variable	line:31
+actor_critic	../enjoy.py	/^        actor_critic = torch.load(os.path.join(args.load_dir, args.env_name + ".pt"))$/;"	kind:variable	line:80
+actor_critic	../enjoy.py	/^actor_critic = torch.load(os.path.join(args.load_dir, args.env_name + ".pt"))$/;"	kind:variable	line:34
+adv_targ	../gtn_optimize.py	/^            adv_targ = Variable(advantages.view(-1, 1)[indices])$/;"	kind:variable	line:69
+adv_targ	../ppo_optimize.py	/^            adv_targ = Variable(advantages.view(-1, 1)[indices])$/;"	kind:variable	line:40
+advantages	../gtn_optimize.py	/^    advantages = (advantages - advantages.mean()) \/ (advantages.std() + 1e-5)$/;"	kind:variable	line:47
+advantages	../gtn_optimize.py	/^    advantages = Variable(rollouts.returns[:-1]) - values$/;"	kind:variable	line:19
+advantages	../gtn_optimize.py	/^    advantages = rollouts.returns[:-1] - rollouts.value_preds[:-1]$/;"	kind:variable	line:46
+advantages	../ppo_optimize.py	/^    advantages = (advantages - advantages.mean()) \/ (advantages.std() + 1e-5)$/;"	kind:variable	line:19
+advantages	../ppo_optimize.py	/^    advantages = Variable(rollouts.returns[:-1]) - values$/;"	kind:variable	line:7
+advantages	../ppo_optimize.py	/^    advantages = rollouts.returns[:-1] - rollouts.value_preds[:-1]$/;"	kind:variable	line:18
+afs_offset	../main.py	/^afs_offset = [0.0, 0.0, 0.0, 0.0, 0.0]$/;"	kind:variable	line:155
+argmax	../common/tf_util.py	/^def argmax(x, axis=None):$/;"	kind:function	line:50
+args	../enjoy.py	/^args = parser.parse_args()$/;"	kind:variable	line:25
+args	../main.py	/^args = get_args()$/;"	kind:variable	line:25
+arguments.py	../arguments.py	1;"	kind:file	line:1
+atari_wrappers.py	../common/atari_wrappers.py	1;"	kind:file	line:1
+atari_wrappers_deprecated.py	../common/atari_wrappers_deprecated.py	1;"	kind:file	line:1
+azure_utils.py	../common/azure_utils.py	1;"	kind:file	line:1
+benchmarks.py	../bench/benchmarks.py	1;"	kind:file	line:1
+blue	../common/console_util.py	/^    blue=34,$/;"	kind:variable	line:28
+boolean_flag	../common/misc_util.py	/^def boolean_flag(parser, name, default=False, help=None):$/;"	kind:function	line:226
+both_side_tower	../arguments.py	/^both_side_tower = 0$/;"	kind:variable	line:21
+break_line_html	../main.py	/^def break_line_html(string):$/;"	kind:function	line:196
+categorical_sample_logits	../common/tf_util.py	/^def categorical_sample_logits(X):$/;"	kind:function	line:89
+cg	../common/cg.py	/^def cg(f_Ax, b, cg_iters=10, callback=None, verbose=False, residual_tol=1e-10):$/;"	kind:function	line:2
+cg.py	../common/cg.py	1;"	kind:file	line:1
+check_synced	../common/mpi_adam.py	/^    def check_synced(self):$/;"	kind:member	line:42
+checkallclose	../common/mpi_running_mean_std.py	/^    def checkallclose(x,y):$/;"	kind:function	line:91
+clip	../common/tf_util.py	/^clip = tf.clip_by_value$/;"	kind:variable	line:14
+close	../bench/monitor.py	/^    def close(self):$/;"	kind:member	line:88
+close	../common/vec_env/__init__.py	/^    def close(self):$/;"	kind:member	line:18
+close	../common/vec_env/subproc_vec_env.py	/^    def close(self):$/;"	kind:member	line:126
+close	../common/vec_env/subproc_vec_env.py	/^    def close(self):$/;"	kind:member	line:71
+color2num	../common/console_util.py	/^color2num = dict($/;"	kind:variable	line:23
+color_defaults	../visualize.py	/^color_defaults = [$/;"	kind:variable	line:88
+colorize	../common/console_util.py	/^def colorize(string, color, bold=False, highlight=False):$/;"	kind:function	line:35
+compute_cov_a	../kfac.py	/^def compute_cov_a(a, classname, layer_info, fast_cnn):$/;"	kind:function	line:27
+compute_cov_g	../kfac.py	/^def compute_cov_g(g, classname, layer_info, fast_cnn):$/;"	kind:function	line:47
+compute_fisher	../model.py	/^    def compute_fisher(self, states, num_samples=200, plot_diffs=False, disp_freq=10):$/;"	kind:member	line:1180
+compute_returns	../storage.py	/^    def compute_returns(self, next_value, use_gae, gamma, tau):$/;"	kind:member	line:34
+concatenate	../common/tf_util.py	/^def concatenate(arrs, axis=0):$/;"	kind:function	line:46
+console_util.py	../common/console_util.py	1;"	kind:file	line:1
+conv2d	../common/tf_util.py	/^def conv2d(x, num_filters, name, filter_size=(3, 3), stride=(1, 1), pad="SAME", dtype=tf.float32, collections=None,$/;"	kind:function	line:294
+conv_list	../gtn_optimize.py	/^        conv_list=conv_list,$/;"	kind:variable	line:10
+cpu	../model.py	/^    def cpu(self, **args):$/;"	kind:member	line:1352
+cpu	../running_stat.py	/^    def cpu(self):$/;"	kind:member	line:26
+cpu_actions	../enjoy.py	/^    cpu_actions = action.data.cpu().numpy()$/;"	kind:variable	line:64
+crimson	../common/console_util.py	/^    crimson=38$/;"	kind:variable	line:32
+cuda	../model.py	/^    def cuda(self, **args):$/;"	kind:member	line:1348
+cuda	../running_stat.py	/^    def cuda(self):$/;"	kind:member	line:18
+cuda	../storage.py	/^    def cuda(self):$/;"	kind:member	line:19
+current_state	../enjoy.py	/^current_state = torch.zeros(1, *obs_shape)$/;"	kind:variable	line:39
+cyan	../common/console_util.py	/^    cyan=36,$/;"	kind:variable	line:30
+dataset	../arguments.py	/^    dataset = 'mt as ewc test'$/;"	kind:variable	line:32
+dataset	../arguments.py	/^    dataset = 'mt shooting'$/;"	kind:variable	line:30
+dataset	../arguments.py	/^    dataset = 'mt test pong'$/;"	kind:variable	line:82
+dataset.py	../common/dataset.py	1;"	kind:file	line:1
+debugging	../arguments.py	/^debugging = 0$/;"	kind:variable	line:6
+dense	../common/tf_util.py	/^def dense(x, size, name, weight_init=None, bias=True):$/;"	kind:function	line:324
+densenobias	../common/tf_util.py	/^def densenobias(x, size, name, weight_init=None):$/;"	kind:function	line:346
+deterministic	../enjoy.py	/^                                        deterministic=True)$/;"	kind:variable	line:63
+discount	../common/math_util.py	/^def discount(x, gamma):$/;"	kind:function	line:5
+discount_with_boundaries	../common/math_util.py	/^def discount_with_boundaries(X, New, gamma):$/;"	kind:function	line:63
+distance	../enjoy.py	/^            distance = 5$/;"	kind:variable	line:71
+distributions.py	../common/distributions.py	1;"	kind:file	line:1
+distributions.py	../distributions.py	1;"	kind:file	line:1
+dropout	../common/tf_util.py	/^def dropout(x, pkeep, phase=None, mask=None):$/;"	kind:function	line:350
+enjoy.py	../enjoy.py	1;"	kind:file	line:1
+ensure_tf_input	../common/tf_util.py	/^def ensure_tf_input(thing):$/;"	kind:function	line:175
+entropy	../common/distributions.py	/^    def entropy(self):$/;"	kind:member	line:147
+entropy	../common/distributions.py	/^    def entropy(self):$/;"	kind:member	line:175
+entropy	../common/distributions.py	/^    def entropy(self):$/;"	kind:member	line:20
+entropy	../common/distributions.py	/^    def entropy(self):$/;"	kind:member	line:201
+entropy	../common/distributions.py	/^    def entropy(self):$/;"	kind:member	line:221
+env	../enjoy.py	/^env = make_env(args.env_name, args.seed, 0, args.log_dir)()$/;"	kind:variable	line:32
+env_shortname	../bench/benchmarks.py	/^def env_shortname(s):$/;"	kind:function	line:133
+envs.py	../envs.py	1;"	kind:file	line:1
+eval	../common/tf_util.py	/^def eval(expr, feed_dict=None):$/;"	kind:function	line:246
+evaluate_actions	../distributions.py	/^    def evaluate_actions(self, x, actions):$/;"	kind:member	line:29
+evaluate_actions	../distributions.py	/^    def evaluate_actions(self, x, actions):$/;"	kind:member	line:75
+evaluate_actions	../model.py	/^    def evaluate_actions(self, inputs, actions):$/;"	kind:member	line:37
+evaluate_states_value_fisher	../model.py	/^    def evaluate_states_value_fisher(self, inputs):$/;"	kind:member	line:42
+ewc	../arguments.py	/^ewc = 0$/;"	kind:variable	line:17
+ewc_interval	../arguments.py	/^ewc_interval = 10$/;"	kind:variable	line:19
+ewc_lambda	../arguments.py	/^ewc_lambda = 1.0$/;"	kind:variable	line:18
+ewc_loss	../gtn_optimize.py	/^            ewc_loss = actor_critic.get_ewc_loss(lam=ewc_lambda)$/;"	kind:variable	line:29
+ewc_loss	../gtn_optimize.py	/^    ewc_loss = None$/;"	kind:variable	line:26
+exists	../common/azure_utils.py	/^    def exists(self, blob_name):$/;"	kind:member	line:148
+exp	../arguments.py	/^exp = 'on_ewc_games_'$/;"	kind:variable	line:45
+explained_variance	../common/math_util.py	/^def explained_variance(ypred,y):$/;"	kind:function	line:25
+explained_variance_2d	../common/math_util.py	/^def explained_variance_2d(ypred, y):$/;"	kind:function	line:40
+f	../bench/monitor.py	/^    f = None$/;"	kind:variable	line:16
+fancy_slice_2d	../common/tf_util.py	/^def fancy_slice_2d(X, inds0, inds1):$/;"	kind:function	line:650
+files	../main.py	/^        files = glob.glob(os.path.join(log_dir, '*.monitor.json'))$/;"	kind:variable	line:151
+final_loss	../gtn_optimize.py	/^        final_loss = final_loss_basic + ewc_loss$/;"	kind:variable	line:34
+final_loss	../gtn_optimize.py	/^        final_loss = final_loss_basic$/;"	kind:variable	line:32
+final_loss_basic	../gtn_optimize.py	/^    final_loss_basic = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef$/;"	kind:variable	line:24
+find_prefixsum_idx	../common/segment_tree.py	/^    def find_prefixsum_idx(self, prefixsum):$/;"	kind:member	line:106
+find_task_for_env_id_in_any_benchmark	../bench/benchmarks.py	/^def find_task_for_env_id_in_any_benchmark(env_id):$/;"	kind:function	line:25
+fix_point	../visualize.py	/^def fix_point(x, y, interval):$/;"	kind:function	line:28
+fixed_list_blobs	../common/azure_utils.py	/^def fixed_list_blobs(service, *args, **kwargs):$/;"	kind:function	line:18
+flatgrad	../common/tf_util.py	/^def flatgrad(loss, var_list, clip_norm=None):$/;"	kind:function	line:609
+flatparam	../common/distributions.py	/^    def flatparam(self):$/;"	kind:member	line:11
+flatparam	../common/distributions.py	/^    def flatparam(self):$/;"	kind:member	line:126
+flatparam	../common/distributions.py	/^    def flatparam(self):$/;"	kind:member	line:165
+flatparam	../common/distributions.py	/^    def flatparam(self):$/;"	kind:member	line:190
+flatparam	../common/distributions.py	/^    def flatparam(self):$/;"	kind:member	line:213
+flatten_arrays	../common/math_util.py	/^def flatten_arrays(arrs):$/;"	kind:function	line:50
+flattenallbut0	../common/tf_util.py	/^def flattenallbut0(x):$/;"	kind:function	line:745
+flush	../plot.py	/^	def flush(self):$/;"	kind:member	line:60
+fmt_item	../common/console_util.py	/^def fmt_item(x, l):$/;"	kind:function	line:15
+fmt_row	../common/console_util.py	/^def fmt_row(width, row, header=False):$/;"	kind:function	line:10
+forward	../distributions.py	/^    def forward(self, x):$/;"	kind:member	line:15
+forward	../distributions.py	/^    def forward(self, x):$/;"	kind:member	line:47
+forward	../kfac.py	/^    def forward(self, input):$/;"	kind:member	line:79
+forward	../model.py	/^    def forward(self, inputs):$/;"	kind:member	line:1356
+forward	../model.py	/^    def forward(self, inputs):$/;"	kind:member	line:872
+forward	../model.py	/^    def forward(self, x):$/;"	kind:member	line:29
+forward	../utils.py	/^    def forward(self, x):$/;"	kind:member	line:10
+fromflat	../common/distributions.py	/^    def fromflat(cls, flat):$/;"	kind:member	line:157
+fromflat	../common/distributions.py	/^    def fromflat(cls, flat):$/;"	kind:member	line:180
+fromflat	../common/distributions.py	/^    def fromflat(cls, flat):$/;"	kind:member	line:206
+fromflat	../common/distributions.py	/^    def fromflat(cls, flat):$/;"	kind:member	line:227
+function	../common/tf_util.py	/^def function(inputs, outputs, updates=None, givens=None):$/;"	kind:function	line:364
+g_game_dic_all	../get_name.py	/^g_game_dic_all = get_env_dic([$/;"	kind:variable	line:30
+g_game_dic_shooting	../get_name.py	/^g_game_dic_shooting = get_env_dic([$/;"	kind:variable	line:27
+g_game_dic_test_multi_pong	../get_name.py	/^g_game_dic_test_multi_pong = get_env_dic([$/;"	kind:variable	line:24
+g_game_dic_test_single_pong	../get_name.py	/^g_game_dic_test_single_pong = get_env_dic([$/;"	kind:variable	line:21
+get	../common/azure_utils.py	/^    def get(self, dest_path, blob_name, callback=None):$/;"	kind:member	line:101
+get	../common/tf_util.py	/^    def get(self):$/;"	kind:member	line:112
+get	../common/tf_util.py	/^    def get(self):$/;"	kind:member	line:129
+get	../common/tf_util.py	/^    def get(self):$/;"	kind:member	line:171
+get_afs_per_m	../model.py	/^    def get_afs_per_m(self, action_log_probs, conv_list):$/;"	kind:member	line:1151
+get_args	../arguments.py	/^def get_args():$/;"	kind:function	line:93
+get_benchmark	../bench/benchmarks.py	/^def get_benchmark(benchmark_name):$/;"	kind:function	line:15
+get_env_ac_space	../get_name.py	/^def get_env_ac_space(env_id):$/;"	kind:function	line:12
+get_env_dic	../get_name.py	/^def get_env_dic(env_seq_id):$/;"	kind:function	line:4
+get_env_dic_ac_space	../get_name.py	/^def get_env_dic_ac_space(env_id_dic):$/;"	kind:function	line:15
+get_episode_lengths	../bench/monitor.py	/^    def get_episode_lengths(self):$/;"	kind:member	line:98
+get_episode_rewards	../bench/monitor.py	/^    def get_episode_rewards(self):$/;"	kind:member	line:95
+get_ewc_loss	../model.py	/^    def get_ewc_loss(self, lam):$/;"	kind:member	line:1272
+get_fisher_one	../model.py	/^        def get_fisher_one(state):$/;"	kind:function	line:1200
+get_grad_norm	../model.py	/^        def get_grad_norm(inputs,outputs):$/;"	kind:function	line:1129
+get_gradient_reward_one_m	../model.py	/^    def get_gradient_reward_one_m(self, action_log_probs, conv):$/;"	kind:member	line:1127
+get_monitor_files	../bench/monitor.py	/^def get_monitor_files(dir):$/;"	kind:function	line:117
+get_name.py	../get_name.py	1;"	kind:file	line:1
+get_parents	../common/tf_util.py	/^def get_parents(node):$/;"	kind:function	line:549
+get_placeholder	../common/tf_util.py	/^def get_placeholder(name, dtype, shape):$/;"	kind:function	line:730
+get_placeholder_cached	../common/tf_util.py	/^def get_placeholder_cached(name):$/;"	kind:function	line:741
+get_plot	../plot.py	/^	def get_plot(self, name):$/;"	kind:member	line:55
+get_session	../common/tf_util.py	/^def get_session():$/;"	kind:function	line:218
+get_state	../common/misc_util.py	/^    def get_state(self):$/;"	kind:member	line:207
+get_task	../bench/benchmarks.py	/^def get_task(benchmark, env_id):$/;"	kind:function	line:21
+get_total_steps	../bench/monitor.py	/^    def get_total_steps(self):$/;"	kind:member	line:92
+get_wrapper_by_name	../common/misc_util.py	/^def get_wrapper_by_name(env, classname):$/;"	kind:function	line:245
+gpus	../arguments.py	/^    gpus = [0]$/;"	kind:variable	line:63
+gpus	../arguments.py	/^    gpus = range(torch.cuda.device_count())$/;"	kind:variable	line:60
+gray	../common/console_util.py	/^    gray=30,$/;"	kind:variable	line:24
+green	../common/console_util.py	/^    green=32,$/;"	kind:variable	line:26
+gtn_M	../arguments.py	/^gtn_M = 1 $/;"	kind:variable	line:8
+gtn_N	../arguments.py	/^gtn_N = 3$/;"	kind:variable	line:9
+gtn_optimize.py	../gtn_optimize.py	1;"	kind:file	line:1
+help	../enjoy.py	/^                    help='algorithm to use: a2c | ppo | acktr')$/;"	kind:variable	line:12
+help	../enjoy.py	/^                    help='directory to save agent logs (default: .\/trained_models\/)')$/;"	kind:variable	line:22
+help	../enjoy.py	/^                    help='directory to save agent logs (default: \/tmp\/gym)')$/;"	kind:variable	line:24
+help	../enjoy.py	/^                    help='environment to train on (default: PongNoFrameskip-v4)')$/;"	kind:variable	line:20
+help	../enjoy.py	/^                    help='log interval, one log per n updates (default: 10)')$/;"	kind:variable	line:18
+help	../enjoy.py	/^                    help='number of frames to stack (default: 4)')$/;"	kind:variable	line:16
+help	../enjoy.py	/^                    help='random seed (default: 1)')$/;"	kind:variable	line:14
+helper	../common/misc_util.py	/^    def helper(cnt, name):$/;"	kind:function	line:105
+hierarchical	../arguments.py	/^hierarchical = 1$/;"	kind:variable	line:11
+huber_loss	../common/tf_util.py	/^def huber_loss(x, delta=1.0):$/;"	kind:function	line:189
+in_session	../common/tf_util.py	/^def in_session(f):$/;"	kind:function	line:719
+indices	../gtn_optimize.py	/^                indices = indices.cuda()$/;"	kind:variable	line:58
+indices	../gtn_optimize.py	/^            indices = torch.LongTensor(indices)$/;"	kind:variable	line:56
+indices	../ppo_optimize.py	/^                indices = indices.cuda()$/;"	kind:variable	line:29
+indices	../ppo_optimize.py	/^            indices = torch.LongTensor(indices)$/;"	kind:variable	line:27
+initialize	../common/tf_util.py	/^def initialize():$/;"	kind:function	line:239
+insert	../storage.py	/^    def insert(self, step, current_state, action, value_pred, reward, mask):$/;"	kind:member	line:27
+intprod	../common/tf_util.py	/^def intprod(x):$/;"	kind:function	line:605
+is_placeholder	../common/tf_util.py	/^def is_placeholder(x):$/;"	kind:function	line:100
+is_restore	../arguments.py	/^is_restore = False$/;"	kind:variable	line:78
+is_use_afs	../main.py	/^is_use_afs = True$/;"	kind:variable	line:24
+is_use_ppo	../arguments.py	/^is_use_ppo = True$/;"	kind:variable	line:4
+iterate_once	../common/dataset.py	/^    def iterate_once(self, batch_size):$/;"	kind:member	line:36
+iterbatches	../common/dataset.py	/^def iterbatches(arrays, *, num_batches=None, batch_size=None, shuffle=True, include_final_partial_batch=True):$/;"	kind:function	line:50
+kfac.py	../kfac.py	1;"	kind:file	line:1
+kl	../common/distributions.py	/^    def kl(self, other):$/;"	kind:member	line:138
+kl	../common/distributions.py	/^    def kl(self, other):$/;"	kind:member	line:171
+kl	../common/distributions.py	/^    def kl(self, other):$/;"	kind:member	line:18
+kl	../common/distributions.py	/^    def kl(self, other):$/;"	kind:member	line:198
+kl	../common/distributions.py	/^    def kl(self, other):$/;"	kind:member	line:219
+l2loss	../common/tf_util.py	/^def l2loss(params):$/;"	kind:function	line:76
+lengths_to_mask	../common/tf_util.py	/^def lengths_to_mask(lengths_b, max_length):$/;"	kind:function	line:701
+linear_interpolation	../common/schedules.py	/^def linear_interpolation(l, r, alpha):$/;"	kind:function	line:34
+list	../common/azure_utils.py	/^    def list(self, prefix=None):$/;"	kind:member	line:144
+list_benchmarks	../bench/benchmarks.py	/^def list_benchmarks():$/;"	kind:function	line:12
+load_data	../visualize.py	/^def load_data(indir, smooth, bin_size):$/;"	kind:function	line:53
+load_results	../bench/monitor.py	/^def load_results(dir, raw_episodes=False):$/;"	kind:function	line:120
+load_state	../common/tf_util.py	/^def load_state(fname):$/;"	kind:function	line:271
+log_dir	../main.py	/^    log_dir = args.log_dir+env_id+'\/'$/;"	kind:variable	line:147
+log_fisher_sensitivity_per_m	../arguments.py	/^    log_fisher_sensitivity_per_m = 1$/;"	kind:variable	line:26
+log_fisher_sensitivity_per_m	../arguments.py	/^log_fisher_sensitivity_per_m = 0$/;"	kind:variable	line:23
+log_interval	../arguments.py	/^    log_interval = 1$/;"	kind:variable	line:83
+log_interval	../arguments.py	/^    log_interval = 10$/;"	kind:variable	line:75
+log_interval	../arguments.py	/^    log_interval = 20$/;"	kind:variable	line:72
+logger	../plot.py	/^class logger(object):$/;"	kind:class	line:18
+logp	../common/distributions.py	/^    def logp(self, x):$/;"	kind:member	line:24
+loss_fisher_sensitivity_per_m	../arguments.py	/^loss_fisher_sensitivity_per_m = 0$/;"	kind:variable	line:24
+lrelu	../common/tf_util.py	/^def lrelu(x, leak=0.2):$/;"	kind:function	line:83
+magenta	../common/console_util.py	/^    magenta=35,$/;"	kind:variable	line:29
+main	../main.py	/^def main():$/;"	kind:function	line:202
+main.py	../main.py	1;"	kind:file	line:1
+make_archive	../common/azure_utils.py	/^def make_archive(source_path, dest_path):$/;"	kind:function	line:34
+make_env	../envs.py	/^def make_env(env_id, seed, rank, log_dir):$/;"	kind:function	line:15
+make_feed_dict	../common/tf_util.py	/^    def make_feed_dict(data):$/;"	kind:member	line:118
+make_feed_dict	../common/tf_util.py	/^    def make_feed_dict(self, data):$/;"	kind:member	line:132
+make_pdtype	../common/distributions.py	/^def make_pdtype(ac_space):$/;"	kind:function	line:230
+make_session	../common/tf_util.py	/^def make_session(num_cpu):$/;"	kind:function	line:223
+math_util.py	../common/math_util.py	1;"	kind:file	line:1
+max	../common/tf_util.py	/^def max(x, axis=None, keepdims=False):$/;"	kind:function	line:36
+mean	../common/tf_util.py	/^def mean(x, axis=None, keepdims=False):$/;"	kind:function	line:22
+mem_friendly_function	../common/tf_util.py	/^def mem_friendly_function(nondata_inputs, data_inputs, outputs, batch_size):$/;"	kind:function	line:452
+min	../common/segment_tree.py	/^    def min(self, start=0, end=None):$/;"	kind:member	line:143
+min	../common/tf_util.py	/^def min(x, axis=None, keepdims=False):$/;"	kind:function	line:41
+minimize_and_clip	../common/tf_util.py	/^def minimize_and_clip(optimizer, objective, var_list, clip_val=10):$/;"	kind:function	line:202
+misc_util.py	../common/misc_util.py	1;"	kind:file	line:1
+mode	../common/distributions.py	/^    def mode(self):$/;"	kind:member	line:128
+mode	../common/distributions.py	/^    def mode(self):$/;"	kind:member	line:13
+mode	../common/distributions.py	/^    def mode(self):$/;"	kind:member	line:167
+mode	../common/distributions.py	/^    def mode(self):$/;"	kind:member	line:192
+mode	../common/distributions.py	/^    def mode(self):$/;"	kind:member	line:215
+model.py	../model.py	1;"	kind:file	line:1
+module	../common/tf_util.py	/^def module(name):$/;"	kind:function	line:532
+monitor.py	../bench/monitor.py	1;"	kind:file	line:1
+mpi_adam.py	../common/mpi_adam.py	1;"	kind:file	line:1
+mpi_fork	../common/mpi_fork.py	/^def mpi_fork(n, bind_to_core=False):$/;"	kind:function	line:3
+mpi_fork.py	../common/mpi_fork.py	1;"	kind:file	line:1
+mpi_moments	../common/mpi_moments.py	/^def mpi_moments(x, axis=0):$/;"	kind:function	line:5
+mpi_moments.py	../common/mpi_moments.py	1;"	kind:file	line:1
+mpi_running_mean_std.py	../common/mpi_running_mean_std.py	1;"	kind:file	line:1
+mt_env_id_dic_all	../main.py	/^mt_env_id_dic_all = {$/;"	kind:variable	line:39
+mt_env_id_dic_selected	../main.py	/^mt_env_id_dic_selected = mt_env_id_dic_all[args.env_name]$/;"	kind:variable	line:144
+multi_gpu	../arguments.py	/^multi_gpu = 0$/;"	kind:variable	line:57
+ncc	../common/math_util.py	/^def ncc(ypred, y):$/;"	kind:function	line:47
+neglogp	../common/distributions.py	/^    def neglogp(self, x):$/;"	kind:member	line:130
+neglogp	../common/distributions.py	/^    def neglogp(self, x):$/;"	kind:member	line:15
+neglogp	../common/distributions.py	/^    def neglogp(self, x):$/;"	kind:member	line:169
+neglogp	../common/distributions.py	/^    def neglogp(self, x):$/;"	kind:member	line:194
+neglogp	../common/distributions.py	/^    def neglogp(self, x):$/;"	kind:member	line:217
+newfunc	../common/tf_util.py	/^    def newfunc(*args, **kwargs):$/;"	kind:function	line:721
+next_batch	../common/dataset.py	/^    def next_batch(self, batch_size):$/;"	kind:member	line:23
+normc_initializer	../common/tf_util.py	/^def normc_initializer(std=1.0):$/;"	kind:function	line:286
+num_envs	../common/vec_env/subproc_vec_env.py	/^    def num_envs(self):$/;"	kind:member	line:133
+num_envs	../common/vec_env/subproc_vec_env.py	/^    def num_envs(self):$/;"	kind:member	line:78
+num_processes	../arguments.py	/^    num_processes = 1$/;"	kind:variable	line:81
+num_processes	../arguments.py	/^    num_processes = 16$/;"	kind:variable	line:65
+num_processes	../arguments.py	/^    num_processes = 4$/;"	kind:variable	line:67
+num_processes	../arguments.py	/^    num_processes = 4$/;"	kind:variable	line:69
+num_updates	../main.py	/^num_updates = int(args.num_frames) \/\/ args.num_steps \/\/ args.num_processes$/;"	kind:variable	line:33
+numel	../common/tf_util.py	/^def numel(x):$/;"	kind:function	line:601
+obs_shape	../enjoy.py	/^obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])$/;"	kind:variable	line:38
+obs_shape	../enjoy.py	/^obs_shape = env.observation_space.shape$/;"	kind:variable	line:37
+param_placeholder	../common/distributions.py	/^    def param_placeholder(self, prepend_shape, name=None):$/;"	kind:member	line:42
+param_shape	../common/distributions.py	/^    def param_shape(self):$/;"	kind:member	line:35
+param_shape	../common/distributions.py	/^    def param_shape(self):$/;"	kind:member	line:52
+param_shape	../common/distributions.py	/^    def param_shape(self):$/;"	kind:member	line:69
+param_shape	../common/distributions.py	/^    def param_shape(self):$/;"	kind:member	line:81
+param_shape	../common/distributions.py	/^    def param_shape(self):$/;"	kind:member	line:93
+parameter_noise	../arguments.py	/^parameter_noise = 1$/;"	kind:variable	line:13
+parameter_noise	../model.py	/^    def parameter_noise(self):$/;"	kind:member	line:1118
+parameter_noise_interval	../arguments.py	/^parameter_noise_interval = 10$/;"	kind:variable	line:14
+parameter_noise_rate	../arguments.py	/^parameter_noise_rate = 0.01$/;"	kind:variable	line:15
+parser	../enjoy.py	/^parser = argparse.ArgumentParser(description='RL')$/;"	kind:variable	line:10
+pdclass	../common/distributions.py	/^    def pdclass(self):$/;"	kind:member	line:31
+pdclass	../common/distributions.py	/^    def pdclass(self):$/;"	kind:member	line:50
+pdclass	../common/distributions.py	/^    def pdclass(self):$/;"	kind:member	line:65
+pdclass	../common/distributions.py	/^    def pdclass(self):$/;"	kind:member	line:79
+pdclass	../common/distributions.py	/^    def pdclass(self):$/;"	kind:member	line:91
+pdfromflat	../common/distributions.py	/^    def pdfromflat(self, flat):$/;"	kind:member	line:33
+pdfromflat	../common/distributions.py	/^    def pdfromflat(self, flat):$/;"	kind:member	line:67
+pickle_load	../common/misc_util.py	/^def pickle_load(path, compression=False):$/;"	kind:function	line:306
+plot	../plot.py	/^	def plot(self, name, value):$/;"	kind:member	line:50
+plot.py	../plot.py	1;"	kind:file	line:1
+ppo_optimize.py	../ppo_optimize.py	1;"	kind:file	line:1
+pretty_eta	../common/misc_util.py	/^def pretty_eta(seconds_left):$/;"	kind:function	line:81
+process	../common/atari_wrappers_deprecated.py	/^    def process(frame):$/;"	kind:member	line:132
+process	../common/atari_wrappers_deprecated.py	/^    def process(frame):$/;"	kind:member	line:236
+progress_callback	../common/azure_utils.py	/^        def progress_callback(current, total):$/;"	kind:function	line:110
+progress_callback	../common/azure_utils.py	/^        def progress_callback(current, total):$/;"	kind:function	line:68
+put	../common/azure_utils.py	/^    def put(self, source_path, blob_name, callback=None):$/;"	kind:member	line:61
+ratio	../gtn_optimize.py	/^            ratio = torch.exp(action_log_probs - Variable(old_action_log_probs.data))$/;"	kind:variable	line:68
+ratio	../ppo_optimize.py	/^            ratio = torch.exp(action_log_probs - Variable(old_action_log_probs.data))$/;"	kind:variable	line:39
+rec_last_100_epi_reward	../main.py	/^def rec_last_100_epi_reward(reward,done_list):$/;"	kind:function	line:158
+red	../common/console_util.py	/^    red=31,$/;"	kind:variable	line:25
+reduce	../common/segment_tree.py	/^    def reduce(self, start=0, end=None):$/;"	kind:member	line:52
+register_benchmark	../bench/benchmarks.py	/^def register_benchmark(benchmark):$/;"	kind:function	line:6
+relatively_safe_pickle_dump	../common/misc_util.py	/^def relatively_safe_pickle_dump(obj, path, compression=False):$/;"	kind:function	line:271
+reset	../bench/monitor.py	/^    def reset(self):$/;"	kind:member	line:62
+reset	../common/tf_util.py	/^def reset():$/;"	kind:function	line:749
+reset	../common/vec_env/__init__.py	/^    def reset(self):$/;"	kind:member	line:13
+reset	../common/vec_env/subproc_vec_env.py	/^    def reset(self):$/;"	kind:member	line:121
+reset	../common/vec_env/subproc_vec_env.py	/^    def reset(self):$/;"	kind:member	line:66
+reset_linear_conv_parameters	../model.py	/^        def reset_linear_conv_parameters(x):$/;"	kind:function	line:636
+reset_parameters	../model.py	/^    def reset_parameters(self):$/;"	kind:member	line:1334
+reset_parameters	../model.py	/^    def reset_parameters(self):$/;"	kind:member	line:631
+restore	../plot.py	/^	def restore(self):$/;"	kind:member	line:33
+retrieve_name	../model.py	/^        def retrieve_name(var):$/;"	kind:function	line:640
+return_batch	../gtn_optimize.py	/^            return_batch = rollouts.returns[:-1].view(-1, 1)[indices]$/;"	kind:variable	line:61
+return_batch	../ppo_optimize.py	/^            return_batch = rollouts.returns[:-1].view(-1, 1)[indices]$/;"	kind:variable	line:32
+reward_dict	../main.py	/^reward_dict={}$/;"	kind:variable	line:156
+running_stat.py	../running_stat.py	1;"	kind:file	line:1
+sample	../common/distributions.py	/^    def sample(self):$/;"	kind:member	line:153
+sample	../common/distributions.py	/^    def sample(self):$/;"	kind:member	line:177
+sample	../common/distributions.py	/^    def sample(self):$/;"	kind:member	line:203
+sample	../common/distributions.py	/^    def sample(self):$/;"	kind:member	line:22
+sample	../common/distributions.py	/^    def sample(self):$/;"	kind:member	line:223
+sample	../distributions.py	/^    def sample(self, x, deterministic):$/;"	kind:member	line:19
+sample	../distributions.py	/^    def sample(self, x, deterministic):$/;"	kind:member	line:60
+sample_dtype	../common/distributions.py	/^    def sample_dtype(self):$/;"	kind:member	line:39
+sample_dtype	../common/distributions.py	/^    def sample_dtype(self):$/;"	kind:member	line:56
+sample_dtype	../common/distributions.py	/^    def sample_dtype(self):$/;"	kind:member	line:73
+sample_dtype	../common/distributions.py	/^    def sample_dtype(self):$/;"	kind:member	line:85
+sample_dtype	../common/distributions.py	/^    def sample_dtype(self):$/;"	kind:member	line:97
+sample_placeholder	../common/distributions.py	/^    def sample_placeholder(self, prepend_shape, name=None):$/;"	kind:member	line:44
+sample_shape	../common/distributions.py	/^    def sample_shape(self):$/;"	kind:member	line:37
+sample_shape	../common/distributions.py	/^    def sample_shape(self):$/;"	kind:member	line:54
+sample_shape	../common/distributions.py	/^    def sample_shape(self):$/;"	kind:member	line:71
+sample_shape	../common/distributions.py	/^    def sample_shape(self):$/;"	kind:member	line:83
+sample_shape	../common/distributions.py	/^    def sample_shape(self):$/;"	kind:member	line:95
+sampler	../gtn_optimize.py	/^        sampler = BatchSampler(SubsetRandomSampler(range(num_processes_total * args.num_steps)), args.batch_size * num_processes_total, drop_last=False)$/;"	kind:variable	line:54
+sampler	../ppo_optimize.py	/^        sampler = BatchSampler(SubsetRandomSampler(range(args.num_processes * args.num_steps)), args.batch_size * args.num_processes, drop_last=False)$/;"	kind:variable	line:25
+save_state	../common/tf_util.py	/^def save_state(fname):$/;"	kind:function	line:276
+schedules.py	../common/schedules.py	1;"	kind:file	line:1
+scope_name	../common/tf_util.py	/^def scope_name():$/;"	kind:function	line:691
+scope_vars	../common/tf_util.py	/^def scope_vars(scope, trainable_only=False):$/;"	kind:function	line:668
+segment_tree.py	../common/segment_tree.py	1;"	kind:file	line:1
+services	../common/azure_utils.py	/^    services = {}$/;"	kind:variable	line:50
+set_global_seeds	../common/misc_util.py	/^def set_global_seeds(i):$/;"	kind:function	line:70
+set_state	../common/misc_util.py	/^    def set_state(self, state):$/;"	kind:member	line:218
+set_value	../common/tf_util.py	/^def set_value(v, val):$/;"	kind:function	line:255
+shape_el	../common/distributions.py	/^def shape_el(v, i):$/;"	kind:function	line:244
+shuffle	../common/dataset.py	/^    def shuffle(self):$/;"	kind:member	line:12
+single_threaded_session	../common/tf_util.py	/^def single_threaded_session():$/;"	kind:function	line:231
+smooth_reward_curve	../visualize.py	/^def smooth_reward_curve(x, y):$/;"	kind:function	line:17
+split_bias	../kfac.py	/^        def split_bias(module):$/;"	kind:function	line:99
+star	../model.py	/^    def star(self):$/;"	kind:member	line:1262
+state	../enjoy.py	/^        state = env.reset()$/;"	kind:variable	line:79
+state	../enjoy.py	/^state = env.reset()$/;"	kind:variable	line:50
+states_batch	../gtn_optimize.py	/^            states_batch = rollouts.states[:-1].view(-1, *obs_shape)[indices]$/;"	kind:variable	line:59
+states_batch	../ppo_optimize.py	/^            states_batch = rollouts.states[:-1].view(-1, *obs_shape)[indices]$/;"	kind:variable	line:30
+std	../common/tf_util.py	/^def std(x, axis=None, keepdims=False):$/;"	kind:function	line:32
+step	../bench/monitor.py	/^    def step(self, action):$/;"	kind:member	line:69
+step	../common/vec_env/__init__.py	/^    def step(self, vac):$/;"	kind:member	line:5
+step	../common/vec_env/subproc_vec_env.py	/^    def step(self, actions):$/;"	kind:member	line:103
+step	../common/vec_env/subproc_vec_env.py	/^    def step(self, actions):$/;"	kind:member	line:59
+step	../kfac.py	/^    def step(self):$/;"	kind:member	line:187
+storage.py	../storage.py	1;"	kind:file	line:1
+subproc_vec_env.py	../common/vec_env/subproc_vec_env.py	1;"	kind:file	line:1
+subset	../common/dataset.py	/^    def subset(self, num_elements, deterministic=True):$/;"	kind:member	line:43
+sum	../common/segment_tree.py	/^    def sum(self, start=0, end=None):$/;"	kind:member	line:102
+sum	../common/tf_util.py	/^def sum(x, axis=None, keepdims=False):$/;"	kind:function	line:17
+surr1	../gtn_optimize.py	/^            surr1 = ratio * adv_targ$/;"	kind:variable	line:70
+surr1	../ppo_optimize.py	/^            surr1 = ratio * adv_targ$/;"	kind:variable	line:41
+surr2	../gtn_optimize.py	/^            surr2 = torch.clamp(ratio, 1.0 - args.clip_param, 1.0 + args.clip_param) * adv_targ$/;"	kind:variable	line:71
+surr2	../ppo_optimize.py	/^            surr2 = torch.clamp(ratio, 1.0 - args.clip_param, 1.0 + args.clip_param) * adv_targ$/;"	kind:variable	line:42
+switch	../common/tf_util.py	/^def switch(condition, then_expression, else_expression):$/;"	kind:function	line:54
+sync	../common/mpi_adam.py	/^    def sync(self):$/;"	kind:member	line:37
+test_MpiAdam	../common/mpi_adam.py	/^def test_MpiAdam():$/;"	kind:function	line:53
+test_constant_schedule	../common/tests/test_schedules.py	/^def test_constant_schedule():$/;"	kind:function	line:23
+test_discount_with_boundaries	../common/math_util.py	/^def test_discount_with_boundaries():$/;"	kind:function	line:75
+test_dist	../common/mpi_running_mean_std.py	/^def test_dist():$/;"	kind:function	line:65
+test_function	../common/tests/test_tf_util.py	/^def test_function():$/;"	kind:function	line:30
+test_max_interval_tree	../common/tests/test_segment_tree.py	/^def test_max_interval_tree():$/;"	kind:function	line:63
+test_multikwargs	../common/tests/test_tf_util.py	/^def test_multikwargs():$/;"	kind:function	line:46
+test_piecewise_schedule	../common/tests/test_schedules.py	/^def test_piecewise_schedule():$/;"	kind:function	line:6
+test_prefixsum_idx	../common/tests/test_segment_tree.py	/^def test_prefixsum_idx():$/;"	kind:function	line:33
+test_prefixsum_idx2	../common/tests/test_segment_tree.py	/^def test_prefixsum_idx2():$/;"	kind:function	line:47
+test_probtypes	../common/distributions.py	/^def test_probtypes():$/;"	kind:function	line:252
+test_runningmeanstd	../common/mpi_moments.py	/^def test_runningmeanstd():$/;"	kind:function	line:27
+test_runningmeanstd	../common/mpi_running_mean_std.py	/^def test_runningmeanstd():$/;"	kind:function	line:46
+test_schedules.py	../common/tests/test_schedules.py	1;"	kind:file	line:1
+test_segment_tree.py	../common/tests/test_segment_tree.py	1;"	kind:file	line:1
+test_set_value	../common/tests/test_tf_util.py	/^def test_set_value():$/;"	kind:function	line:11
+test_tf_util.py	../common/tests/test_tf_util.py	1;"	kind:file	line:1
+test_tree_set	../common/tests/test_segment_tree.py	/^def test_tree_set():$/;"	kind:function	line:6
+test_tree_set_overlap	../common/tests/test_segment_tree.py	/^def test_tree_set_overlap():$/;"	kind:function	line:20
+tf_util.py	../common/tf_util.py	1;"	kind:file	line:1
+tick	../plot.py	/^	def tick(self):$/;"	kind:member	line:47
+timed	../common/console_util.py	/^def timed(msg):$/;"	kind:function	line:47
+title	../arguments.py	/^    title = title[:x] + '\\n' + title[x:]$/;"	kind:variable	line:88
+title	../arguments.py	/^title = exp$/;"	kind:variable	line:86
+title_html	../arguments.py	/^    title_html = title_html[:x] + '<br>' + title_html[x:]$/;"	kind:variable	line:91
+title_html	../arguments.py	/^title_html = exp$/;"	kind:variable	line:89
+to_data_parallel	../model.py	/^def to_data_parallel(m):$/;"	kind:function	line:20
+topsorted	../common/tf_util.py	/^def topsorted(outputs):$/;"	kind:function	line:553
+torsoId	../enjoy.py	/^            torsoId = i$/;"	kind:variable	line:59
+torsoId	../enjoy.py	/^    torsoId = -1$/;"	kind:variable	line:56
+trainable_variables	../common/tf_util.py	/^    def trainable_variables(self):$/;"	kind:member	line:522
+unflatten_vector	../common/math_util.py	/^def unflatten_vector(vec, shapes):$/;"	kind:function	line:53
+unpack	../common/misc_util.py	/^def unpack(seq, sizes):$/;"	kind:function	line:17
+update	../common/misc_util.py	/^    def update(self, new_val):$/;"	kind:member	line:139
+update	../common/mpi_adam.py	/^    def update(self, localg, stepsize):$/;"	kind:member	line:21
+update	../common/mpi_running_mean_std.py	/^    def update(self, x):$/;"	kind:member	line:37
+update	../running_stat.py	/^    def update(self, x):$/;"	kind:member	line:34
+update_current_state	../enjoy.py	/^def update_current_state(state):$/;"	kind:function	line:42
+update_current_state	../main.py	/^    def update_current_state(state):$/;"	kind:function	line:270
+update_running_stat	../kfac.py	/^def update_running_stat(aa, m_aa, momentum):$/;"	kind:function	line:65
+utils.py	../utils.py	1;"	kind:file	line:1
+validate_probtype	../common/distributions.py	/^def validate_probtype(probtype, pdparam):$/;"	kind:function	line:268
+value	../common/schedules.py	/^    def value(self, t):$/;"	kind:member	line:13
+value	../common/schedules.py	/^    def value(self, t):$/;"	kind:member	line:29
+value	../common/schedules.py	/^    def value(self, t):$/;"	kind:member	line:64
+value	../common/schedules.py	/^    def value(self, t):$/;"	kind:member	line:96
+value_loss	../gtn_optimize.py	/^            value_loss = (Variable(return_batch) - values).pow(2).mean()$/;"	kind:variable	line:74
+value_loss	../gtn_optimize.py	/^    value_loss = advantages.pow(2).mean()$/;"	kind:variable	line:20
+value_loss	../ppo_optimize.py	/^            value_loss = (Variable(return_batch) - values).pow(2).mean()$/;"	kind:variable	line:45
+value_loss	../ppo_optimize.py	/^    value_loss = advantages.pow(2).mean()$/;"	kind:variable	line:8
+values	../gtn_optimize.py	/^    values = values.view(args.num_steps, num_processes_total, 1)$/;"	kind:variable	line:4
+values	../ppo_optimize.py	/^    values = values.view(args.num_steps, args.num_processes, 1)$/;"	kind:variable	line:4
+var	../common/tf_util.py	/^def var(x, axis=None, keepdims=False):$/;"	kind:function	line:27
+var_shape	../common/tf_util.py	/^def var_shape(x):$/;"	kind:function	line:594
+variables	../common/tf_util.py	/^    def variables(self):$/;"	kind:member	line:527
+vis	../plot.py	/^vis = visdom.Visdom()$/;"	kind:variable	line:14
+vis_interval	../arguments.py	/^    vis_interval = 1$/;"	kind:variable	line:84
+vis_interval	../arguments.py	/^    vis_interval = 10$/;"	kind:variable	line:76
+vis_interval	../arguments.py	/^    vis_interval = 20$/;"	kind:variable	line:73
+visdom_plot	../visualize.py	/^def visdom_plot(viz, win, folder, game, name, bin_size=100, smooth=1):$/;"	kind:function	line:102
+visualize.py	../visualize.py	1;"	kind:file	line:1
+viz	../visualize.py	/^    viz = Visdom()$/;"	kind:variable	line:139
+weights_init	../model.py	/^def weights_init(m):$/;"	kind:function	line:13
+weights_init_mlp	../model.py	/^def weights_init_mlp(m):$/;"	kind:function	line:1300
+white	../common/console_util.py	/^    white=37,$/;"	kind:variable	line:31
+wndense	../common/tf_util.py	/^def wndense(x, size, name, init_scale=1.0):$/;"	kind:function	line:334
+worker	../common/vec_env/subproc_vec_env.py	/^def worker(remote, env_fn_wrapper):$/;"	kind:function	line:5
+wrap_deepmind	../common/atari_wrappers.py	/^def wrap_deepmind(env, episode_life=True, clip_rewards=True):$/;"	kind:function	line:158
+wrap_dqn	../common/atari_wrappers_deprecated.py	/^def wrap_dqn(env):$/;"	kind:function	line:209
+wrapper	../common/tf_util.py	/^    def wrapper(f):$/;"	kind:function	line:534
+writekvs	../bench/monitor.py	/^    def writekvs(self, kvs):$/;"	kind:member	line:105
+yaw	../enjoy.py	/^            yaw = 0$/;"	kind:variable	line:72
+yellow	../common/console_util.py	/^    yellow=33,$/;"	kind:variable	line:27
+zipsame	../common/misc_util.py	/^def zipsame(*seqs):$/;"	kind:function	line:11

@@ -1,0 +1,28 @@
+in a2c:
+	1.conv_list in actor-critic.evaluation ok
+	2.gtn has optimizer.zero_grad() at the beginning  ok
+	3.values = values.view(args.num_steps, num_processes_total, 1) ***total ok
+	4. action_log_probs = action_log_probs.view(args.num_steps, num_processes_total, 1)  ***total ok
+	5.  afs_per_m_temp, afs_loss = actor_critic.get_afs_per_m(
+        action_log_probs=action_log_probs,
+        conv_list=conv_list,
+    )
+    if len(afs_per_m_temp)>0:
+        afs_per_m += [afs_per_m_temp]
+
+    if (afs_loss is not None) and (afs_loss.data.cpu().numpy()[0]!=0.0):
+        afs_loss.backward(mone, retain_graph=True)
+        afs_loss_list += [afs_loss.data.cpu().numpy()[0]]
+
+
+        ok
+
+    6. dim a final_loss_basic but not backward
+    7. dim a ewc-loss ok
+
+2. lager than 3 x 3  happend to error , guess it is because the conv3x3 is missing 
+3. loss normalization from different games ok
+4.linear or lstm linear
+5.different action-spcae ok
+6.hyper-parameter is like the code or the paper
+7.afs_loss is need

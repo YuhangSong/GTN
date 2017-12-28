@@ -21,13 +21,15 @@ from visualize import visdom_plot
 
 from arguments import debugging, gtn_M
 from arguments import exp, title, title_html
-
+is_use_afs = True
 args = get_args()
 
 assert args.algo in ['a2c', 'ppo', 'acktr']
 if args.algo == 'ppo':
     assert args.num_processes * args.num_steps % args.batch_size == 0
-
+'''num_frames: number of frames to train (default: 10e6)
+    num_steps:  agent every time updata need steps
+'''
 num_updates = int(args.num_frames) // args.num_steps // args.num_processes
 
 torch.manual_seed(args.seed)
@@ -46,6 +48,16 @@ mt_env_id_dic_all = {
         'QbertNoFrameskip-v4',
         'SpaceInvadersNoFrameskip-v4',
         'SeaquestNoFrameskip-v4',
+        ],
+    'mt_as_ewc_test':[
+        'CrazyClimberNoFrameskip-v4',
+        'RiverraidNoFrameskip-v4',
+        'BreakoutNoFrameskip-v4',
+        'PongNoFrameskip-v4',
+        'StarGunnerNoFrameskip-v4',
+        'DemonAttackNoFrameskip-v4',
+        'AsteroidsNoFrameskip-v4',
+        'SpaceInvadersNoFrameskip-v4',
         ],
     'mt shooting':[
         'BeamRiderNoFrameskip-v4',
@@ -141,6 +153,44 @@ for env_id in mt_env_id_dic_selected:
             os.remove(f)
 
 afs_offset = [0.0, 0.0, 0.0, 0.0, 0.0]
+reward_dict={}
+
+def rec_last_100_epi_reward(reward,done_list):
+    # num = 0
+    '''
+    arguments statement:
+    reward  :episode reward
+    done_list: the finished signal from env
+    '''
+    
+    for index,done  in enumerate(done_list):
+        env_name = mt_env_id_dic_selected[index // args.num_processes] 
+        # print (env_name)
+        if done:
+            try:
+                reward_dict["{}_entire".format(env_name)].append(reward[index])
+                try:
+                    reward_dict["{}_average".format(env_name)].append(np.mean(np.asarray(reward_dict["{}_entire".format(env_name)])))            
+                except:
+                    reward_dict["{}_average".format(env_name)] =[]           
+                if len(reward_dict["{}_entire".format(env_name)])>100:
+                    try:
+                        reward_dict["{}_last_100".format(env_name)].append(np.mean(np.asarray(reward_dict["{}_entire".format(env_name)][-100:])))
+                    except:
+                        reward_dict["{}_last_100".format(env_name)]=[]
+
+            except Exception as e:
+                reward_dict["{}_entire".format(env_name)]=[]
+                reward_dict["{}_average".format(env_name)] =[]         
+            reward[index] = 0
+    return reward
+        
+
+def break_line_html(string):
+    for x in range(0,len(string),40):
+        string = string[:x] + '<br>' + string[x:]
+    return string
+
 
 def main():
     print("#######")
@@ -153,31 +203,44 @@ def main():
         from visdom import Visdom
         viz = Visdom()
         win = []
+        win_dic ={}
         for i in range(len(mt_env_id_dic_selected)):
             win += [None]
         win_afs_per_m = None
         win_afs_loss = None
         win_basic_loss = None
-
+    
+    plot_dic = {}
     envs = []
-
+    ''' Because the oral program has only one game per model, so Song add loop i
+        So whatever you wanna run , just put in SubprocVecEnvMt!
+    '''
     for i in range(len(mt_env_id_dic_selected)):
         log_dir = args.log_dir+mt_env_id_dic_selected[i]+'/'
         for j in range(args.num_processes):
             envs += [make_env(mt_env_id_dic_selected[i], args.seed, j, log_dir)]
-
+    ''' This envs is an intergration of all the running env'''
     envs = SubprocVecEnvMt(envs)
 
     num_processes_total = args.num_processes * len(mt_env_id_dic_selected)
-
+    '''(1,128,128)'''
     obs_shape = envs.observation_space.shape
+    #num_stack :number of frames to stack
     obs_shape = (obs_shape[0] * args.num_stack, *obs_shape[1:])
 
-    if len(envs.observation_space.shape) == 3:
-        actor_critic = CNNPolicy(obs_shape[0], envs.action_space)
+    from arguments import is_restore
+    if is_restore and args.save_dir:
+        load_path = os.path.join(args.save_dir, args.algo)
+        actor_critic =torch.load(os.path.join(load_path, args.env_name + ".pt"))
+        # print ("restored previous model!")
+        # print (actor_critic.Variable)
+        # print (sss)
     else:
-        actor_critic = MLPPolicy(obs_shape[0], envs.action_space)
-
+        if len(envs.observation_space.shape) == 3:
+            actor_critic = CNNPolicy(obs_shape[0], envs.action_space)
+        else:
+            actor_critic = MLPPolicy(obs_shape[0], envs.action_space)
+    
     if envs.action_space.__class__.__name__ == "Discrete":
         action_shape = 1
     else:
@@ -192,12 +255,15 @@ def main():
         optimizer = optim.Adam(actor_critic.parameters(), args.lr, eps=args.eps)
     elif args.algo == 'acktr':
         optimizer = KFACOptimizer(actor_critic)
-
+    #'args.num_steps: number of forward steps in A2C
+    #rollouts is an intergration of state\ reward\ next state\action and so on
     rollouts = RolloutStorage(args.num_steps, num_processes_total, obs_shape, envs.action_space)
     current_state = torch.zeros(num_processes_total, *obs_shape)
-
+    ''' not sure about it'''
     def update_current_state(state):
         shape_dim0 = envs.observation_space.shape[0]
+        # print (shape_dim0)
+        # print (sss)
         state = torch.from_numpy(state).float()
         if args.num_stack > 1:
             current_state[:, :-shape_dim0] = current_state[:, shape_dim0:]
@@ -226,10 +292,10 @@ def main():
 
     afs_loss_list = []
     basic_loss_list = []
-
+    episode_reward_rec = 0.0
     one = torch.FloatTensor([1]).cuda()
     mone = one * -1
-
+    '''for one whole game '''
     for j in range(num_updates):
         for step in range(args.num_steps):
             if ewc == 1:
@@ -238,15 +304,29 @@ def main():
                 except Exception as e:
                     states_store = rollouts.states[step].clone()
             # Sample actions
+            '''act fun refer to "observe it!"'''
             value, action = actor_critic.act(Variable(rollouts.states[step], volatile=True))
             cpu_actions = action.data.squeeze(1).cpu().numpy()
 
             # Obser reward and next state
             state, reward, done = envs.step(cpu_actions)
+            '''record the last 100 episodes rewards'''
+            episode_reward_rec += reward
+            episode_reward_rec = rec_last_100_epi_reward(episode_reward_rec,done)
+            
+            
             reward = torch.from_numpy(np.expand_dims(np.stack(reward), 1)).float()
+            '''reward is shape of process_num_total, not batch-size'''
+            # print ((reward).size())
+            # print (done)
+            # print (sss)
             episode_rewards += reward
-
-            # If done then clean the history of observations.
+            ################
+            # rec_last_100_epi_reward(reward,done)
+            
+            # episode_reward_ppo += reward[0]
+            # If done then clean the history of observations. final_rewards is used for compute after one whole num_step
+            
             masks = torch.FloatTensor([[0.0] if done_ else [1.0] for done_ in done])
             final_rewards *= masks
             final_rewards += (1 - masks) * episode_rewards
@@ -296,7 +376,6 @@ def main():
             value_loss = advantages.pow(2).mean()
 
             action_loss = -(Variable(advantages.data) * action_log_probs).mean()
-
             final_loss_basic = value_loss * args.value_loss_coef + action_loss - dist_entropy * args.entropy_coef
 
             ewc_loss = None
@@ -308,9 +387,9 @@ def main():
                 final_loss = final_loss_basic
             else:
                 final_loss = final_loss_basic + ewc_loss
-
+            # print (final_loss_basic.data.cpu().numpy()[0])
+            # final_loss_basic
             basic_loss_list += [final_loss_basic.data.cpu().numpy()[0]]
-                
             final_loss.backward()
 
             if args.algo == 'a2c':
@@ -337,9 +416,9 @@ def main():
                     return_batch = rollouts.returns[:-1].view(-1, 1)[indices]
 
                     # Reshape to do in a single forward pass for all steps
-                    values, action_log_probs, dist_entropy = actor_critic.evaluate_actions(Variable(states_batch), Variable(actions_batch))
+                    values, action_log_probs, dist_entropy, conv_list = actor_critic.evaluate_actions(Variable(states_batch), Variable(actions_batch))
 
-                    _, old_action_log_probs, _ = old_model.evaluate_actions(Variable(states_batch, volatile=True), Variable(actions_batch, volatile=True))
+                    _, old_action_log_probs, _, old_conv_list= old_model.evaluate_actions(Variable(states_batch, volatile=True), Variable(actions_batch, volatile=True))
 
                     ratio = torch.exp(action_log_probs - Variable(old_action_log_probs.data))
                     adv_targ = Variable(advantages.view(-1, 1)[indices])
@@ -350,12 +429,17 @@ def main():
                     value_loss = (Variable(return_batch) - values).pow(2).mean()
 
                     optimizer.zero_grad()
-                    (value_loss + action_loss - dist_entropy * args.entropy_coef).backward()
+                    final_loss_basic = (value_loss + action_loss - dist_entropy * args.entropy_coef)
+                    
+                    basic_loss_list += [final_loss_basic.data.cpu().numpy()[0]]
+                    final_loss_basic.backward()
                     optimizer.step()
 
         rollouts.states[0].copy_(rollouts.states[-1])
 
-        if j % int(num_updates/2-10) == 0 and args.save_dir != "":
+        # if j % int(num_updates/2-10) == 0 and args.save_dir != "":
+        if j % args.save_interval == 0 and args.save_dir != "":
+         
             save_path = os.path.join(args.save_dir, args.algo)
             try:
                 os.makedirs(save_path)
@@ -367,6 +451,11 @@ def main():
             if args.cuda:
                 save_model = copy.deepcopy(actor_critic).cpu()
             torch.save(save_model, os.path.join(save_path, args.env_name + ".pt"))
+            import pickle
+            with open(os.path.join(save_path, args.env_name + "_last_100_reward"), "wb") as f:
+                pickle.dump(reward_dict, f)
+
+
 
         if j % args.log_interval == 0:
             print("Updates {}, num frames {}, mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}, entropy {:.5f}, value loss {:.5f}, policy loss {:.5f}".
@@ -384,11 +473,28 @@ def main():
                 pass
             
 
-        if j > 5 and j % args.vis_interval == 0:
+        if j > 5 and j % args.vis_interval == 0 and args.vis:
+            ''' load from the folder'''
             for ii in range(len(mt_env_id_dic_selected)):
                 log_dir = args.log_dir+mt_env_id_dic_selected[ii]+'/'
                 win[ii] = visdom_plot(viz, win[ii], log_dir, mt_env_id_dic_selected[ii], args.algo)
 
+            plot_dic = reward_dict
+            for plot_name in plot_dic.keys():
+                # if plot_name not in win_dic:
+                # win_dic[plot_name] = None
+                if plot_name in win_dic.keys():
+                    if len(plot_dic[plot_name]) > 0:
+                        win_dic[plot_name] = viz.line(
+                            torch.from_numpy(np.asarray(plot_dic[plot_name])), 
+                            win=win_dic[plot_name],
+                            opts=dict(title=break_line_html(exp+'>>'+plot_name))
+                        )
+                    
+
+                else:
+                    win_dic[plot_name] = None
+            
             if len(afs_per_m)>0:
                 win_afs_per_m = viz.line(
                     torch.from_numpy(np.asarray(afs_per_m)), 
@@ -396,6 +502,13 @@ def main():
                     opts=dict(title=title_html+'>>afs')
                 )
 
+            # print (basic_loss_list)
+            '''a2c:len(basic_loss_list) is vis_interval+1. because j start from 0
+               ppo:len(basic_loss_list) is (vis_interval+1)*ppo_epoch_4*len(BatchSampler)
+            '''
+            
+            # print (len(basic_loss_list))
+            # print (ss)
             win_basic_loss = viz.line(
                 torch.from_numpy(np.asarray(basic_loss_list)), 
                 win=win_basic_loss,
